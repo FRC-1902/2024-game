@@ -71,23 +71,26 @@ public class Swerve extends SubsystemBase {
         drive(speeds, isOpenLoop);
     }
 
-    public void drive(ChassisSpeeds speeds, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates =
-            Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.MAX_SPEED);
-        
-        for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
-        }
-        // Logger.recordOutput("Swerve Desired Module States", swerveModuleStates);
-    }
-
+    /**
+     * Drives with closed-loop control, useful for ChassisSpeeds consumers in auto
+     * @param speeds ChassisSpeeds
+     */
     public void drive(ChassisSpeeds speeds) {
         drive(speeds, false);
     }
 
-    /* Used by SwerveControllerCommand in Auto */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
+    /**
+     * @param speeds ChassisSpeeds
+     * @param isOpenLoop open or closed loop control
+     */
+    public void drive(ChassisSpeeds speeds, boolean isOpenLoop) {
+        SwerveModuleState[] swerveModuleStates =
+            Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
+
+        setModuleStates(swerveModuleStates);
+    }
+
+    private void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.MAX_SPEED);
         
         for(SwerveModule mod : mSwerveMods){
@@ -95,17 +98,25 @@ public class Swerve extends SubsystemBase {
         }
     }    
 
+    /**
+     * Get estimated position from odometry
+     * @return
+     */
     public Pose2d getPose() {
         return swerveOdometry.getEstimatedPosition();
     }
 
     /**
-     * @param pose //TODO: finish documenting this
+     * @param pose estimated position to reset to
      */
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(imu.getHeading(), getModulePositions(), pose);
     }
 
+    /**
+     * Gets current SwerveModuleStates from all swerve modules
+     * @return SwerveModuleState[]
+     */
     public SwerveModuleState[] getModuleStates(){
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(SwerveModule mod : mSwerveMods){
@@ -114,6 +125,10 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    /**
+     * Gets current SwerveModulePositions from all swerve modules
+     * @return SwerveModulePositions[]
+     */
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : mSwerveMods){
@@ -122,8 +137,8 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
+    // TODO: fix me
     public void zeroGyro(){
-        // TODO: fix me
         imu.setOffset(imu.getHeading().minus(imu.getOffset()));
     }
 
@@ -139,6 +154,10 @@ public class Swerve extends SubsystemBase {
         logPeriodic();
     }
 
+    /**
+     * Use to grab Singleton instance
+     * @return Swerve instance
+     */
     public static Swerve getInstance(){
         if(instance == null){
             instance = new Swerve();

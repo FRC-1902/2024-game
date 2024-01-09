@@ -1,6 +1,6 @@
 package frc.robot;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,11 +23,11 @@ public class Constants {
         public static final boolean GYRO_INVERT = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule =  
-            COTSFalconSwerveConstants.SDSMK3(COTSFalconSwerveConstants.DriveGearRatios.SDSMK3_STANDARD);
+            COTSFalconSwerveConstants.SDSMK4(COTSFalconSwerveConstants.DriveGearRatios.SDSMK4_L3); // TODO: check ratio
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(21); 
-        public static final double WHEEL_BASE = Units.inchesToMeters(21); 
+        public static final double TRACK_WIDTH = Units.inchesToMeters(21); // TODO: set me
+        public static final double WHEEL_BASE = Units.inchesToMeters(21);  // TODO: set me
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -62,13 +62,13 @@ public class Constants {
         public static final double ANGLE_KD = chosenModule.angleKD;
         public static final double ANGLE_KF = chosenModule.angleKF;
 
-        /* Drive Motor PID Values */ //This must be tuned to specific robot
+        /* Drive Motor PID Values */  // TODO: tune me
         public static final double DRIVE_KP = 0.25; 
         public static final double DRIVE_KI = 0.001;
         public static final double DRIVE_KD = 0.5;
         public static final double DRIVE_KF = 0.0;
 
-        /* Drive Motor Characterization Values */ //This must be tuned to specific robot
+        /* Drive Motor Characterization Values */ // TODO: tune me
         // divide by 12 to convert from volts to 1 to -1 power range
         public static final double DRIVE_KS = 0.126;
         public static final double DRIVE_KV = 2.72;
@@ -83,13 +83,15 @@ public class Constants {
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
-        public static final double MAX_SPEED = 3.23; //TODO: test me, Kevin values
+        public static final double MAX_SPEED = 3.23; //TODO: set new Kevin values
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 9.933; //TODO: set me, Kevin values
+        public static final double MAX_ANGULAR_VELOCITY = 9.933; //TODO: set new Kevin values
 
         /* Neutral (Idle) Modes */
         public static final IdleMode ANGLE_NEURTRAL_MODE = IdleMode.kCoast;
         public static final IdleMode DRIVE_NEUTRAL_MODE = IdleMode.kBrake;
+
+        /* Note: helium cancoders have a reset for angle offset integrated onto them */
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -97,10 +99,9 @@ public class Constants {
             private Mod0() {}
             public static final int DRIVE_MOTOR_ID = 1;
             public static final int ANGLE_MOTOR_ID = 2;
-            public static final int CAN_CODER_ID = 0;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(19);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
         }
 
         /* Front Right Module - Module 1 */
@@ -108,10 +109,9 @@ public class Constants {
             private Mod1() {}
             public static final int DRIVE_MOTOR_ID = 3;
             public static final int ANGLE_MOTOR_ID = 4;
-            public static final int CAN_CODER_ID = 1;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(70);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
         }
         
         /* Back Left Module - Module 2 */
@@ -119,10 +119,9 @@ public class Constants {
             private Mod2() {}
             public static final int DRIVE_MOTOR_ID = 5;
             public static final int ANGLE_MOTOR_ID = 6;
-            public static final int CAN_CODER_ID = 2;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(230);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
         }
 
         /* Back Right Module - Module 3 */
@@ -130,26 +129,14 @@ public class Constants {
             private Mod3() {}
             public static final int DRIVE_MOTOR_ID = 7;
             public static final int ANGLE_MOTOR_ID = 8;
-            public static final int CAN_CODER_ID = 3;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(155);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+                new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
         }
     }
 
     public static final class AutoConstants { 
         private AutoConstants() {}
-
-        public static final double SEARCH_DISTANCE = 0.1; //TODO: tune me
-        public static final double MIN_VELOCITY = 0.02; // stops deadlocking at 0 m/s on path //TODO: tune me
-        public static final double TARGET_END_DELTA = 0.01; // meters from end waypoint
-        public static final double TARGET_ANGLE_DELTA = 0.5;
-        public static final int TARGET_COUNT_AT_SETPIONT = 5; //number of robot loops to maintain at setpoint
-
-        // Cascading control into velocity PID, be careful
-        public static final double ANGLE_KP = 0.065;
-        public static final double ANGLE_KI = 0.0;
-        public static final double ANGLE_KD = 0.0;
-        public static final double ANGLE_ERROR_LIMIT = 20.0; // cap max angle to avoid instability from cascading control, in degrees
+        // TODO: make me
     }
 }

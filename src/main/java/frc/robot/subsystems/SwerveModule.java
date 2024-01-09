@@ -4,7 +4,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.util.ModuleStateOptimizer;
 import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil.Usage;
@@ -13,8 +12,9 @@ import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import frc.lib.util.CANSparkMaxUtil;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder;
 
 public class SwerveModule {
   private int moduleNumber;
@@ -27,25 +27,25 @@ public class SwerveModule {
   
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
-  private DutyCycleEncoder angleEncoder;
+  private SparkAbsoluteEncoder angleEncoder;
 
-  private final SparkMaxPIDController driveController;
-  private final SparkMaxPIDController angleController;
+  private final SparkPIDController driveController;
+  private final SparkPIDController angleController;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.DRIVE_KS, Constants.Swerve.DRIVE_KV, Constants.Swerve.DRIVE_KA);
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;
-    
-    /* Angle Encoder Config */
-    angleEncoder = new DutyCycleEncoder(moduleConstants.cancoderID);
-    configAngleEncoder();
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
     integratedAngleEncoder = angleMotor.getEncoder();
     angleController = angleMotor.getPIDController();
     configAngleMotor();
+
+    /* Helium Cancoder Config - PLUG INTO ANGLE MOTOR*/
+    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+    configAngleEncoder();
 
     /* Drive Motor Config */
     driveMotor = new CANSparkMax(moduleConstants.driveMotorID, MotorType.kBrushless);
@@ -110,9 +110,9 @@ public class SwerveModule {
     return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
   }
 
-  // XXX: Not actually pulling from cancoder
+  // XXX: Not actually pulling from cancoder, maybe rename?
   public Rotation2d getCanCoder(){
-    return (Constants.Swerve.CAN_CODER_INVERT) ? Rotation2d.fromRotations(1 - angleEncoder.getAbsolutePosition()) : Rotation2d.fromRotations(angleEncoder.getAbsolutePosition());
+    return (Constants.Swerve.CAN_CODER_INVERT) ? Rotation2d.fromRotations(1 - angleEncoder.getPosition()) : Rotation2d.fromRotations(angleEncoder.getPosition());
   }
 
   public double getDesiredSpeed() {
@@ -126,7 +126,9 @@ public class SwerveModule {
   }
 
   private void configAngleEncoder(){     
-    angleEncoder.reset();
+    angleEncoder.setAverageDepth(8); // bit sampling depth (must be a power of 2 up to 128 )
+    angleEncoder.setPositionConversionFactor(1); // angle encoder is directly on the correct shaft
+    angleEncoder.setZeroOffset(angleOffset.getRotations());
   }
 
   private void configAngleMotor(){
