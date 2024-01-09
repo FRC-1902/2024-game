@@ -4,18 +4,52 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.util.OperationMode;
+import frc.robot.modes.AutoMode;
+import frc.robot.modes.DisabledMode;
+import frc.robot.modes.TeleOpMode;
+import frc.robot.modes.TestMode;
+import frc.robot.subsystems.IMU;
 
-public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+public class Robot extends LoggedRobot {
+  private IMU imu;
+  private PowerDistribution pdh;
 
-  private RobotContainer m_robotContainer;
+  private OperationMode disabledMode, autoMode, teleOpMode, testMode;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+
+    if (isReal()) {
+      Logger.addDataReceiver(new WPILOGWriter("/media/sda")); // Log to a USB stick
+      // Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      pdh = new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    } else {
+      setUseTiming(false); // Run as fast as possible
+      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    }
+
+    // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
+    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+
+    imu = IMU.getInstance();
+
+    disabledMode = new DisabledMode();
+    autoMode = new AutoMode();
+    teleOpMode = new TeleOpMode();
+    testMode = new TestMode();
   }
 
   @Override
@@ -24,50 +58,62 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    disabledMode.enter();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    disabledMode.periodic();
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    disabledMode.exit();
+  }
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    autoMode.enter();
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    autoMode.periodic();
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    autoMode.exit();
+  }
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    teleOpMode.enter();
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    teleOpMode.periodic();
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+    teleOpMode.exit();
+  }
 
   @Override
   public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
+    testMode.enter();
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    testMode.periodic();
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+    testMode.exit();
+  }
 }
