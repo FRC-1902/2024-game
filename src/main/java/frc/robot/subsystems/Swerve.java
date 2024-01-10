@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
@@ -150,7 +151,18 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        swerveOdometry.update(imu.getHeading(), getModulePositions());  
+        // vision odometry // TODO: test me
+        Pose2d limelightEstimate = LimelightHelpers.getBotPose3d("").toPose2d();
+        // update odometry if vision position deviates by less than 1 meter from current estimate (as per documentation estimate)
+        if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) {
+            swerveOdometry.addVisionMeasurement(
+                LimelightHelpers.getBotPose3d("").toPose2d(), 
+                Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
+            );
+        }   
+
+        swerveOdometry.update(imu.getHeading(), getModulePositions());
+        
         logPeriodic();
     }
 
