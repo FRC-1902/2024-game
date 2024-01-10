@@ -17,7 +17,7 @@ public class AutoSelector {
     public AutoSelector() {
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
         autoChooser.addDefaultOption("Do Nothing", new SequentialCommandGroup());
-        autoChooser.addOption("TestAuto1Path", getTestAuto());
+        // autoChooser.addOption("TestAuto1Path", getTestAuto());
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
     }
 
@@ -31,7 +31,7 @@ public class AutoSelector {
 
     // Auto definitions
 
-    private SequentialCommandGroup getTestAuto() {
+    // private SequentialCommandGroup getTestAuto() {
         // TODO: implement better path finding through PathPlannerLib
-    }
+    // }
 }
