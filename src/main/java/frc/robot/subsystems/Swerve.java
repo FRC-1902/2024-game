@@ -87,7 +87,7 @@ public class Swerve extends SubsystemBase {
     public void drive(ChassisSpeeds speeds, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
-
+        
         setModuleStates(swerveModuleStates);
     }
 
@@ -136,6 +136,13 @@ public class Swerve extends SubsystemBase {
             positions[mod.getModuleNumber()] = mod.getPosition();
         }
         return positions;
+    }
+
+    /**
+     * Gets current ChassisSpeeds, derived from robot-relative movement
+     */
+    public ChassisSpeeds getChassisSpeeds() {
+        return Constants.Swerve.swerveKinematics.toChassisSpeeds(getModuleStates());
     }
 
     // TODO: fix me

@@ -4,30 +4,41 @@
 
 package frc.robot.commands;
 
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.controllers.PPRamseteController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Swerve;
 
-// TODO: write me, untilizing the full power of path planner lib
-public class FollowCommand extends Command {
+public class FollowCommand extends FollowPathCommand {
+  Swerve swerveSubsystem = Swerve.getInstance();
+
   /** Creates a new FollowCommand. */
-  public FollowCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+  public FollowCommand(PathPlannerPath path) {          
+    super(
+      path, 
+      () -> Swerve.getInstance().getPose(), 
+      () -> Swerve.getInstance().getChassisSpeeds(),
+      (ChassisSpeeds s) -> Swerve.getInstance().drive(s),
+      new PPRamseteController(), // maybe also try PPLTVController
+      new ReplanningConfig(), // default config
+      () -> { 
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red; // should flip path if on red alliance
+        } else {
+          return false;
+        }
+      }, 
+      Swerve.getInstance()
+    );
   }
 }
