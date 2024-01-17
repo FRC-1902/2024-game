@@ -27,6 +27,10 @@ public class Constants {
         public static final int RIGHT_SHOOTER_MOTOR_ID = 13;
         public static final int INDEXER_MOTOR_ID = 14;
 
+        // Sensor ports
+        public static final int PIVOT_ENCODER_PORT = 0; // TODO: set me
+        // TODO: add index sensor
+
         // PID Values // TODO: tune me
         public static final double PIVOT_KP = 0.0;
         public static final double PIVOT_KI = 0.0;
@@ -34,13 +38,22 @@ public class Constants {
         public static final double PIVOT_KF = 0.0; // gravity compensation feedforward
 
         // Pivot Positions
-        public static final double PIVOT_MIN_ANGLE = 0.0; // TODO: set me
-        public static final double PIVOT_MAX_ANGLE = 0.0; // TODO: set me
+        public static final Rotation2d PIVOT_MIN_ROTATION = new Rotation2d(0.0); // TODO: set me
+        public static final Rotation2d PIVOT_MAX_ROTATION = new Rotation2d(0.0); // TODO: set me
+        public static final double PIVOT_DEGREES_TOLERANCE = 0.0; // TODO: set me
+        public static final double PIVOT_ANGLE_OFFSET = 0.0; // TODO: set me
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
-        public static final int SHOOTER_CURRENT_LIMIT = 20;
+        public static final int SHOOTER_CURRENT_LIMIT = 40;
         public static final int INDEX_CURRENT_LIMIT = 20; // XXX: maybe?
+        public static final int PIVOT_CURRENT_LIMIT = 20; // XXX: maybe?
+
+        // Arm lengths 
+        public static final double PIVOT_LENGTH = 0.0; // TODO: set me
+        public static final double ARM_LENGTH = 0.0; // TODO: set me
+        public static final double WRIST_LENGTH = 0.0; // TODO: set me
+        public static final Rotation2d WRIST_OFFSET = new Rotation2d(0.0); // TODO: set me
     }
 
     public static final class Swerve {
