@@ -1,11 +1,13 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -37,7 +39,7 @@ public class Constants {
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
-
+        
         /* Module Gear Ratios */
         public static final double DRIVE_GEAR_RATIO = chosenModule.driveGearRatio;
         public static final double ANGLE_GEAR_RATIO = chosenModule.angleGearRatio;
@@ -84,9 +86,13 @@ public class Constants {
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
         public static final double MAX_SPEED = 3.23; //TODO: set new Kevin values
+        /** Meters per Second squared */
+        public static final double MAX_ACCELERATION = 3.0; //TODO: set new Kevin values
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = 9.933; //TODO: set new Kevin values
-
+        /** Radians per Second squared*/
+        public static final double MAX_ANGULAR_ACCELERATION = 4.0; //TODO: set new Kevin values
+        
         /* Neutral (Idle) Modes */
         public static final IdleMode ANGLE_NEURTRAL_MODE = IdleMode.kCoast;
         public static final IdleMode DRIVE_NEUTRAL_MODE = IdleMode.kBrake;
@@ -138,5 +144,9 @@ public class Constants {
     public static final class AutoConstants { 
         private AutoConstants() {}
         // TODO: make me
+        // PID contstants
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0, 0, 0, 0); // TODO: tune me
+        public static final PIDConstants ROTATION_PID = new PIDConstants(0, 0, 0, 0); // TODO: tune me
+
     }
 }
