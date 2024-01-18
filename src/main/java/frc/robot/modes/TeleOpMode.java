@@ -64,7 +64,7 @@ public class TeleOpMode implements OperationMode{
         // check for reset field oriented mode
         if (controllers.getPressed(ControllerName.DRIVE, Button.Y)) {
             swerveSubsystem.zeroGyro();
-            System.out.println(IMU.getInstance().getHeading());
+            System.out.println(IMU.getInstance().getDriverHeading());
         }
     }
 }
