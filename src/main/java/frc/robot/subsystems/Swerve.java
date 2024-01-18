@@ -145,9 +145,8 @@ public class Swerve extends SubsystemBase {
         return Constants.Swerve.swerveKinematics.toChassisSpeeds(getModuleStates());
     }
 
-    // TODO: fix me
     public void zeroGyro(){
-        imu.setOffset(imu.getHeading().minus(imu.getOffset()));
+        imu.setOffset(imu.getOffset().minus(imu.getHeading()));
     }
 
     public void resetModulesToAbsolute(){
