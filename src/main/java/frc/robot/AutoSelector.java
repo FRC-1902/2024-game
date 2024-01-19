@@ -13,8 +13,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class AutoSelector {
     private LoggedDashboardChooser<Command> autoChooser;
+    RobotContainer robotContainer;
     
-    public AutoSelector() {
+    public AutoSelector(RobotContainer robotContainer) {
+        this.robotContainer = robotContainer;
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
         autoChooser.addDefaultOption("Do Nothing", null);
         // autoChooser.addOption("TestAuto1Path", getTestAuto());

@@ -48,8 +48,8 @@ public class Robot extends LoggedRobot {
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     imu = IMU.getInstance();
-    autoSelector = new AutoSelector();
     robotContainer = new RobotContainer();
+    autoSelector = new AutoSelector(robotContainer);
   }
 
   @Override
