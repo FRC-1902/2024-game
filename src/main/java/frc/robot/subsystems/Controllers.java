@@ -2,9 +2,13 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 
 public class Controllers {
+  private CommandXboxController commandDriveController;
+  private CommandXboxController commandManipController;
   private XboxController driveController;
   private XboxController manipController;
 
@@ -38,8 +42,10 @@ public class Controllers {
   }
 
   private Controllers(){
-    driveController = new XboxController(Constants.DRIVE_CONTROLLER_PORT);
-    manipController = new XboxController(Constants.MANIP_CONTROLLER_PORT);
+    commandDriveController = new CommandXboxController(Constants.DRIVE_CONTROLLER_PORT);
+    commandManipController = new CommandXboxController(Constants.MANIP_CONTROLLER_PORT);
+    driveController = commandDriveController.getHID();
+    manipController = commandManipController.getHID();
   }
 
   /**Checks if specified button is depressed
@@ -76,37 +82,14 @@ public class Controllers {
     }
   }
 
-  /**Checks if specified button was pressed since last checked
-   * @param name Controller name DRIVE/MANIP
-   * @param button Button name
-   * @return boolean if button is pressed.
-   * If controller is specified incorrectly, returns false
-   */
-  public boolean getPressed(ControllerName name, Button b){
+  public Trigger getTrigger(ControllerName name, Button b){
     switch(name){
     case DRIVE:
-      return driveController.getRawButtonPressed(b.id);
+      return commandDriveController.button(b.id);
     case MANIP:
-      return manipController.getRawButtonPressed(b.id);
+      return commandManipController.button(b.id);
     default:
-      return false;
-    }
-  }
-
-  /**Checks if specified button was released since last checked
-   * @param name Controller name DRIVE/MANIP
-   * @param button Button name
-   * @return boolean if button is pressed.
-   * If controller is specified incorrectly, returns false
-   */
-  public boolean getReleased(ControllerName name, Button b){
-    switch(name){
-    case DRIVE:
-      return driveController.getRawButtonReleased(b.id);
-    case MANIP:
-      return manipController.getRawButtonReleased(b.id);
-    default:
-      return false;
+      return null;
     }
   }
 

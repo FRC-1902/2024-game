@@ -16,12 +16,11 @@ import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
-    private static Swerve instance;
     private SwerveDrivePoseEstimator swerveOdometry;
     private SwerveModule[] mSwerveMods;
     private IMU imu;
 
-    private Swerve() {
+    public Swerve() {
         imu = IMU.getInstance();
         zeroGyro();
         
@@ -183,16 +182,5 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(imu.getDriverHeading(), getModulePositions());
         
         logPeriodic();
-    }
-
-    /**
-     * Use to grab Singleton instance
-     * @return Swerve instance
-     */
-    public static Swerve getInstance(){
-        if(instance == null){
-            instance = new Swerve();
-        }
-        return instance;
     }
 }
