@@ -16,7 +16,7 @@ public class AutoSelector {
     
     public AutoSelector() {
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
-        autoChooser.addDefaultOption("Do Nothing", new SequentialCommandGroup());
+        autoChooser.addDefaultOption("Do Nothing", null);
         // autoChooser.addOption("TestAuto1Path", getTestAuto());
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
     }

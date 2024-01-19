@@ -12,19 +12,17 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.util.OperationMode;
-import frc.robot.modes.AutoMode;
-import frc.robot.modes.DisabledMode;
-import frc.robot.modes.TeleOpMode;
-import frc.robot.modes.TestMode;
 import frc.robot.subsystems.IMU;
 
 public class Robot extends LoggedRobot {
   private IMU imu;
   private PowerDistribution pdh;
+  private AutoSelector autoSelector;
+  private Command autonomousCommand;
+  private RobotContainer robotContainer;
 
-  private OperationMode disabledMode, autoMode, teleOpMode, testMode;
 
   @Override
   public void robotInit() {
@@ -45,11 +43,8 @@ public class Robot extends LoggedRobot {
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     imu = IMU.getInstance();
-
-    disabledMode = new DisabledMode();
-    autoMode = new AutoMode();
-    teleOpMode = new TeleOpMode();
-    testMode = new TestMode();
+    autoSelector = new AutoSelector();
+    robotContainer = new RobotContainer();
   }
 
   @Override
@@ -58,62 +53,47 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledInit() {
-    disabledMode.enter();
-  }
+  public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {
-    disabledMode.periodic();
-  }
+  public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {
-    disabledMode.exit();
-  }
+  public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
-    autoMode.enter();
+    autonomousCommand = autoSelector.getSelectedCommand();
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   @Override
-  public void autonomousPeriodic() {
-    autoMode.periodic();
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void autonomousExit() {
-    autoMode.exit();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
   }
 
   @Override
-  public void teleopInit() {
-    teleOpMode.enter();
-  }
+  public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {
-    teleOpMode.periodic();
-  }
+  public void teleopPeriodic() {}
 
   @Override
-  public void teleopExit() {
-    teleOpMode.exit();
-  }
+  public void teleopExit() {}
 
   @Override
-  public void testInit() {
-    testMode.enter();
-  }
+  public void testInit() {}
 
   @Override
-  public void testPeriodic() {
-    testMode.periodic();
-  }
+  public void testPeriodic() {}
 
   @Override
-  public void testExit() {
-    testMode.exit();
-  }
+  public void testExit() {}
 }
