@@ -21,15 +21,13 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pivot extends SubsystemBase {
-  private static Pivot instance;
-
   private CANSparkMax pivotMotor1;
   private CANSparkMax pivotMotor2;
   private DutyCycleEncoder pivotEncoder;
   private PIDController pivotPID;
 
   /** Creates a new Pivot. */
-  private Pivot() {
+  public Pivot() {
     pivotMotor1 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
     pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.MINIMAL);
@@ -143,12 +141,5 @@ public class Pivot extends SubsystemBase {
       pivotPID.calculate(pivotEncoder.getAbsolutePosition()) 
       + Constants.Arm.PIVOT_KF * Math.sin(pivotEncoder.getAbsolutePosition() * Math.PI * 2)
     );
-  }
-
-  public static Pivot getInstance() {
-    if (instance == null) {
-      instance = new Pivot();
-    }
-    return instance;
   }
 }

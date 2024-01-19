@@ -17,8 +17,8 @@ public class SetPivotCommand extends Command {
    * Creates a new SetPivotCommand.
    * @param angle rotation from directly down
    */
-  public SetPivotCommand(Rotation2d angle) {
-    pivotSubsystem = Pivot.getInstance();
+  public SetPivotCommand(Rotation2d angle, Pivot pivotSubsystem) {
+    this.pivotSubsystem = pivotSubsystem;
     this.angle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(pivotSubsystem);

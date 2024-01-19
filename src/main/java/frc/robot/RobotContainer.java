@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Controllers;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
@@ -15,10 +17,14 @@ import frc.robot.subsystems.Controllers.ControllerName;
 public class RobotContainer {
 
     Swerve swerveSubsystem;
+    Shooter shooterSubsystem;
+    Pivot pivotSubsystem;
     Controllers controllers;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
+        shooterSubsystem = new Shooter();
+        pivotSubsystem = new Pivot();
         controllers = Controllers.getInstance();
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));

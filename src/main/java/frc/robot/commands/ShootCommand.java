@@ -14,8 +14,8 @@ public class ShootCommand extends Command {
   Double shotTime;
 
   /** Creates a new ShootCommand. */
-  public ShootCommand() {
-    shootSubsystem = Shooter.getInstance();
+  public ShootCommand(Shooter shooterSubsystem) {
+    this.shootSubsystem = shooterSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shootSubsystem);
 

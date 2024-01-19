@@ -15,13 +15,11 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 
 
 public class Shooter extends SubsystemBase {
-  private static Shooter instance;
-
   private CANSparkMax leftShooterMotor, rightShooterMotor;
   private CANSparkMax indexMotor;
 
   /** Creates a new Shooter. */ 
-  private Shooter() {
+  public Shooter() {
     leftShooterMotor = new CANSparkMax(Constants.Arm.LEFT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
     rightShooterMotor = new CANSparkMax(Constants.Arm.RIGHT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(leftShooterMotor, Usage.VELOCITY_ONLY);
@@ -72,12 +70,5 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
-
-  public static Shooter getInstance() {
-    if (instance == null) {
-      instance = new Shooter();
-    }
-    return instance;
   }
 }
