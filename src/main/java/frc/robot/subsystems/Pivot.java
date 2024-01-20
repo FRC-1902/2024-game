@@ -43,7 +43,6 @@ public class Pivot extends SubsystemBase {
     pivotEncoder.setPositionOffset(Constants.Arm.PIVOT_ANGLE_OFFSET); // TODO: set me
 
     pivotPID = new PIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD);
-    pivotPID.enableContinuousInput(0, 1);
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
   }
 
@@ -133,6 +132,7 @@ public class Pivot extends SubsystemBase {
   @Override
   public void periodic() {
     if (checkPivotWatchdog()) {
+      pivotMotor1.set(0);
       return;
     }
 
