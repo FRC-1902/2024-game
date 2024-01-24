@@ -17,7 +17,7 @@ public class Controllers {
   public enum Button{
     A(1), B(2), X(3), Y(4), LB(5), RB(6), LS(9), RS(10);
 
-    public final int id;
+    public final int id; 
     Button(int id) {
       this.id = id;
     }

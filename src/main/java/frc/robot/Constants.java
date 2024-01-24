@@ -17,9 +17,24 @@ public class Constants {
 
 	public static final double STICK_DEADBAND = 0.1;
 
-    public static final class Swerve {
-        private Swerve() {}
+    public static final class Climber{
+        private Climber() {}
+        // CAN ids
+        public static final int LEFT_MOTOR_ID = 17; 
+        public static final int RIGHT_MOTOR_ID = 18; 
 
+        // DIO ports
+        public static final int LB_SWITCH_PORT = 0; 
+        public static final int LT_SWITCH_PORT = 1; 
+        public static final int RB_SWITCH_PORT = 2; 
+        public static final int RT_SWITCH_PORT = 3; 
+
+
+    }
+
+    public static final class Swerve {
+        private Swerve() {} 
+ 
         public static final boolean GYRO_INVERT = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule =  
