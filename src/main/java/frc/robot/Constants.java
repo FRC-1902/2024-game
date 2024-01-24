@@ -29,7 +29,8 @@ public class Constants {
         public static final int RB_SWITCH_PORT = 2; 
         public static final int RT_SWITCH_PORT = 3; 
 
-
+        // Power Budgeting
+        public static final int CLIMBER_CURRENT_LIMIT = 40;
     }
 
     public static final class Swerve {

@@ -5,12 +5,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;  
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.lib.util.CANSparkMaxUtil;
+import frc.lib.util.CANSparkMaxUtil.Usage;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
@@ -30,6 +33,12 @@ public class Climber extends SubsystemBase {
   public Climber() {
     leftMotor = new CANSparkMax(Constants.Climber.LEFT_MOTOR_ID, MotorType.kBrushless); 
     rightMotor = new CANSparkMax(Constants.Climber.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(leftMotor, Usage.MINIMAL);
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(rightMotor, Usage.MINIMAL);
+    leftMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+    rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+    leftMotor.setSmartCurrentLimit(Constants.Climber.CLIMBER_CURRENT_LIMIT);
+    rightMotor.setSmartCurrentLimit(Constants.Climber.CLIMBER_CURRENT_LIMIT);
 
     // normally closed limit switches
     leftBottomSwitch =  new DigitalInput(Constants.Climber.LB_SWITCH_PORT);
