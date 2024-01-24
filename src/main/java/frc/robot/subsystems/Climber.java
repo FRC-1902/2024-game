@@ -53,6 +53,17 @@ public class Climber extends SubsystemBase {
     this.targetDirection = targetDirection;
   }
 
+  public boolean atSetpoint() {
+    switch (targetDirection) {
+      case UP:
+        return !leftTopSwitch.get() && !rightTopSwitch.get();
+      case DOWN:
+        return !leftBottomSwitch.get() && !rightBottomSwitch.get();
+      default:
+        return false;
+    }
+  }
+
   @Override
   public void periodic() { // XXX: maybe different motor power?
     switch (targetDirection) {
