@@ -9,7 +9,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
@@ -87,14 +89,14 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
         
-        setModuleStates(swerveModuleStates);
+        setModuleStates(swerveModuleStates, isOpenLoop);
     }
 
-    private void setModuleStates(SwerveModuleState[] desiredStates) {
+    private void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.MAX_SPEED);
         
         for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(desiredStates[mod.getModuleNumber()], false);
+            mod.setDesiredState(desiredStates[mod.getModuleNumber()], isOpenLoop);
         }
     }    
 
@@ -157,7 +159,15 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         // vision odometry // TODO: test me
-        // Pose2d limelightEstimate = LimelightHelpers.getBotPose3d("").toPose2d();
+        // Pose2d limelightEstimate;
+        // DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+        // 
+        // if (alliance == DriverStation.Alliance.Red) {
+        //     limelightEstimate = LimelightHelpers.getBotPose3d_wpiRed("").toPose2d();
+        // } else {
+        //     limelightEstimate = LimelightHelpers.getBotPose3d_wpiBlue("").toPose2d();
+        // }
+
         // update odometry if vision position deviates by less than 1 meter from current estimate (as per documentation estimate)
         // if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) { XXX: maybe reimplement me
         

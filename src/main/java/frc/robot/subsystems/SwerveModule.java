@@ -4,7 +4,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.ModuleStateOptimizer;
 import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil.Usage;
@@ -131,7 +130,6 @@ public class SwerveModule {
   private void configAngleEncoder(){     
     angleEncoder.setAverageDepth(8); // bit sampling depth (must be a power of 2 up to 128 )
     angleEncoder.setPositionConversionFactor(1); // angle encoder is directly on the correct shaft
-    angleEncoder.setZeroOffset(angleOffset.getRotations());
   }
 
   private void configAngleMotor(){
@@ -145,6 +143,7 @@ public class SwerveModule {
     angleController.setI(Constants.Swerve.ANGLE_KI);
     angleController.setD(Constants.Swerve.ANGLE_KD);
     angleController.setFF(Constants.Swerve.ANGLE_KF);
+    angleController.setSmartMotionAllowedClosedLoopError(0.1, 0); // TODO: test me
     angleMotor.enableVoltageCompensation(Constants.Swerve.VOLTAGE_COMP);
     angleMotor.burnFlash();
     resetToAbsolute();
