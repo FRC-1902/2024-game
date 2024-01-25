@@ -16,44 +16,35 @@ public class IMU extends SubsystemBase{
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
     BNO055.vector_type_t.VECTOR_EULER);
 
-  private Rotation2d driverOffset;
-  private Rotation2d fieldOffset;
+  private Rotation2d offset;
 
   private IMU() {
-    driverOffset = Rotation2d.fromDegrees(0);
+    offset = Rotation2d.fromDegrees(0);
     initializeLogger();
   }
 
   private void initializeLogger() {
-    Logger.recordOutput("IMU heading", getDriverHeading().getDegrees());
+    Logger.recordOutput("IMU heading", getHeading().getDegrees());
     Logger.recordOutput("IMU roll", getRoll());
     Logger.recordOutput("IMU pitch", getPitch());
     Logger.recordOutput("IMU turn", getTurns());
-    Logger.recordOutput("IMU offset", driverOffset.getDegrees());
+    Logger.recordOutput("IMU offset", offset.getDegrees());
   }
 
   @Override
   public void periodic() {
-    Logger.recordOutput("IMU heading", getDriverHeading().getDegrees());
+    Logger.recordOutput("IMU heading", getHeading().getDegrees());
     Logger.recordOutput("IMU roll", getRoll());
     Logger.recordOutput("IMU pitch", getPitch());
     Logger.recordOutput("IMU turn", getTurns());
   }
 
   /**
-   * @return returns the imu's x scalar (heading/yaw) as a Rotation2d object for field-relative driver usage
+   * @return returns the imu's x scalar (heading/yaw) as a Rotation2d object
    */
-  public Rotation2d getDriverHeading() {
+  public Rotation2d getHeading() {
     double[] xyz = bno055Euler.getVector();
-    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(driverOffset) : Rotation2d.fromDegrees(xyz[0]).plus(driverOffset);
-  }
-
-  /**
-   * @return returns the imu's x scalar (heading/yaw) as a Rotation2d object for field-relative driver usage
-   */
-  public Rotation2d getFieldHeading() {
-    double[] xyz = bno055Euler.getVector();
-    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(fieldOffset) : Rotation2d.fromDegrees(xyz[0]).plus(fieldOffset);
+    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(offset) : Rotation2d.fromDegrees(xyz[0]).plus(offset);
   }
 
   /**
@@ -82,33 +73,18 @@ public class IMU extends SubsystemBase{
   }
 
   /**
-   * @param offset sets imu x heading offset for field-relative driver usage
+   * @param offset sets imu x heading offset
    */
-  public void setDriverOffset(Rotation2d offset) {
-    this.driverOffset = offset;
+  public void setOffset(Rotation2d offset) {
+    this.offset = offset;
     Logger.recordOutput("IMU offset", offset.getDegrees());
   }
 
   /**
-   * @return imu x heading offset for field-relative driver usage
+   * @return imu x heading offset
    */
-  public Rotation2d getDriverOffset() {
-    return driverOffset;
-  }
-
-  /**
-   * @param offset sets imu x heading offset for field-relative auto & pose estimator usage
-   */
-  public void setFieldOffset(Rotation2d offset) {
-    this.fieldOffset = offset;
-    Logger.recordOutput("IMU offset", offset.getDegrees());
-  }
-
-  /**
-   * @return imu x heading offset for field-relative auto & pose estimator usage
-   */
-  public Rotation2d getFieldOffset() {
-    return fieldOffset;
+  public Rotation2d getOffset() {
+    return offset;
   }
 
   /**

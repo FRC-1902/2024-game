@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -40,9 +39,9 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics, 
-            imu.getFieldHeading(), 
+            imu.getHeading(), 
             getModulePositions(), 
-            new Pose2d(0.0, 0.0, imu.getFieldHeading())
+            new Pose2d(0.0, 0.0, imu.getHeading()) // XXX: starting position on the field
         );
     }
 
@@ -63,7 +62,7 @@ public class Swerve extends SubsystemBase {
                                     translation.getX(), 
                                     translation.getY(), 
                                     rotation, 
-                                    imu.getDriverHeading()
+                                    imu.getHeading()
                                 )
                                 : new ChassisSpeeds(
                                     translation.getX(), 
@@ -108,19 +107,10 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * make sure to set field offset first if not set yet (see setFieldOffset(Roation2d offset))
      * @param pose estimated position to reset to
      */
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(imu.getFieldHeading(), getModulePositions(), pose);
-    }
-
-    /**
-     * @param offset sets imu x heading offset for field-relative auto & pose estimator usage
-     * CCW is positive, adds offest to current field heading
-     */
-    public void setFieldOffset(Rotation2d offset) {
-        imu.setFieldOffset(offset);
+        swerveOdometry.resetPosition(imu.getHeading(), getModulePositions(), pose);
     }
 
     /**
@@ -154,11 +144,8 @@ public class Swerve extends SubsystemBase {
         return Constants.Swerve.swerveKinematics.toChassisSpeeds(getModuleStates());
     }
 
-    /**
-     * sets the current driver gyro heading to the new 0
-     */
     public void zeroGyro(){
-        imu.setDriverOffset(imu.getDriverOffset().minus(imu.getDriverHeading()));
+        imu.setOffset(imu.getOffset().minus(imu.getHeading()));
     }
 
     public void resetModulesToAbsolute(){
@@ -179,7 +166,7 @@ public class Swerve extends SubsystemBase {
             );
         }   
 
-        swerveOdometry.update(imu.getDriverHeading(), getModulePositions());
+        swerveOdometry.update(imu.getHeading(), getModulePositions());
         
         logPeriodic();
     }
