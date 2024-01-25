@@ -28,8 +28,8 @@ public class Constants {
             COTSFalconSwerveConstants.SDSMK4(COTSFalconSwerveConstants.DriveGearRatios.SDSMK4_L3); // TODO: check ratio
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(21); // TODO: set me
-        public static final double WHEEL_BASE = Units.inchesToMeters(21);  // TODO: set me
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.504);
+        public static final double WHEEL_BASE = Units.inchesToMeters(20.504);
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -85,13 +85,13 @@ public class Constants {
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
-        public static final double MAX_SPEED = 3.23; //TODO: set new Kevin values
+        public static final double MAX_SPEED = Units.feetToMeters(13.73); // XXX: theoretical Kevin values
         /** Meters per Second squared */
-        public static final double MAX_ACCELERATION = 3.0; //TODO: set new Kevin values
+        public static final double MAX_ACCELERATION = Units.feetToMeters(24.16); // XXX: theoretical Kevin values
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 9.933; //TODO: set new Kevin values
+        public static final double MAX_ANGULAR_VELOCITY = Units.degreesToRadians(243.79) * 60; // XXX: theoretical Kevin values
         /** Radians per Second squared*/
-        public static final double MAX_ANGULAR_ACCELERATION = 4.0; //TODO: set new Kevin values
+        public static final double MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(428.99) * 60; //TODO: set new Kevin values
         
         /* Neutral (Idle) Modes */
         public static final IdleMode ANGLE_NEURTRAL_MODE = IdleMode.kCoast;
@@ -103,8 +103,8 @@ public class Constants {
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
             private Mod0() {}
-            public static final int DRIVE_MOTOR_ID = 1;
-            public static final int ANGLE_MOTOR_ID = 2;
+            public static final int DRIVE_MOTOR_ID = 2;
+            public static final int ANGLE_MOTOR_ID = 3;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -113,8 +113,8 @@ public class Constants {
         /* Front Right Module - Module 1 */
         public static final class Mod1 {
             private Mod1() {}
-            public static final int DRIVE_MOTOR_ID = 3;
-            public static final int ANGLE_MOTOR_ID = 4;
+            public static final int DRIVE_MOTOR_ID = 4;
+            public static final int ANGLE_MOTOR_ID = 5;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -123,8 +123,8 @@ public class Constants {
         /* Back Left Module - Module 2 */
         public static final class Mod2 {
             private Mod2() {}
-            public static final int DRIVE_MOTOR_ID = 5;
-            public static final int ANGLE_MOTOR_ID = 6;
+            public static final int DRIVE_MOTOR_ID = 6;
+            public static final int ANGLE_MOTOR_ID = 7;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -133,8 +133,8 @@ public class Constants {
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
             private Mod3() {}
-            public static final int DRIVE_MOTOR_ID = 7;
-            public static final int ANGLE_MOTOR_ID = 8;
+            public static final int DRIVE_MOTOR_ID = 8;
+            public static final int ANGLE_MOTOR_ID = 9;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);

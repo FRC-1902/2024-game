@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.ModuleStateOptimizer;
 import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil.Usage;
@@ -34,6 +35,7 @@ public class SwerveModule {
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.DRIVE_KS, Constants.Swerve.DRIVE_KV, Constants.Swerve.DRIVE_KA);
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
+    System.out.println(moduleNumber);
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;
 
@@ -41,10 +43,11 @@ public class SwerveModule {
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
     integratedAngleEncoder = angleMotor.getEncoder();
     angleController = angleMotor.getPIDController();
+    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+
     configAngleMotor();
 
     /* Helium Cancoder Config - PLUG INTO ANGLE MOTOR*/
-    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     configAngleEncoder();
 
     /* Drive Motor Config */

@@ -157,14 +157,14 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         // vision odometry // TODO: test me
-        Pose2d limelightEstimate = LimelightHelpers.getBotPose3d("").toPose2d();
+        // Pose2d limelightEstimate = LimelightHelpers.getBotPose3d("").toPose2d();
         // update odometry if vision position deviates by less than 1 meter from current estimate (as per documentation estimate)
-        if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) {
-            swerveOdometry.addVisionMeasurement(
-                LimelightHelpers.getBotPose3d("").toPose2d(), 
-                Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
-            );
-        }   
+        // if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) { XXX: maybe reimplement me
+        
+        // swerveOdometry.addVisionMeasurement(
+        //     LimelightHelpers.getBotPose3d("").toPose2d(), 
+        //     Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
+        // ); 
 
         swerveOdometry.update(imu.getHeading(), getModulePositions());
         
