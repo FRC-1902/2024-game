@@ -64,17 +64,17 @@ public class Constants {
         public static final double ANGLE_KD = chosenModule.angleKD;
         public static final double ANGLE_KF = chosenModule.angleKF;
 
-        /* Drive Motor PID Values */  // TODO: tune me
+        /* Drive Motor PID Values */  // TODO: tune me on real robot now
         public static final double DRIVE_KP = 0.25; 
         public static final double DRIVE_KI = 0.001;
         public static final double DRIVE_KD = 0.5;
         public static final double DRIVE_KF = 0.0;
 
-        /* Drive Motor Characterization Values */ // TODO: tune me
+        /* Drive Motor Characterization Values */ // TODO: tune me on real robot now
         // divide by 12 to convert from volts to 1 to -1 power range
-        public static final double DRIVE_KS = 0.126;
-        public static final double DRIVE_KV = 2.72;
-        public static final double DRIVE_KA = 0.28;
+        public static final double DRIVE_KS = 0.338492;
+        public static final double DRIVE_KV = 1.533248;
+        public static final double DRIVE_KA = 0.305292;
 
 		/* Drive Motor Conversion Factors */
 		public static final double DRIVE_CONVERSION_POSITION_FACTOR =
