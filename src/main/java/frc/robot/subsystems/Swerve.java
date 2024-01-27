@@ -9,8 +9,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.LimelightHelpers;
@@ -20,6 +23,8 @@ public class Swerve extends SubsystemBase {
     private SwerveDrivePoseEstimator swerveOdometry;
     private SwerveModule[] mSwerveMods;
     private IMU imu;
+
+    GenericEntry rot, xPos;
 
     public Swerve() {
         imu = IMU.getInstance();
@@ -45,6 +50,15 @@ public class Swerve extends SubsystemBase {
             getModulePositions(), 
             new Pose2d(0.0, 0.0, imu.getHeading()) // XXX: starting position on the field
         );
+
+        xPos = Shuffleboard.getTab("Swerve")
+            .add("xPos", 1)
+            .withWidget(BuiltInWidgets.kNumberSlider) // specify the widget here
+            .getEntry();
+        rot = Shuffleboard.getTab("Swerve")
+            .add("rot", 1)
+            .withWidget(BuiltInWidgets.kNumberSlider) // specify the widget here
+            .getEntry();
     }
 
     private void logPeriodic() {
@@ -179,5 +193,8 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(imu.getHeading(), getModulePositions());
         
         logPeriodic();
+
+        rot.setDouble(imu.getHeading().getDegrees());
+        xPos.setDouble(swerveOdometry.getEstimatedPosition().getX());
     }
 }

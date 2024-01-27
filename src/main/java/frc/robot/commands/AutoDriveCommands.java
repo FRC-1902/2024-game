@@ -3,6 +3,7 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -45,6 +46,12 @@ public class AutoDriveCommands {
         );
     }
 
+    /**
+     * Path to pose
+     * <b>NOTE: path rotation not fully enforced, only when in transit, you should probably rotate before this command</b>
+     * @param targetPose
+     * @return command to schedule to move to point
+     */
     public Command getPathFindingCommand(Pose2d targetPose) {
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
@@ -54,10 +61,12 @@ public class AutoDriveCommands {
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
         return AutoBuilder.pathfindToPose(
             targetPose,
-            constraints,
-            0.0, // Goal end velocity in meters/sec
-            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+            constraints
         );
+    }
+
+    public Command followPathCommand(PathPlannerPath path) {
+        return AutoBuilder.followPath(path);
     }
 
     public Command getExampleAutonomousCommand() {
