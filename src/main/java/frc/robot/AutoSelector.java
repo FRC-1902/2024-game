@@ -47,16 +47,14 @@ public class AutoSelector {
 
     private Command getTestAuto1() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(0)))),
-            robotContainer.autoDriveCommands.getPathFindingCommand(new Pose2d(3, 2, Rotation2d.fromDegrees(90)))
+            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(0))))
         );
     }
 
     private Command getTestAuto2() {
         return new SequentialCommandGroup(
             new InstantCommand(() -> swerveSubsystem.zeroGyro()),
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(0)))),
-            robotContainer.autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Example Path"))
+            robotContainer.autoDriveCommands.turnCommand(Rotation2d.fromDegrees(90))
         );
     }
 }

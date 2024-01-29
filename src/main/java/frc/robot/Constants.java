@@ -143,9 +143,14 @@ public class Constants {
 
     public static final class AutoConstants { 
         private AutoConstants() {}
-        // PID contstants
+        // PID contstants for pathplannerlib
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.15, 20, 0.1, 0.2); // TODO: tune me on real robot
         public static final PIDConstants ROTATION_PID = new PIDConstants(0.15, 0, 0, 10); // TODO: tune me on real robot
 
+        // turn in place command
+        public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me
+        public static final double TURN_KP = 15; // TODO: set me on real robot
+        public static final double TURN_KI = 0.01; // TODO: set me on real robot
+        public static final double TURN_KD = 0.0; // TODO: set me on real robot
     }
 }

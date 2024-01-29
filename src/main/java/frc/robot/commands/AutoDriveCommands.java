@@ -7,15 +7,20 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Swerve;
 
 public class AutoDriveCommands {
     private Swerve swerveSubsystem;
+    private IMU imu;
 
     public AutoDriveCommands(Swerve swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
@@ -44,6 +49,8 @@ public class AutoDriveCommands {
             },
             swerveSubsystem
         );
+
+        imu = IMU.getInstance();
     }
 
     /**
@@ -67,6 +74,59 @@ public class AutoDriveCommands {
 
     public Command followPathCommand(PathPlannerPath path) {
         return AutoBuilder.followPath(path);
+    }
+
+    public Command turnCommand(Rotation2d rot) {
+        return new TurnCommand(rot);
+    }
+
+    private class TurnCommand extends Command {
+        private PIDController turnPID;
+        private Rotation2d targetRot;
+
+        public TurnCommand(Rotation2d targetRot) {
+            this.targetRot = targetRot;
+
+            turnPID = new PIDController(Constants.AutoConstants.TURN_KP, Constants.AutoConstants.TURN_KI, Constants.AutoConstants.TURN_KD);
+            turnPID.setTolerance(Constants.AutoConstants.TURN_TOLERANCE.getRotations());
+            turnPID.enableContinuousInput(0, 1);
+            turnPID.setIZone(1);
+
+            addRequirements(swerveSubsystem);
+        }
+
+        @Override
+        public void initialize() {
+            turnPID.reset();
+            turnPID.setSetpoint(targetRot.getRotations());
+        }
+
+        @Override
+        public void execute() {
+            swerveSubsystem.drive(
+                new Translation2d(0, 0), 
+                turnPID.calculate(imu.getHeading().getRotations()), 
+                false, 
+                false
+            );
+        }
+
+        @Override
+        public boolean isFinished() {
+            return turnPID.atSetpoint();
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+            swerveSubsystem.drive(
+                new Translation2d(0, 0), 
+                0, 
+                false, 
+                false
+            );
+            System.out.println("At degree");
+
+        }
     }
 
     public Command getExampleAutonomousCommand() {
