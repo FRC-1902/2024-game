@@ -10,6 +10,7 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
 import frc.lib.util.CANSparkMaxUtil;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -34,7 +35,6 @@ public class SwerveModule {
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.DRIVE_KS, Constants.Swerve.DRIVE_KV, Constants.Swerve.DRIVE_KA);
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
-    System.out.println(moduleNumber);
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;
 
@@ -94,7 +94,7 @@ public class SwerveModule {
     else {
       driveController.setReference(
         desiredState.speedMetersPerSecond,
-        CANSparkMax.ControlType.kVelocity,
+        CANSparkBase.ControlType.kVelocity,
         0,
         feedforward.calculate(desiredState.speedMetersPerSecond));
     }
@@ -104,7 +104,7 @@ public class SwerveModule {
     //Prevent rotating module if speed is less then 1%. Prevents Jittering.
     Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.MAX_SPEED * 0.01)) ? lastAngle : desiredState.angle; 
     
-    angleController.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
+    angleController.setReference(angle.getDegrees(), CANSparkBase.ControlType.kPosition);
     lastAngle = angle;
   }
 

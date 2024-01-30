@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
@@ -40,8 +39,9 @@ public class Swerve extends SubsystemBase {
 
         /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
          * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+         * Commentented out, but may need to be re-added if issue comes up
          */
-        // Timer.delay(1.0); //XXX: may need to be re-added
+        // Timer.delay(1.0);
         // resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDrivePoseEstimator(
@@ -172,23 +172,23 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        // vision odometry // TODO: test me
-        // Pose2d limelightEstimate;
-        // DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
-        // 
-        // if (alliance == DriverStation.Alliance.Red) {
-        //     limelightEstimate = LimelightHelpers.getBotPose3d_wpiRed("").toPose2d();
-        // } else {
-        //     limelightEstimate = LimelightHelpers.getBotPose3d_wpiBlue("").toPose2d();
-        // }
+        // vision odometry
+       Pose2d limelightEstimate;
+       DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
+       
+       if (alliance == DriverStation.Alliance.Red) {
+           limelightEstimate = LimelightHelpers.getBotPose3d_wpiRed("").toPose2d();
+       } else {
+           limelightEstimate = LimelightHelpers.getBotPose3d_wpiBlue("").toPose2d();
+       }
 
         // update odometry if vision position deviates by less than 1 meter from current estimate (as per documentation estimate)
-        // if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) { XXX: maybe reimplement me
-        
-        // swerveOdometry.addVisionMeasurement(
-        //     LimelightHelpers.getBotPose3d("").toPose2d(), 
-        //     Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
-        // ); 
+        //if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) { XXX: maybe reimplement me
+    
+        swerveOdometry.addVisionMeasurement(
+            limelightEstimate, 
+            Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
+        ); 
 
         swerveOdometry.update(imu.getHeading(), getModulePositions());
         
