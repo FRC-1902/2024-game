@@ -17,10 +17,11 @@ public class IMU extends SubsystemBase{
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
     BNO055.vector_type_t.VECTOR_EULER, I2C.Port.kOnboard, BNO055.BNO055_ADDRESS_A);
 
-  private Rotation2d offset;
+  private Rotation2d offset, fieldOffset;
 
   private IMU() {
     offset = Rotation2d.fromDegrees(0);
+    fieldOffset = Rotation2d.fromDegrees(0);
     initializeLogger();
   }
 
@@ -46,6 +47,14 @@ public class IMU extends SubsystemBase{
   public Rotation2d getHeading() {
     double[] xyz = bno055Euler.getVector();
     return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(offset) : Rotation2d.fromDegrees(xyz[0]).plus(offset);
+  }
+
+  /**
+   * @return returns the imu's x scalar (heading/yaw) as a Rotation2d object for blue field origin
+   */
+  public Rotation2d getFieldHeading() {
+    double[] xyz = bno055Euler.getVector();
+    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(fieldOffset) : Rotation2d.fromDegrees(xyz[0]).plus(fieldOffset);
   }
 
   /**
@@ -78,6 +87,14 @@ public class IMU extends SubsystemBase{
    */
   public void setOffset(Rotation2d offset) {
     this.offset = offset;
+    Logger.recordOutput("IMU offset", offset.getDegrees());
+  }
+
+  /**
+   * @param offset sets imu x heading offset for blue field origin
+   */
+  public void setFieldOffset(Rotation2d offset) {
+    this.fieldOffset = fieldOffset;
     Logger.recordOutput("IMU offset", offset.getDegrees());
   }
 

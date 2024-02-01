@@ -13,7 +13,10 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -50,6 +53,15 @@ public class Robot extends LoggedRobot {
     imu = IMU.getInstance();
     robotContainer = new RobotContainer();
     autoSelector = new AutoSelector(robotContainer);
+
+    // changes field offset based on alliance, to keep rotation relative to blue origin
+    DriverStation.getAlliance().ifPresent(alliance -> {
+      if (alliance == Alliance.Red) {
+        imu.setFieldOffset(Rotation2d.fromDegrees(180));
+      } else {
+        imu.setFieldOffset(Rotation2d.fromDegrees(0));
+      }
+    });
   }
 
   @Override
