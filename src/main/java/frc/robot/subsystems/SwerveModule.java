@@ -10,6 +10,7 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
 import frc.lib.util.CANSparkMaxUtil;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -41,10 +42,11 @@ public class SwerveModule {
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
     integratedAngleEncoder = angleMotor.getEncoder();
     angleController = angleMotor.getPIDController();
+    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+
     configAngleMotor();
 
     /* Helium Cancoder Config - PLUG INTO ANGLE MOTOR*/
-    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     configAngleEncoder();
 
     /* Drive Motor Config */
@@ -92,7 +94,7 @@ public class SwerveModule {
     else {
       driveController.setReference(
         desiredState.speedMetersPerSecond,
-        CANSparkMax.ControlType.kVelocity,
+        CANSparkBase.ControlType.kVelocity,
         0,
         feedforward.calculate(desiredState.speedMetersPerSecond));
     }
@@ -102,7 +104,7 @@ public class SwerveModule {
     //Prevent rotating module if speed is less then 1%. Prevents Jittering.
     Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.MAX_SPEED * 0.01)) ? lastAngle : desiredState.angle; 
     
-    angleController.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
+    angleController.setReference(angle.getDegrees(), CANSparkBase.ControlType.kPosition);
     lastAngle = angle;
   }
 
@@ -128,7 +130,6 @@ public class SwerveModule {
   private void configAngleEncoder(){     
     angleEncoder.setAverageDepth(8); // bit sampling depth (must be a power of 2 up to 128 )
     angleEncoder.setPositionConversionFactor(1); // angle encoder is directly on the correct shaft
-    angleEncoder.setZeroOffset(angleOffset.getRotations());
   }
 
   private void configAngleMotor(){
@@ -142,6 +143,7 @@ public class SwerveModule {
     angleController.setI(Constants.Swerve.ANGLE_KI);
     angleController.setD(Constants.Swerve.ANGLE_KD);
     angleController.setFF(Constants.Swerve.ANGLE_KF);
+    angleController.setSmartMotionAllowedClosedLoopError(0.1, 0); // TODO: test me
     angleMotor.enableVoltageCompensation(Constants.Swerve.VOLTAGE_COMP);
     angleMotor.burnFlash();
     resetToAbsolute();

@@ -5,21 +5,27 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.AutoDriveCommands;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
 
-/** Add your docs here. */
+/*
+ * Instantiates all robot subsystems and button commands.
+*/
 public class RobotContainer {
 
-    Swerve swerveSubsystem;
+    public Swerve swerveSubsystem;
     Controllers controllers;
+    public AutoDriveCommands autoDriveCommands;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
         controllers = Controllers.getInstance();
+
+        autoDriveCommands = new AutoDriveCommands(swerveSubsystem);
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
 

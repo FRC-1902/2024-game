@@ -3,6 +3,9 @@ package frc.lib.util;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
+/*
+ * Take a more optimal path to the desired module state by potentially reversing the wheel direction.
+ */
 public class ModuleStateOptimizer {
   private ModuleStateOptimizer() {}
 
