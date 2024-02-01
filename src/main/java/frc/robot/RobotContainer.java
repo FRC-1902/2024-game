@@ -12,7 +12,9 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
 
-/** Add your docs here. */
+/*
+ * Instantiates all robot subsystems and button commands.
+*/
 public class RobotContainer {
 
     public Swerve swerveSubsystem;

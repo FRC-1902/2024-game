@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Swerve;
 
+/*
+ * Publishes a network table chooser to smart dashboard to select the autonomous command. 
+ * Compose the auto routines here to put in the selector.
+ */
 public class AutoSelector {
     private LoggedDashboardChooser<Command> autoChooser;
     RobotContainer robotContainer;

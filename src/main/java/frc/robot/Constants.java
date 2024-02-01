@@ -84,15 +84,15 @@ public class Constants {
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
-        public static final double MAX_SPEED = Units.feetToMeters(13.73); // XXX: theoretical Kevin values
+        public static final double MAX_SPEED = Units.feetToMeters(13.73); // TODO: theoretical Kevin values
         /** Meters per Second squared */
-        public static final double MAX_ACCELERATION = Units.feetToMeters(24.16); // XXX: theoretical Kevin values
+        public static final double MAX_ACCELERATION = Units.feetToMeters(24.16); // TODO: theoretical Kevin values
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Units.degreesToRadians(243.79) * 60; // XXX: theoretical Kevin values
+        public static final double MAX_ANGULAR_VELOCITY = Units.degreesToRadians(243.79) * 60; // TODO: theoretical Kevin values
         /** Radians per Second squared*/
-        public static final double MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(428.99) * 60; //TODO: set new Kevin values
+        public static final double MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(428.99) * 60; // TODO: set new Kevin values
         
-        /* Neutral (Idle) Modes */
+        /* Neurtral (Idle) Modes */
         public static final IdleMode ANGLE_NEURTRAL_MODE = IdleMode.kCoast;
         public static final IdleMode DRIVE_NEUTRAL_MODE = IdleMode.kBrake;
 
