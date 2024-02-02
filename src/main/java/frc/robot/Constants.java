@@ -55,6 +55,12 @@ public class Constants {
         public static final double ARM_LENGTH = 0.0; // TODO: set me
         public static final double WRIST_LENGTH = 0.0; // TODO: set me
         public static final Rotation2d WRIST_OFFSET = new Rotation2d(0.0); // TODO: set me
+
+        // cubic curve magic numbers to relate pivot angle and distance from speaker // TODO: set me with new shooter data
+        public static final double SHOOTER_MAGIC_A = 0.449;
+        public static final double SHOOTER_MAGIC_B = -5.988;
+        public static final double SHOOTER_MAGIC_C = 27.423;
+        public static final double SHOOTER_MAGIC_D = 86.871;
     }
 
     public static final class Swerve {
