@@ -39,8 +39,8 @@ public class Constants {
         public static final double PIVOT_KF = 0.0; // gravity compensation feedforward
 
         // Pivot Positions
-        public static final Rotation2d PIVOT_MIN_ROTATION = new Rotation2d(0.0); // TODO: set me
-        public static final Rotation2d PIVOT_MAX_ROTATION = new Rotation2d(0.0); // TODO: set me
+        public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
+        public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
         public static final double PIVOT_DEGREES_TOLERANCE = 0.0; // TODO: set me
         public static final double PIVOT_ANGLE_OFFSET = 0.0; // TODO: set me
 
@@ -51,19 +51,25 @@ public class Constants {
         public static final int PIVOT_CURRENT_LIMIT = 20; // XXX: maybe?
 
         // Arm lengths 
-        public static final double PIVOT_LENGTH = 0.0; // TODO: set me
-        public static final double ARM_LENGTH = 0.0; // TODO: set me
-        public static final double WRIST_LENGTH = 0.0; // TODO: set me
-        public static final Rotation2d WRIST_OFFSET = new Rotation2d(0.0); // TODO: set me
+        public static final double PIVOT_LENGTH = Units.inchesToMeters(21.07);
+        public static final double ARM_LENGTH = Units.inchesToMeters(20.82);
+        public static final double WRIST_LENGTH = Units.inchesToMeters(12.06);
+        public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
 
         // cubic curve magic numbers to relate pivot angle and distance from speaker // TODO: set me with new shooter data
-        public static final double SHOOTER_MAGIC_A = 0.449;
-        public static final double SHOOTER_MAGIC_B = -5.988;
-        public static final double SHOOTER_MAGIC_C = 27.423;
-        public static final double SHOOTER_MAGIC_D = 86.871;
+        public static final double SHOOTER_MAGIC_A = 0.516;
+        public static final double SHOOTER_MAGIC_B = -6.909;
+        public static final double SHOOTER_MAGIC_C = 31.836;
+        public static final double SHOOTER_MAGIC_D = 78.469;
 
         // max distance to shoot into the speaker in meters
         public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance
+
+        // position to line up pivot with things on the field (0 is straight down)
+        public static final Rotation2d AMP_PIVOT_LINEUP = Rotation2d.fromDegrees(177.27);
+        public static final Rotation2d HP_PIVOT_LINEUP = Rotation2d.fromDegrees(144.39);
+        public static final Rotation2d STOW_PIVOT_LINEUP = Rotation2d.fromDegrees(65.0);
+        public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
     }
 
     public static final class Swerve {

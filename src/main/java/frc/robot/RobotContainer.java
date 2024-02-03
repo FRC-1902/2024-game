@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.Controllers;
+import frc.robot.subsystems.Controllers.Button;
+import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Controllers.Button;
-import frc.robot.subsystems.Controllers.ControllerName;
 
 /*
  * Instantiates all robot subsystems and button commands.
@@ -40,17 +41,29 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
 
         configureButtonBindings();
-    }
+    }   
 
+
+    /**
+     * See <a href="https://docs.google.com/spreadsheets/d/1wMP4YpzC1QxRhvHqJ1PFmJ7Ox0EeoEuYVAkCYsLmFI0/edit?usp=sharing">Button Map</a> for button bindings
+     */
     private void configureButtonBindings() {
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.1)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
+        controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
+            .onTrue(new ShootCommand(shooterSubsystem));
+        
+        controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.1)
+            .onTrue(new SetPivotCommand(Constants.Arm.HP_PIVOT_LINEUP, pivotSubsystem))
+            .onFalse(new SetPivotCommand(Constants.Arm.STOW_PIVOT_LINEUP, pivotSubsystem));
+
+        controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.1)
+            .onTrue(new SetPivotCommand(Constants.Arm.AMP_PIVOT_LINEUP, pivotSubsystem))
+            .onFalse(new SetPivotCommand(Constants.Arm.STOW_PIVOT_LINEUP, pivotSubsystem));
+
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.1)
             .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
             .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
-
-        controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
-            .onTrue(new ShootCommand(shooterSubsystem));
     }
 }
