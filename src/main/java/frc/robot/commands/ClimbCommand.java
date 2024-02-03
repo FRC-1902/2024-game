@@ -6,16 +6,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Climber.Direction;
+import frc.robot.subsystems.Controllers.ControllerName;
 
 public class ClimbCommand extends Command {
-  Direction targetDirection; 
   Climber climberSubsystem;
+  Controllers controllers;
 
   /** Creates a new Climb. */
-  public ClimbCommand(Direction targetDirection, Climber climberSubsystem) {
-    this.targetDirection = targetDirection; 
+  public ClimbCommand(Climber climberSubsystem) {
     this.climberSubsystem = climberSubsystem; 
+    controllers = Controllers.getInstance();
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climberSubsystem);
@@ -23,13 +25,18 @@ public class ClimbCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    climberSubsystem.setDirection(targetDirection);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double dpadAngle = controllers.getDPAD(ControllerName.MANIP);
+    if (dpadAngle <= 45 || dpadAngle >= 315) {
+      climberSubsystem.setDirection(Direction.UP);
+    } else if (dpadAngle >= 135 && dpadAngle <= 225) {
+      climberSubsystem.setDirection(Direction.DOWN);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -38,6 +45,6 @@ public class ClimbCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climberSubsystem.atSetpoint();
+    return false;
   }
 }

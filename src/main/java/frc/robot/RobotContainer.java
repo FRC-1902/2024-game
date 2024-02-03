@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Climber;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Swerve;
@@ -15,13 +17,16 @@ import frc.robot.subsystems.Controllers.ControllerName;
 public class RobotContainer {
 
     Swerve swerveSubsystem;
+    Climber climberSubsystem;
     Controllers controllers;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
+        climberSubsystem = new Climber();
         controllers = Controllers.getInstance();
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
+        climberSubsystem.setDefaultCommand(new ClimbCommand(climberSubsystem));
 
         configureButtonBindings();
     }
