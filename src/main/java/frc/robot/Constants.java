@@ -30,7 +30,6 @@ public class Constants {
 
         // Sensor ports
         public static final int PIVOT_ENCODER_PORT = 0; // TODO: set me
-        // TODO: add index sensor
 
         // PID Values // TODO: tune me
         public static final double PIVOT_KP = 0.0;
@@ -70,6 +69,11 @@ public class Constants {
         public static final Rotation2d HP_PIVOT_LINEUP = Rotation2d.fromDegrees(144.39);
         public static final Rotation2d STOW_PIVOT_LINEUP = Rotation2d.fromDegrees(65.0);
         public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
+
+        // mm min and max distance to trigger the TOF piece sensor 
+        public static final double PIECE_SENSOR_MIN_DIST = 11.0;
+        public static final double PIECE_SENSOR_MAX_DIST = 38.0;
+
     }
 
     public static final class Swerve {

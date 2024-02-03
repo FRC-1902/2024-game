@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.Rev2mDistanceSensor;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,6 +18,7 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 public class Shooter extends SubsystemBase {
   private CANSparkMax leftShooterMotor, rightShooterMotor;
   private CANSparkMax indexMotor;
+  private Rev2mDistanceSensor pieceSensor;
 
   /** Creates a new Shooter. */ 
   public Shooter() {
@@ -36,7 +38,8 @@ public class Shooter extends SubsystemBase {
     indexMotor.setSmartCurrentLimit(Constants.Arm.INDEX_CURRENT_LIMIT);
     indexMotor.setIdleMode(IdleMode.kBrake); // XXX: maybe?
 
-    // TODO: add index sensor
+    pieceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kMXP);
+    pieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
   }
 
   /**
@@ -62,9 +65,8 @@ public class Shooter extends SubsystemBase {
     indexMotor.set(power);
   }
 
-  // TODO: write this
   public boolean pieceSensorActive() {
-    return false;
+    return pieceSensor.getRange() <= Constants.Arm.PIECE_SENSOR_MIN_DIST && pieceSensor.getRange() >= Constants.Arm.PIECE_SENSOR_MAX_DIST;
   }
 
   @Override
