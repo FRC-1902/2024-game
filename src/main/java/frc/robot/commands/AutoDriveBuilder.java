@@ -17,11 +17,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Swerve;
 
-public class AutoDriveCommands {
+public class AutoDriveBuilder {
     private Swerve swerveSubsystem;
     private IMU imu;
 
-    public AutoDriveCommands(Swerve swerveSubsystem) {
+    public AutoDriveBuilder(Swerve swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
 
         AutoBuilder.configureHolonomic(
@@ -71,14 +71,14 @@ public class AutoDriveCommands {
         );
     }
 
-    public Command followPathCommand(PathPlannerPath path) {
+    public Command getFollowPathCommand(PathPlannerPath path) {
         return AutoBuilder.followPath(path);
     }
 
     /**
      * @return command to turn to a specific field-centric angle relative to the blue origin
      */
-    public Command turnCommand(Rotation2d rot) {
+    public Command getTurnCommand(Rotation2d rot) {
         return new TurnCommand(rot);
     }
 

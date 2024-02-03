@@ -50,7 +50,7 @@ public class AutoSelector {
     private Command getTestAuto2() {
         return new SequentialCommandGroup(
             new InstantCommand(() -> swerveSubsystem.zeroGyro()),
-            robotContainer.autoDriveCommands.turnCommand(Rotation2d.fromDegrees(90))
+            robotContainer.autoDriveBuilder.getTurnCommand(Rotation2d.fromDegrees(90))
         );
     }
 }

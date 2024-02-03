@@ -61,6 +61,9 @@ public class Constants {
         public static final double SHOOTER_MAGIC_B = -5.988;
         public static final double SHOOTER_MAGIC_C = 27.423;
         public static final double SHOOTER_MAGIC_D = 86.871;
+
+        // max distance to shoot into the speaker in meters
+        public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance
     }
 
     public static final class Swerve {

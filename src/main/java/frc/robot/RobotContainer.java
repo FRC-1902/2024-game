@@ -5,8 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.AutoDriveCommands;
+import frc.robot.commands.AutoDriveBuilder;
+import frc.robot.commands.AutoShootBuilder;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -23,7 +25,8 @@ public class RobotContainer {
     Shooter shooterSubsystem;
     Pivot pivotSubsystem;
     Controllers controllers;
-    public AutoDriveCommands autoDriveCommands;
+    public AutoDriveBuilder autoDriveBuilder;
+    AutoShootBuilder autoShootBuilder;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -31,7 +34,8 @@ public class RobotContainer {
         pivotSubsystem = new Pivot();
         controllers = Controllers.getInstance();
 
-        autoDriveCommands = new AutoDriveCommands(swerveSubsystem);
+        autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
+        autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
 
@@ -41,5 +45,12 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.1)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
+
+        controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.1)
+            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+
+        controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
+            .onTrue(new ShootCommand(shooterSubsystem));
     }
 }

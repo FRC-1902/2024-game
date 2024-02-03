@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
@@ -17,26 +18,41 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
-public class AutoShootCommand{
+public class AutoShootBuilder{
   Shooter shooterSubsystem;
   Pivot pivotSubsystem;
   Swerve swerveSubsystem;
   IMU imu;
-  AutoDriveCommands autoDriveCommands;
+  AutoDriveBuilder autoDriveCommands;
+
+  Command shotSequence;
 
   /**
    * Immediately schedules routine to shoot automatically into the speaker
    */
-  public void startAutoShotSequence() {
-    new SequentialCommandGroup(
-      autoDriveCommands.turnCommand(calculateFaceAngle()),
-      new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
+  public void startShotSequence() {
+    if (getVecDistance(calculateTargetVector()) > Constants.Arm.SHOOTER_MAX_DISTANCE) {
+      return;
+    }
+    
+    shotSequence = new SequentialCommandGroup(
+      new ParallelCommandGroup(
+        autoDriveCommands.getTurnCommand(calculateFaceAngle()),
+        new SetPivotCommand(calculateShotAngle(), pivotSubsystem)
+      ),
       new ShootCommand(shooterSubsystem)
-    ).schedule();
+    );
+    shotSequence.schedule();
+  }
+
+  public void cancelShotSequence() {
+    if (shotSequence != null && !shotSequence.isFinished()) {
+      shotSequence.cancel();
+    }
   }
 
   /** Creates a new AutoShootCommand. */
-  public AutoShootCommand(AutoDriveCommands autoDriveCommands, Shooter shooterSubsystem, Pivot pivotSubsystem, Swerve swerveSubsystem) {
+  public AutoShootBuilder(AutoDriveBuilder autoDriveCommands, Shooter shooterSubsystem, Pivot pivotSubsystem, Swerve swerveSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.pivotSubsystem = pivotSubsystem;
     this.swerveSubsystem = swerveSubsystem;
@@ -52,7 +68,7 @@ public class AutoShootCommand{
 
   private Rotation2d calculateShotAngle() {
     Translation2d targetVector = calculateTargetVector();
-    double distance = Math.sqrt(Math.pow(targetVector.getX(), 2) + Math.pow(targetVector.getY(), 2));
+    double distance = getVecDistance(targetVector);
 
     // magic precalculated numbers!!!!! based on how shooter distance relates to the target angle in degrees
     return Rotation2d.fromDegrees(
@@ -61,6 +77,10 @@ public class AutoShootCommand{
       Constants.Arm.SHOOTER_MAGIC_C * distance + 
       Constants.Arm.SHOOTER_MAGIC_C
     );
+  }
+
+  private double getVecDistance(Translation2d vec) {
+    return Math.sqrt(Math.pow(vec.getX(), 2) + Math.pow(vec.getY(), 2));
   }
 
   /**
