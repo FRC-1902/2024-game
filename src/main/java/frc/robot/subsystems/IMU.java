@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.BNO055;
 import frc.robot.Constants;
@@ -14,7 +15,7 @@ public class IMU extends SubsystemBase{
 
   // only velocity or acceleration can be used at once, can't use both at the same time
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
-    BNO055.vector_type_t.VECTOR_EULER);
+    BNO055.vector_type_t.VECTOR_EULER, I2C.Port.kOnboard, BNO055.BNO055_ADDRESS_A);
 
   private Rotation2d offset;
 

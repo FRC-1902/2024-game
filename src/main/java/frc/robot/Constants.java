@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,11 +40,11 @@ public class Constants {
         public static final boolean GYRO_INVERT = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule =  
-            COTSFalconSwerveConstants.SDSMK4(COTSFalconSwerveConstants.DriveGearRatios.SDSMK4_L3); // TODO: check ratio
+            COTSFalconSwerveConstants.SDSMK4(COTSFalconSwerveConstants.DriveGearRatios.SDSMK4_L3);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(21); // TODO: set me
-        public static final double WHEEL_BASE = Units.inchesToMeters(21);  // TODO: set me
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.504);
+        public static final double WHEEL_BASE = Units.inchesToMeters(20.504);
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -53,7 +54,7 @@ public class Constants {
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
-
+        
         /* Module Gear Ratios */
         public static final double DRIVE_GEAR_RATIO = chosenModule.driveGearRatio;
         public static final double ANGLE_GEAR_RATIO = chosenModule.angleGearRatio;
@@ -70,7 +71,7 @@ public class Constants {
 
         /* Swerve Current Limiting */
         public static final int ANGLE_CURRENT_LIMIT = 30;
-        public static final int DRIVE_CURRENT_LIMIT = 40;
+        public static final int DRIVE_CURRENT_LIMIT = 45;
 
         /* Angle Motor PID Values */
         public static final double ANGLE_KP = chosenModule.angleKP;
@@ -78,17 +79,17 @@ public class Constants {
         public static final double ANGLE_KD = chosenModule.angleKD;
         public static final double ANGLE_KF = chosenModule.angleKF;
 
-        /* Drive Motor PID Values */  // TODO: tune me
+        /* Drive Motor PID Values */  // TODO: tune me on real robot now
         public static final double DRIVE_KP = 0.25; 
         public static final double DRIVE_KI = 0.001;
         public static final double DRIVE_KD = 0.5;
         public static final double DRIVE_KF = 0.0;
 
-        /* Drive Motor Characterization Values */ // TODO: tune me
+        /* Drive Motor Characterization Values */ // TODO: tune me on real robot now
         // divide by 12 to convert from volts to 1 to -1 power range
-        public static final double DRIVE_KS = 0.126;
-        public static final double DRIVE_KV = 2.72;
-        public static final double DRIVE_KA = 0.28;
+        public static final double DRIVE_KS = 0.338492;
+        public static final double DRIVE_KV = 1.533248;
+        public static final double DRIVE_KA = 0.305292;
 
 		/* Drive Motor Conversion Factors */
 		public static final double DRIVE_CONVERSION_POSITION_FACTOR =
@@ -99,11 +100,15 @@ public class Constants {
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
-        public static final double MAX_SPEED = 3.23; //TODO: set new Kevin values
+        public static final double MAX_SPEED = Units.feetToMeters(13.73); // TODO: theoretical Kevin values
+        /** Meters per Second squared */
+        public static final double MAX_ACCELERATION = Units.feetToMeters(24.16); // TODO: theoretical Kevin values
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 9.933; //TODO: set new Kevin values
-
-        /* Neutral (Idle) Modes */
+        public static final double MAX_ANGULAR_VELOCITY = Units.degreesToRadians(243.79) * 60; // TODO: theoretical Kevin values
+        /** Radians per Second squared*/
+        public static final double MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(428.99) * 60; // TODO: set new Kevin values
+        
+        /* Neurtral (Idle) Modes */
         public static final IdleMode ANGLE_NEURTRAL_MODE = IdleMode.kCoast;
         public static final IdleMode DRIVE_NEUTRAL_MODE = IdleMode.kBrake;
 
@@ -113,8 +118,8 @@ public class Constants {
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
             private Mod0() {}
-            public static final int DRIVE_MOTOR_ID = 1;
-            public static final int ANGLE_MOTOR_ID = 2;
+            public static final int DRIVE_MOTOR_ID = 2;
+            public static final int ANGLE_MOTOR_ID = 3;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -123,8 +128,8 @@ public class Constants {
         /* Front Right Module - Module 1 */
         public static final class Mod1 {
             private Mod1() {}
-            public static final int DRIVE_MOTOR_ID = 3;
-            public static final int ANGLE_MOTOR_ID = 4;
+            public static final int DRIVE_MOTOR_ID = 4;
+            public static final int ANGLE_MOTOR_ID = 5;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -133,8 +138,8 @@ public class Constants {
         /* Back Left Module - Module 2 */
         public static final class Mod2 {
             private Mod2() {}
-            public static final int DRIVE_MOTOR_ID = 5;
-            public static final int ANGLE_MOTOR_ID = 6;
+            public static final int DRIVE_MOTOR_ID = 6;
+            public static final int ANGLE_MOTOR_ID = 7;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -143,8 +148,8 @@ public class Constants {
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
             private Mod3() {}
-            public static final int DRIVE_MOTOR_ID = 7;
-            public static final int ANGLE_MOTOR_ID = 8;
+            public static final int DRIVE_MOTOR_ID = 8;
+            public static final int ANGLE_MOTOR_ID = 9;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -153,6 +158,14 @@ public class Constants {
 
     public static final class AutoConstants { 
         private AutoConstants() {}
-        // TODO: make me
+        // PID contstants for pathplannerlib
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.15, 20, 0.1, 0.2); // TODO: tune me on real robot
+        public static final PIDConstants ROTATION_PID = new PIDConstants(0.15, 0, 0, 10); // TODO: tune me on real robot
+
+        // turn in place command
+        public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me
+        public static final double TURN_KP = 15; // TODO: set me on real robot
+        public static final double TURN_KI = 0.01; // TODO: set me on real robot
+        public static final double TURN_KD = 0.0; // TODO: set me on real robot
     }
 }
