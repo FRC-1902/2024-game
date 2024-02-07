@@ -29,6 +29,8 @@ public class ShootCommand extends Command {
     if (!shootSubsystem.pieceSensorActive()) {
       earlyExit = true;
       return;
+    } else {
+      earlyExit = false;
     }
     shootSubsystem.setFlywheel(1, 0);
   }
