@@ -9,15 +9,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommand extends Command {
-  Shooter shootSubsystem;
+  Shooter shooterSubsystem;
   boolean earlyExit;
   Double shotTime;
 
   /** Creates a new ShootCommand. */
   public ShootCommand(Shooter shooterSubsystem) {
-    this.shootSubsystem = shooterSubsystem;
+    this.shooterSubsystem = shooterSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shootSubsystem);
+    addRequirements(shooterSubsystem);
 
     shotTime = null;
     earlyExit = false;
@@ -26,13 +26,13 @@ public class ShootCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!shootSubsystem.pieceSensorActive()) {
+    if (!shooterSubsystem.pieceSensorActive()) {
       earlyExit = true;
       return;
     } else {
       earlyExit = false;
     }
-    shootSubsystem.setFlywheel(1, 0);
+    shooterSubsystem.setFlywheel(1, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,12 +43,12 @@ public class ShootCommand extends Command {
     }
 
     // shoot once revved up
-    if (shootSubsystem.atRPM()) {
-      shootSubsystem.setIndexer(1);
+    if (shooterSubsystem.atRPM()) {
+      shooterSubsystem.setIndexer(1);
     }
 
     // get ready to exit when piece is no longer detected
-    if (!shootSubsystem.pieceSensorActive()) {
+    if (!shooterSubsystem.pieceSensorActive()) {
       shotTime = Timer.getFPGATimestamp();
     }
   }
@@ -56,8 +56,8 @@ public class ShootCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shootSubsystem.setFlywheel(0, 0);
-    shootSubsystem.setIndexer(0);
+    shooterSubsystem.setFlywheel(0, 0);
+    shooterSubsystem.setIndexer(0);
   }
 
   // Returns true when the command should end.

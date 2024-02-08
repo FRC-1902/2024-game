@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -38,7 +39,8 @@ public class AutoShootBuilder{
     shotSequence = new SequentialCommandGroup(
       new ParallelCommandGroup(
         autoDriveCommands.getTurnCommand(calculateFaceAngle()),
-        new SetPivotCommand(calculateShotAngle(), pivotSubsystem)
+        new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
+        new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
       ),
       new ShootCommand(shooterSubsystem)
     );
@@ -47,6 +49,7 @@ public class AutoShootBuilder{
 
   public void cancelShotSequence() {
     if (shotSequence != null && !shotSequence.isFinished()) {
+      shooterSubsystem.setFlywheel(0, 0);
       shotSequence.cancel();
     }
   }
