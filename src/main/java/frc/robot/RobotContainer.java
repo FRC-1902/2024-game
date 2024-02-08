@@ -65,5 +65,12 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.1)
             .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
             .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+
+
+        // XXX: tmp stuffs. remove later
+
+        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.1)
+            .onTrue(new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0.0)))
+            .onFalse(new InstantCommand(() -> shooterSubsystem.setFlywheel(0.0, 0.0)));
     }
 }

@@ -24,8 +24,8 @@ public class Constants {
         // CAN IDs
         public static final int PIVOT_MOTOR_1_ID = 10;
         public static final int PIVOT_MOTOR_2_ID = 11;
-        public static final int LEFT_SHOOTER_MOTOR_ID = 12; 
-        public static final int RIGHT_SHOOTER_MOTOR_ID = 13;
+        public static final int TOP_SHOOTER_MOTOR_ID = 12; 
+        public static final int BOTTOM_SHOOTER_MOTOR_ID = 13;
         public static final int INDEXER_MOTOR_ID = 14;
 
         // Sensor ports
@@ -55,11 +55,11 @@ public class Constants {
         public static final double WRIST_LENGTH = Units.inchesToMeters(12.06);
         public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
 
-        // cubic curve magic numbers to relate pivot angle and distance from speaker // TODO: set me with new shooter data
-        public static final double SHOOTER_MAGIC_A = 0.516;
-        public static final double SHOOTER_MAGIC_B = -6.909;
-        public static final double SHOOTER_MAGIC_C = 31.836;
-        public static final double SHOOTER_MAGIC_D = 78.469;
+        // cubic curve magic numbers to relate pivot angle and distance from speaker
+        public static final double SHOOTER_MAGIC_A = 0.514;
+        public static final double SHOOTER_MAGIC_B = -6.887;
+        public static final double SHOOTER_MAGIC_C = 31.587;
+        public static final double SHOOTER_MAGIC_D = 78.565;
 
         // max distance to shoot into the speaker in meters
         public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance

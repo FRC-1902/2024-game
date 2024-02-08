@@ -29,7 +29,7 @@ public class Pivot extends SubsystemBase {
   /** Creates a new Pivot. */
   public Pivot() {
     pivotMotor1 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
-    pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
+    pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_2_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.MINIMAL);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor2, Usage.MINIMAL);
     pivotMotor1.setSmartCurrentLimit(Constants.Arm.PIVOT_CURRENT_LIMIT);
@@ -131,10 +131,10 @@ public class Pivot extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (checkPivotWatchdog()) {
-      pivotMotor1.set(0);
-      return;
-    }
+    // if (checkPivotWatchdog()) {
+    //   pivotMotor1.set(0);
+    //   return;
+    // }
 
     // TODO: TEST BEFORE MOVING ARM!!!!!!!!!!!!!
     pivotMotor1.set(
