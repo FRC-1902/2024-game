@@ -31,6 +31,7 @@ public class IMU extends SubsystemBase{
     Logger.recordOutput("IMU pitch", getPitch());
     Logger.recordOutput("IMU turn", getTurns());
     Logger.recordOutput("IMU offset", offset.getDegrees());
+    Logger.recordOutput("IMU field offset", fieldOffset.getDegrees());
   }
 
   @Override
@@ -93,9 +94,9 @@ public class IMU extends SubsystemBase{
   /**
    * @param offset sets imu x heading offset for blue field origin
    */
-  public void setFieldOffset(Rotation2d offset) {
+  public void setFieldOffset(Rotation2d fieldOffset) {
     this.fieldOffset = fieldOffset;
-    Logger.recordOutput("IMU offset", offset.getDegrees());
+    Logger.recordOutput("IMU field offset", fieldOffset.getDegrees());
   }
 
   /**

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
@@ -22,6 +23,8 @@ public class Swerve extends SubsystemBase {
     private SwerveDrivePoseEstimator swerveOdometry;
     private SwerveModule[] mSwerveMods;
     private IMU imu;
+
+    private Field2d field;
 
     public Swerve() {
         imu = IMU.getInstance();
@@ -48,6 +51,8 @@ public class Swerve extends SubsystemBase {
             getModulePositions(), 
             new Pose2d(0.0, 0.0, imu.getHeading()) // XXX: starting position on the field
         );
+
+        field = new Field2d();
     }
 
     private void logPeriodic() {
@@ -173,6 +178,7 @@ public class Swerve extends SubsystemBase {
         ); 
 
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
+        field.setRobotPose(swerveOdometry.getEstimatedPosition());
         
         logPeriodic();
     }
