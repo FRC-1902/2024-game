@@ -2,13 +2,14 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoDriveCommands;
 import frc.robot.subsystems.Swerve;
 
 /*
@@ -19,16 +20,20 @@ public class AutoSelector {
     private LoggedDashboardChooser<Command> autoChooser;
     RobotContainer robotContainer;
     Swerve swerveSubsystem;
+    AutoDriveCommands autoDriveCommands;
     
     public AutoSelector(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
         autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
-        autoChooser.addOption("TestAuto1Path", getTestAuto1());
-        autoChooser.addOption("TestAuto2Path", getTestAuto2());
+        autoChooser.addOption("Amp", getAmpAuto());
+        autoChooser.addOption("3 Piece", getThreePieceAuto());
+        autoChooser.addOption("One Piece!", getItsRealAuto());
+
 
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
         swerveSubsystem = robotContainer.swerveSubsystem;
+        autoDriveCommands = robotContainer.autoDriveCommands;
     }
 
     /**
@@ -41,16 +46,35 @@ public class AutoSelector {
 
     // Auto definitions
 
-    private Command getTestAuto1() {
+    
+
+    private SequentialCommandGroup getAmpAuto() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(0))))
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Amp 1")),
+            // TODO: add shot to amp
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
+            // TODO: add shot to speaker
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Amp 3"))
         );
     }
 
-    private Command getTestAuto2() {
+    private SequentialCommandGroup getThreePieceAuto(){
         return new SequentialCommandGroup(
-            new InstantCommand(() -> swerveSubsystem.zeroGyro()),
-            robotContainer.autoDriveCommands.turnCommand(Rotation2d.fromDegrees(90))
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 1")),
+            // TODO: shot to speaker 
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 2")),
+            // TODO: shot to speaker 
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 3")),
+            // TODO: shot to speaker
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 4"))
         );
+    }
+
+    private SequentialCommandGroup getItsRealAuto(){
+        return new SequentialCommandGroup(
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
+            // TODO: shot to speaker 
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("One Piece 2"))
+        ); 
     }
 }
