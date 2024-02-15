@@ -34,7 +34,7 @@ public class AutoSelector {
 
         alternativeSelector = new LoggedDashboardChooser<>("Alternative Auto Chooser");
         alternativeSelector.addDefaultOption("Regular Side Endpoint", new StringWrapper("a"));
-        alternativeSelector.addDefaultOption("Under Stage Endpoint", new StringWrapper("b"));
+        alternativeSelector.addOption("Under Stage Endpoint", new StringWrapper("b"));
 
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
         swerveSubsystem = robotContainer.swerveSubsystem;
