@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.895011337562543,
-        "y": 6.997125524268105
+        "x": 2.9007173676963096,
+        "y": 6.97
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.944533865644764,
-        "y": 5.982345058198883
+        "x": 3.4007173676963096,
+        "y": 6.97
       },
       "isLocked": false,
-      "linkedName": "3Piece1"
+      "linkedName": "Amp3"
     },
     {
       "anchor": {
-        "x": 2.9,
-        "y": 5.5440346398212785
+        "x": 5.395280185676909,
+        "y": 4.148532012380341
       },
       "prevControl": {
-        "x": 4.576133082901165,
-        "y": 5.608592687013661
+        "x": 4.895280185676909,
+        "y": 4.148532012380341
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "3Piece2"
+      "linkedName": "CenterEndpoint"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": 90.0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -49,7 +43,10 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "3 Piece",
-  "previewStartingState": null,
+  "folder": "Amp",
+  "previewStartingState": {
+    "rotation": -160.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

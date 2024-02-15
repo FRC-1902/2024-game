@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9007173676963096,
-        "y": 6.97
+        "x": 2.6025192283458933,
+        "y": 4.27804795676184
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4007173676963096,
-        "y": 6.97
+        "x": 1.4883660973315294,
+        "y": 3.541900121136535
       },
       "isLocked": false,
-      "linkedName": "Amp3"
+      "linkedName": "3Piece3"
     },
     {
       "anchor": {
-        "x": 5.406840299590198,
-        "y": 7.668950049854126
+        "x": 5.420356213513709,
+        "y": 1.776147726111951
       },
       "prevControl": {
-        "x": 4.906840299590198,
-        "y": 7.668950049854126
+        "x": 4.148240813753124,
+        "y": 1.685997815892697
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
-    "rotateFast": true
+    "rotation": 180.0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp",
+  "folder": "3 Piece",
   "previewStartingState": {
-    "rotation": -160.0,
+    "rotation": 140.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

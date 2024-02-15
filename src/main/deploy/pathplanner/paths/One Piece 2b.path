@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.142566984624066,
-        "y": 2.5026186712590732
+        "x": 4.2341923446333025,
+        "y": 2.9719976421084917
       },
       "isLocked": false,
       "linkedName": "OnePiece1"
     },
     {
       "anchor": {
-        "x": 5.35,
-        "y": 0.6
+        "x": 5.395280185676909,
+        "y": 4.148532012380341
       },
       "prevControl": {
-        "x": 3.7605307280348352,
-        "y": 1.4160582670991722
+        "x": 4.339506353818479,
+        "y": 3.2372223789952574
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterEndpoint"
     }
   ],
   "rotationTargets": [],
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": 180.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "One Piece",
