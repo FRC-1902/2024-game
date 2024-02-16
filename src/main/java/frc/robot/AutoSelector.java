@@ -18,7 +18,7 @@ import frc.robot.subsystems.Swerve;
  */
 public class AutoSelector {
     private LoggedDashboardChooser<Command> autoChooser;
-    private LoggedDashboardChooser<Command> alternativeSelector;
+    private LoggedDashboardChooser<String> alternativeSelector;
 
     RobotContainer robotContainer;
     Swerve swerveSubsystem;
@@ -33,28 +33,12 @@ public class AutoSelector {
         autoChooser.addOption("One Piece!", getItsRealAuto());
 
         alternativeSelector = new LoggedDashboardChooser<>("Alternative Auto Chooser");
-        alternativeSelector.addDefaultOption("Regular Side Endpoint", new StringWrapper("a"));
-        alternativeSelector.addOption("Under Stage Endpoint", new StringWrapper("b"));
+        alternativeSelector.addDefaultOption("Regular Side Endpoint", "a");
+        alternativeSelector.addOption("Under Stage Endpoint", "b");
 
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
         swerveSubsystem = robotContainer.swerveSubsystem;
         autoDriveCommands = robotContainer.autoDriveCommands;
-    }
-
-    /**
-     * Bypass Dashboard Chooser to be able to return a string instead of a command
-     */
-    private class StringWrapper extends Command {
-        String s;
-
-        public StringWrapper(String s) {
-            this.s = s;
-        }
-
-        @Override
-        public String toString() {
-            return s;
-        }
     }
 
     /**
@@ -76,7 +60,7 @@ public class AutoSelector {
             // TODO: add shot to amp
             autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
             // TODO: add shot to speaker
-            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Amp 3" + alternativeSelector.get().toString()))
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("Amp 3" + alternativeSelector.get()))
         );
     }
 
@@ -91,7 +75,7 @@ public class AutoSelector {
             // TODO: shot to speaker 
             autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 3")),
             // TODO: shot to speaker
-            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 4" + alternativeSelector.get().toString()))
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("3 Piece 4" + alternativeSelector.get()))
         );
     }
 
@@ -102,7 +86,7 @@ public class AutoSelector {
         return new SequentialCommandGroup(
             autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
             // TODO: shot to speaker 
-            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("One Piece 2" + alternativeSelector.get().toString()))
+            autoDriveCommands.followPathCommand(PathPlannerPath.fromPathFile("One Piece 2" + alternativeSelector.get()))
         ); 
     }
 }
