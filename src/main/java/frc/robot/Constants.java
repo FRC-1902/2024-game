@@ -4,7 +4,10 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSFalconSwerveConstants;
@@ -138,6 +141,11 @@ public class Constants {
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
         }
+
+        // TODO: set camera offsets
+        /* Photonvision camera transforms */
+        public static final Transform3d LEFT_CAMERA_OFFSET = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
+        public static final Transform3d RIGHT_CAMERA_OFFSET = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
     }
 
     public static final class AutoConstants { 
