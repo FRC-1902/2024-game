@@ -9,6 +9,7 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -23,11 +24,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Pivot extends SubsystemBase {
   private CANSparkMax pivotMotor1;
   private CANSparkMax pivotMotor2;
-  private DutyCycleEncoder pivotEncoder;
+  private SparkAbsoluteEncoder pivotEncoder;
   private PIDController pivotPID;
 
   /** Creates a new Pivot. */
-  public Pivot() {
+  public Pivot(Shooter shooterSubsystem) {
     pivotMotor1 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
     pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_2_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.MINIMAL);
@@ -39,8 +40,8 @@ public class Pivot extends SubsystemBase {
 
     pivotMotor2.follow(pivotMotor1);
 
-    pivotEncoder = new DutyCycleEncoder(Constants.Arm.PIVOT_ENCODER_PORT);
-    pivotEncoder.setPositionOffset(Constants.Arm.PIVOT_ANGLE_OFFSET); // TODO: set me
+    pivotEncoder = shooterSubsystem.getPivotEncoder();
+    pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET); // TODO: set me
 
     pivotPID = new PIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD);
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
@@ -67,7 +68,7 @@ public class Pivot extends SubsystemBase {
    * @return The angle of the arm.
    */
   public Rotation2d getAngle() {
-    return Rotation2d.fromRotations(pivotEncoder.getAbsolutePosition());
+    return Rotation2d.fromRotations(pivotEncoder.getPosition());
   }
 
   /**
@@ -138,8 +139,8 @@ public class Pivot extends SubsystemBase {
 
     // TODO: TEST BEFORE MOVING ARM!!!!!!!!!!!!!
     pivotMotor1.set(
-      pivotPID.calculate(pivotEncoder.getAbsolutePosition()) 
-      + Constants.Arm.PIVOT_KF * Math.sin(pivotEncoder.getAbsolutePosition() * Math.PI * 2)
+      pivotPID.calculate(getAngle().getRotations()) 
+      + Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians())
     );
   }
 }

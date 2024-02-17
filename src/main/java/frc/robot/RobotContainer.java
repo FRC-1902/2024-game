@@ -32,7 +32,7 @@ public class RobotContainer {
     public RobotContainer() {
         swerveSubsystem = new Swerve();
         shooterSubsystem = new Shooter();
-        pivotSubsystem = new Pivot();
+        pivotSubsystem = new Pivot(shooterSubsystem);
         controllers = Controllers.getInstance();
 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);

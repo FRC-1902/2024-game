@@ -8,10 +8,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.lib.util.CANSparkMaxUtil;
@@ -48,6 +48,10 @@ public class Shooter extends SubsystemBase {
     pieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
 
     configureShuffleboardData();
+  }
+
+  public SparkAbsoluteEncoder getPivotEncoder() {  
+    return topShooterMotor.getAbsoluteEncoder();
   }
 
   /**
