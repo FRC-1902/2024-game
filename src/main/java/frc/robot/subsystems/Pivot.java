@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pivot extends SubsystemBase {
@@ -138,9 +139,10 @@ public class Pivot extends SubsystemBase {
     // }
 
     // TODO: TEST BEFORE MOVING ARM!!!!!!!!!!!!!
-    pivotMotor1.set(
-      pivotPID.calculate(getAngle().getRotations()) 
-      + Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians())
-    );
+    // pivotMotor1.set(
+    //   pivotPID.calculate(getAngle().getRotations()) 
+    //   + Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians())
+    // );
+    SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
   }
 }

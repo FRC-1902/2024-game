@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
     indexMotor = new CANSparkMax(Constants.Arm.INDEXER_MOTOR_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(indexMotor, Usage.MINIMAL);
     indexMotor.setSmartCurrentLimit(Constants.Arm.INDEX_CURRENT_LIMIT);
-    indexMotor.setIdleMode(IdleMode.kBrake); // XXX: maybe?
+    indexMotor.setIdleMode(IdleMode.kCoast); // XXX: maybe?
 
     pieceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kMXP);
     pieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
