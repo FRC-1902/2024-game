@@ -12,6 +12,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.lib.util.CANSparkMaxUtil;
@@ -89,10 +90,13 @@ public class Shooter extends SubsystemBase {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
     shooterTab.addDouble("RPM", this::getRPM);
     shooterTab.addBoolean("Piece Sensor Active", this::pieceSensorActive);
+    shooterTab.addDouble("2m dts", pieceSensor::getRange);
+    shooterTab.addBoolean("Is valid dts", pieceSensor::isRangeValid);
   }
 
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
   }
 }

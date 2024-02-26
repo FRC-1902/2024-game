@@ -42,7 +42,8 @@ public class Pivot extends SubsystemBase {
     pivotMotor2.follow(pivotMotor1);
 
     pivotEncoder = shooterSubsystem.getPivotEncoder();
-    pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET); // TODO: set me
+    pivotEncoder.setInverted(true);
+    pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations()); // TODO: set me
 
     pivotPID = new PIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD);
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
