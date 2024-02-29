@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.commands.DriveCommand;
@@ -51,26 +53,35 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.1)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
+        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.1)
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.18), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
-            .onTrue(new ShootCommand(shooterSubsystem));
-        
-        controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.1)
-            .onTrue(new SetPivotCommand(Constants.Arm.HP_PIVOT_LINEUP, pivotSubsystem))
-            .onFalse(new SetPivotCommand(Constants.Arm.STOW_PIVOT_LINEUP, pivotSubsystem));
+            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(180), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+        // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
+        //     .onTrue(new ShootCommand(shooterSubsystem));
+        // 
+        // controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.1)
+        //     .onTrue(new SetPivotCommand(Constants.Arm.HP_PIVOT_LINEUP, pivotSubsystem))
+        //     .onFalse(new SetPivotCommand(Constants.Arm.STOW_PIVOT_LINEUP, pivotSubsystem));
 
-        controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.1)
-            .onTrue(new SetPivotCommand(Constants.Arm.AMP_PIVOT_LINEUP, pivotSubsystem))
-            .onFalse(new SetPivotCommand(Constants.Arm.STOW_PIVOT_LINEUP, pivotSubsystem));
-
-        controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.1)
-            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
-            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        // controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.1)
+        //     .onTrue(new SetPivotCommand(Constants.Arm.AMP_PIVOT_LINEUP, pivotSubsystem))
+        //     .onFalse(new SetPivotCommand(Constants.Arm.STOW_PIVOT_LINEUP, pivotSubsystem));
+// 
+        // controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.1)
+        //     .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+        //     .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
 
 
         // XXX: tmp stuffs. remove later
 
-        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.1)
-            .onTrue(new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0.0)))
-            .onFalse(new InstantCommand(() -> shooterSubsystem.setFlywheel(0.0, 0.0)));
+        // controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.1)
+        //     .onTrue(new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0.0)))
+        //     .onFalse(new InstantCommand(() -> shooterSubsystem.setFlywheel(0.0, 0.0)));
+    }
+
+    public void resetPIDs() {
+        pivotSubsystem.resetPIDs();
     }
 }

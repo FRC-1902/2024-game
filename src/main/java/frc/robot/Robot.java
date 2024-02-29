@@ -29,6 +29,7 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
+  private static Robot instance;
 
   @Override
   public void robotInit() {
@@ -62,6 +63,8 @@ public class Robot extends LoggedRobot {
         imu.setFieldOffset(Rotation2d.fromDegrees(0));
       }
     });
+
+    instance = this;
   }
 
   @Override
@@ -80,6 +83,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    robotContainer.resetPIDs();
+
     autonomousCommand = autoSelector.getSelectedCommand();
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -97,7 +102,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    robotContainer.resetPIDs();
+  }
 
   @Override
   public void teleopPeriodic() {}
@@ -106,11 +113,20 @@ public class Robot extends LoggedRobot {
   public void teleopExit() {}
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+    robotContainer.resetPIDs();
+  }
 
   @Override
   public void testPeriodic() {}
 
   @Override
   public void testExit() {}
+
+  public static Robot getInstance() {
+    if (instance == null) {
+      throw new IllegalStateException("Robot instance not initialized");
+    }
+    return instance;
+  }
 }

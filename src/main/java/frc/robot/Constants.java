@@ -29,22 +29,22 @@ public class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
         // PID Values // TODO: tune me
-        public static final double PIVOT_KP = 0.0;
-        public static final double PIVOT_KI = 0.0;
-        public static final double PIVOT_KD = 0.0;
-        public static final double PIVOT_KF = 0.0; // gravity compensation feedforward
+        public static final double PIVOT_KP = 1.2;
+        public static final double PIVOT_KI = 0.03;
+        public static final double PIVOT_KD = 0.05;
+        public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
-        public static final double PIVOT_DEGREES_TOLERANCE = 0.0; // TODO: set me
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.544); // TODO: set me
+        public static final double PIVOT_DEGREES_TOLERANCE = 0.004; // TODO: set me
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.540); // TODO: set me
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
         public static final int SHOOTER_CURRENT_LIMIT = 40;
-        public static final int INDEX_CURRENT_LIMIT = 20; // XXX: maybe?
-        public static final int PIVOT_CURRENT_LIMIT = 20; // XXX: maybe?
+        public static final int INDEX_CURRENT_LIMIT = 60; // XXX: maybe?
+        public static final int PIVOT_CURRENT_LIMIT = 60; // XXX: maybe?
 
         // Arm lengths 
         public static final double PIVOT_LENGTH = Units.inchesToMeters(21.07);
@@ -68,9 +68,10 @@ public class Constants {
         public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
 
         // mm min and max distance to trigger the TOF piece sensor 
-        public static final double PIECE_SENSOR_MIN_DIST = 11.0;
-        public static final double PIECE_SENSOR_MAX_DIST = 38.0;
-
+        // public static final double PIECE_SENSOR_MIN_DIST = 11.0;
+        // public static final double PIECE_SENSOR_MAX_DIST = 38.0;
+        public static final int PIECE_SENSOR_PORT = 0;
+        public static final double PIECE_SENSOR_THRESHOLD_VOLTAGE = 2.0;
     }
 
     public static final class Swerve {

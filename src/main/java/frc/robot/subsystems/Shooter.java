@@ -6,13 +6,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import com.revrobotics.SparkAbsoluteEncoder;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.lib.util.CANSparkMaxUtil;
@@ -22,7 +23,7 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 public class Shooter extends SubsystemBase {
   private CANSparkMax topShooterMotor, bottomShooterMotor;
   private CANSparkMax indexMotor;
-  private Rev2mDistanceSensor pieceSensor;
+  private AnalogInput pieceSensor;
 
   /** Creates a new Shooter. */ 
   public Shooter() {
@@ -45,8 +46,8 @@ public class Shooter extends SubsystemBase {
     indexMotor.setSmartCurrentLimit(Constants.Arm.INDEX_CURRENT_LIMIT);
     indexMotor.setIdleMode(IdleMode.kCoast); // XXX: maybe?
 
-    pieceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kMXP);
-    pieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
+    pieceSensor = new AnalogInput(Constants.Arm.PIECE_SENSOR_PORT);
+    // pieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
 
     configureShuffleboardData();
   }
@@ -83,15 +84,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean pieceSensorActive() {
-    return pieceSensor.getRange() <= Constants.Arm.PIECE_SENSOR_MIN_DIST && pieceSensor.getRange() >= Constants.Arm.PIECE_SENSOR_MAX_DIST;
+    return pieceSensor.getVoltage() > Constants.Arm.PIECE_SENSOR_THRESHOLD_VOLTAGE;
+    // return pieceSensor.getRange() <= Constants.Arm.PIECE_SENSOR_MIN_DIST && pieceSensor.getRange() >= Constants.Arm.PIECE_SENSOR_MAX_DIST;
   }
 
   private void configureShuffleboardData() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
     shooterTab.addDouble("RPM", this::getRPM);
     shooterTab.addBoolean("Piece Sensor Active", this::pieceSensorActive);
-    shooterTab.addDouble("2m dts", pieceSensor::getRange);
-    shooterTab.addBoolean("Is valid dts", pieceSensor::isRangeValid);
+    shooterTab.addDouble("2m dts", pieceSensor::getVoltage);
+    // shooterTab.addBoolean("Is valid dts", pieceSensor::isRangeValid);
   }
 
   @Override

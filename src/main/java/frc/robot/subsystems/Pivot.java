@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
+import frc.robot.Robot;
+
+import java.util.logging.LogManager;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
@@ -32,14 +35,15 @@ public class Pivot extends SubsystemBase {
   public Pivot(Shooter shooterSubsystem) {
     pivotMotor1 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
     pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_2_ID, MotorType.kBrushless);
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.MINIMAL);
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor2, Usage.MINIMAL);
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.ALL); // XXX:
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor2, Usage.ALL); // XXX:
     pivotMotor1.setSmartCurrentLimit(Constants.Arm.PIVOT_CURRENT_LIMIT);
     pivotMotor2.setSmartCurrentLimit(Constants.Arm.PIVOT_CURRENT_LIMIT);
     pivotMotor1.setIdleMode(IdleMode.kBrake);
     pivotMotor2.setIdleMode(IdleMode.kBrake);
 
-    pivotMotor2.follow(pivotMotor1);
+    pivotMotor1.setInverted(false);
+    pivotMotor2.setInverted(true);
 
     pivotEncoder = shooterSubsystem.getPivotEncoder();
     pivotEncoder.setInverted(true);
@@ -47,15 +51,18 @@ public class Pivot extends SubsystemBase {
 
     pivotPID = new PIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD);
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
+    pivotPID.setIntegratorRange(-0.15, 0.15);
   }
 
   /**
    * Sets the angle of the arm.
    * Returns early if the arm is out of bounds specified in constants
+   * 
    * @param angle The angle to set the arm to.
    */
   public void setAngle(Rotation2d angle) {
-    if (angle.getRotations() > Constants.Arm.PIVOT_MAX_ROTATION.getRotations() || angle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getRotations()) {
+    if (angle.getRotations() > Constants.Arm.PIVOT_MAX_ROTATION.getRotations()
+        || angle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getRotations()) {
       return;
     }
     pivotPID.setSetpoint(angle.getRotations());
@@ -67,6 +74,7 @@ public class Pivot extends SubsystemBase {
 
   /**
    * Gets the angle of the arm, 0 is directly down into the pivot
+   * 
    * @return The angle of the arm.
    */
   public Rotation2d getAngle() {
@@ -75,19 +83,20 @@ public class Pivot extends SubsystemBase {
 
   /**
    * Gets the angle of the shooter, where 0 is horizontal to the ground
+   * 
    * @param pivotAngle The angle of the pivot.
    * @return Pose2d of The angle of the shooter & location relative to pivot
    */
   public static Rotation2d getShooterTheta(Rotation2d pivotAngle) {
     Translation2d armTranslation = new Translation2d(
-      -Constants.Arm.ARM_LENGTH * Math.sin(pivotAngle.getRadians()), 
-      -Constants.Arm.ARM_LENGTH * Math.cos(pivotAngle.getRadians())
-    );
+        -Constants.Arm.ARM_LENGTH * Math.sin(pivotAngle.getRadians()),
+        -Constants.Arm.ARM_LENGTH * Math.cos(pivotAngle.getRadians()));
 
     Translation2d wristTranslation = new Translation2d(
-      armTranslation.getX() + Constants.Arm.WRIST_LENGTH * Math.cos(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()),
-      armTranslation.getY() + Constants.Arm.WRIST_LENGTH * Math.sin(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians())
-    );
+        armTranslation.getX() + Constants.Arm.WRIST_LENGTH
+            * Math.cos(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()),
+        armTranslation.getY() + Constants.Arm.WRIST_LENGTH
+            * Math.sin(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()));
 
     // Stop divide by 0 errors if pointed straight up or down
     if (armTranslation.getX() == wristTranslation.getX()) {
@@ -99,12 +108,12 @@ public class Pivot extends SubsystemBase {
     }
 
     return Rotation2d.fromRadians(Math.atan(
-      (armTranslation.getY() - wristTranslation.getY()) / (armTranslation.getX() - wristTranslation.getX())
-    ));
+        (armTranslation.getY() - wristTranslation.getY()) / (armTranslation.getX() - wristTranslation.getX())));
   }
 
   /**
    * Gets the angle of the shooter, where 0 is horizontal to the ground
+   * 
    * @return Pose2d of The angle of the shooter & location relative to pivot
    */
   public Rotation2d getCurrentShooterTheta() {
@@ -120,11 +129,13 @@ public class Pivot extends SubsystemBase {
 
   /**
    * Pivot watchdog, checking if the pivot is out of bounds
+   * 
    * @return isOutOfBounds
    */
   private boolean checkPivotWatchdog() {
     Rotation2d currentAngle = getAngle();
-    if (currentAngle.getDegrees() > Constants.Arm.PIVOT_MAX_ROTATION.getDegrees() || currentAngle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getDegrees()) {
+    if (currentAngle.getDegrees() > Constants.Arm.PIVOT_MAX_ROTATION.getDegrees()
+        || currentAngle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getDegrees()) {
       DataLogManager.log("[Pivot Watchdog] Arm out of bounds!");
       return true;
     } else {
@@ -132,18 +143,39 @@ public class Pivot extends SubsystemBase {
     }
   }
 
+  public void resetPIDs() {
+    pivotPID.reset();
+  }
+
   @Override
   public void periodic() {
-    // if (checkPivotWatchdog()) {
-    //   pivotMotor1.set(0);
-    //   return;
-    // }
+    double setPower = pivotPID.calculate(getAngle().getRotations());
+    double feedFoward = Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians());
 
-    // TODO: TEST BEFORE MOVING ARM!!!!!!!!!!!!!
-    // pivotMotor1.set(
-    //   pivotPID.calculate(getAngle().getRotations()) 
-    //   + Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians())
-    // );
+
+    if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
+      setPower += feedFoward;
+    } else {
+      setPower += feedFoward / 1.4;
+    }
+
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
+    SmartDashboard.putNumber("Pivot Power", setPower);
+
+    SmartDashboard.putNumber("PivotRawSet1", pivotMotor1.get());
+    SmartDashboard.putNumber("PivotRawSet2", pivotMotor2.get());
+    SmartDashboard.putNumber("PivotOutCurrent1", pivotMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("PivotOutCurrent2", pivotMotor2.getOutputCurrent());
+
+    // if the pivot is doing bad thigns or not enabled
+    if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {
+      pivotMotor1.set(0);
+      pivotMotor2.set(0);
+
+      return;
+    }
+
+    pivotMotor1.set(setPower);
+    pivotMotor2.set(setPower);
   }
 }
