@@ -54,7 +54,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.18), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.20), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(180), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));

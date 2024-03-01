@@ -168,8 +168,8 @@ public class Constants {
         /* Front Right Module - Module 1 */
         public static final class Mod1 {
             private Mod1() {}
-            public static final int DRIVE_MOTOR_ID = 9;
-            public static final int ANGLE_MOTOR_ID = 10;
+            public static final int DRIVE_MOTOR_ID = 10;
+            public static final int ANGLE_MOTOR_ID = 9;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
