@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.commands.AutoDriveBuilder;
@@ -12,6 +13,7 @@ import frc.robot.commands.AutoShootBuilder;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.TmpIndexCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
@@ -31,6 +33,8 @@ public class RobotContainer {
     public AutoDriveBuilder autoDriveBuilder;
     AutoShootBuilder autoShootBuilder;
 
+    Command tmpIndexCommand;
+
     public RobotContainer() {
         swerveSubsystem = new Swerve();
         shooterSubsystem = new Shooter();
@@ -40,7 +44,10 @@ public class RobotContainer {
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
+        tmpIndexCommand = new TmpIndexCommand(shooterSubsystem);
+
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
+        new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
 
         configureButtonBindings();
     }   
@@ -54,10 +61,14 @@ public class RobotContainer {
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.20), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+            .onTrue(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(180), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+        controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)
+            .onTrue(tmpIndexCommand)
+            .onFalse(new InstantCommand(tmpIndexCommand::cancel));
         // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
         //     .onTrue(new ShootCommand(shooterSubsystem));
         // 

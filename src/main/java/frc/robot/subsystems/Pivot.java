@@ -73,8 +73,8 @@ public class Pivot extends SubsystemBase {
     pivotPID.setGoal(angle.getRotations());
   }
 
-  public void setToDefaultAngle() {
-    setAngle(new Rotation2d(0)); // TODO: set me
+  public Rotation2d getDefaultAngle() {
+    return Rotation2d.fromRotations(0.2);
   }
 
   /**
@@ -165,7 +165,7 @@ public class Pivot extends SubsystemBase {
     if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
       setPower += feedFoward;
     } else {
-      setPower += feedFoward / 1.4;
+      setPower += feedFoward / 1.3;
     }
 
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
@@ -175,6 +175,9 @@ public class Pivot extends SubsystemBase {
     if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {
       pivotMotor1.set(0);
       pivotMotor2.set(0);
+
+      // integrator safety when stuck out of bounds
+      resetPIDs();
 
       return;
     }
