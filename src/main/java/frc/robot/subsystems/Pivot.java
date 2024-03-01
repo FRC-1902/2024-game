@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -32,6 +33,8 @@ public class Pivot extends SubsystemBase {
   private CANSparkMax pivotMotor2;
   private SparkAbsoluteEncoder pivotEncoder;
   private ProfiledPIDController pivotPID;
+
+  private double watchdogPrintTime;
 
   /** Creates a new Pivot. */
   public Pivot(Shooter shooterSubsystem) {
@@ -138,7 +141,11 @@ public class Pivot extends SubsystemBase {
     Rotation2d currentAngle = getAngle();
     if (currentAngle.getDegrees() > Constants.Arm.PIVOT_MAX_ROTATION.getDegrees()
         || currentAngle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getDegrees()) {
-      DataLogManager.log("[Pivot Watchdog] Arm out of bounds!");
+      // reduce spamming of warning messages
+      if (Timer.getFPGATimestamp() - watchdogPrintTime > 1) {
+        DataLogManager.log("[Pivot Watchdog] Arm out of bounds!");
+        watchdogPrintTime = Timer.getFPGATimestamp();
+      }
       return true;
     } else {
       return false;
@@ -154,7 +161,7 @@ public class Pivot extends SubsystemBase {
     double setPower = pivotPID.calculate(getAngle().getRotations());
     double feedFoward = Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians());
 
-
+    // reducing feedforward power on down strokes 
     if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
       setPower += feedFoward;
     } else {
@@ -164,12 +171,7 @@ public class Pivot extends SubsystemBase {
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Power", setPower);
 
-    SmartDashboard.putNumber("PivotRawSet1", pivotMotor1.get());
-    SmartDashboard.putNumber("PivotRawSet2", pivotMotor2.get());
-    SmartDashboard.putNumber("PivotOutCurrent1", pivotMotor1.getOutputCurrent());
-    SmartDashboard.putNumber("PivotOutCurrent2", pivotMotor2.getOutputCurrent());
-
-    // if the pivot is doing bad thigns or not enabled
+    // if the pivot is doing bad thigns or robot not enabled
     if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {
       pivotMotor1.set(0);
       pivotMotor2.set(0);
