@@ -17,9 +17,11 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,7 +31,7 @@ public class Pivot extends SubsystemBase {
   private CANSparkMax pivotMotor1;
   private CANSparkMax pivotMotor2;
   private SparkAbsoluteEncoder pivotEncoder;
-  private PIDController pivotPID;
+  private ProfiledPIDController pivotPID;
 
   /** Creates a new Pivot. */
   public Pivot(Shooter shooterSubsystem) {
@@ -47,9 +49,9 @@ public class Pivot extends SubsystemBase {
 
     pivotEncoder = shooterSubsystem.getPivotEncoder();
     pivotEncoder.setInverted(true);
-    pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations()); // TODO: set me
+    pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new PIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD);
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(1, 1.5));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
     pivotPID.setIntegratorRange(-0.15, 0.15);
   }
@@ -65,7 +67,7 @@ public class Pivot extends SubsystemBase {
         || angle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getRotations()) {
       return;
     }
-    pivotPID.setSetpoint(angle.getRotations());
+    pivotPID.setGoal(angle.getRotations());
   }
 
   public void setToDefaultAngle() {
@@ -144,7 +146,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void resetPIDs() {
-    pivotPID.reset();
+    pivotPID.reset(getAngle().getRotations());
   }
 
   @Override

@@ -50,13 +50,13 @@ public class RobotContainer {
      * See <a href="https://docs.google.com/spreadsheets/d/1wMP4YpzC1QxRhvHqJ1PFmJ7Ox0EeoEuYVAkCYsLmFI0/edit?usp=sharing">Button Map</a> for button bindings
      */
     private void configureButtonBindings() {
-        controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.1)
+        controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
-        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.1)
+        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.18), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-        controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
+        controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(180), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
         // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
         //     .onTrue(new ShootCommand(shooterSubsystem));
