@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +33,8 @@ public class AutoShootBuilder{
    * Immediately schedules routine to shoot automatically into the speaker
    */
   public void startShotSequence() {
+    DataLogManager.log(String.format("Starting Shot Sequence at X: %.3f Y: %.3f", swerveSubsystem.getPose().getX(), swerveSubsystem.getPose().getY()));
+    
     if (getVecDistance(calculateTargetVector()) > Constants.Arm.SHOOTER_MAX_DISTANCE) {
       return;
     }
@@ -52,6 +55,10 @@ public class AutoShootBuilder{
       shooterSubsystem.setFlywheel(0, 0);
       shotSequence.cancel();
     }
+  }
+
+  public boolean isShotDone() {
+    return shotSequence.isFinished();
   }
 
   /** Creates a new AutoShootCommand. */

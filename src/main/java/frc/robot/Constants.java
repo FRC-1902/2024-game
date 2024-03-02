@@ -29,16 +29,16 @@ public class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
         // PID Values // TODO: tune me
-        public static final double PIVOT_KP = 1.4;
-        public static final double PIVOT_KI = 0.08;
-        public static final double PIVOT_KD = 0.12;
-        public static final double PIVOT_KF = 0.085; // gravity compensation feedforward
+        public static final double PIVOT_KP = 1.8;
+        public static final double PIVOT_KI = 0.15;  //.35
+        public static final double PIVOT_KD = 0.015;
+        public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
-        public static final double PIVOT_DEGREES_TOLERANCE = 0.004; // TODO: set me
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.540); // TODO: set me
+        public static final double PIVOT_DEGREES_TOLERANCE = 0.008;
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.540);
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
@@ -53,10 +53,10 @@ public class Constants {
         public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
 
         // cubic curve magic numbers to relate pivot angle and distance from speaker
-        public static final double SHOOTER_MAGIC_A = 0.514;
-        public static final double SHOOTER_MAGIC_B = -6.887;
-        public static final double SHOOTER_MAGIC_C = 31.587;
-        public static final double SHOOTER_MAGIC_D = 78.565;
+        public static final double SHOOTER_MAGIC_A = 0.532;
+        public static final double SHOOTER_MAGIC_B = -7.106;
+        public static final double SHOOTER_MAGIC_C = 32.601;
+        public static final double SHOOTER_MAGIC_D = 135.591;
 
         // max distance to shoot into the speaker in meters
         public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance

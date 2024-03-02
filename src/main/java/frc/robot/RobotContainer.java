@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
@@ -33,7 +34,7 @@ public class RobotContainer {
     Pivot pivotSubsystem;
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
-    AutoShootBuilder autoShootBuilder;
+    public AutoShootBuilder autoShootBuilder;
 
     Command intakeCommand, shootCommand, outtakeCommand;
 
@@ -75,9 +76,13 @@ public class RobotContainer {
         /* -------- manip code -------- */
         
         // speaker lineup
+        // controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
+        //     .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+        //     .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        // test lineup
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
-            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
-            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.325), pivotSubsystem))
+            .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
         // amp lineup
         controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.05)
@@ -99,6 +104,12 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .onTrue(outtakeCommand)
             .onFalse(new InstantCommand(outtakeCommand::cancel));
+        
+        controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05) // TODO: Debug me, java lang exception
+            .onTrue(new SequentialCommandGroup(
+                new SetPivotCommand(Rotation2d.fromDegrees(111), pivotSubsystem),
+                shootCommand
+            ));
         
         // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
         //     .onTrue(new ShootCommand(shooterSubsystem));

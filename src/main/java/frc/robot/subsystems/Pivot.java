@@ -56,7 +56,7 @@ public class Pivot extends SubsystemBase {
     pivotEncoder.setInverted(true);
     pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(1, 1.5));
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(2, 2.5));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
     pivotPID.setIntegratorRange(-0.15, 0.15);
   }
@@ -72,11 +72,12 @@ public class Pivot extends SubsystemBase {
         || angle.getDegrees() < Constants.Arm.PIVOT_MIN_ROTATION.getRotations()) {
       return;
     }
+    resetPIDs();
     pivotPID.setGoal(angle.getRotations());
   }
 
   public Rotation2d getDefaultAngle() {
-    return Rotation2d.fromRotations(0.2);
+    return Rotation2d.fromRotations(0.21);
   }
 
   /**
@@ -155,10 +156,11 @@ public class Pivot extends SubsystemBase {
   }
 
   private boolean friendlyPivotWarning() {
-    if (Math.abs(pivotMotor1.getOutputCurrent() - pivotMotor2.getOutputCurrent()) > 10) {
-      DataLogManager.log("CURRENT DIFF BAD!");
-      return true;
-    }
+    // TODO: FIX ME
+    // if (Math.abs(pivotMotor1.getOutputCurrent() - pivotMotor2.getOutputCurrent()) > 10) {
+    //   DataLogManager.log("CURRENT DIFF BAD!");
+    //   return true;
+    // }
     return false;
   }
 
@@ -175,7 +177,7 @@ public class Pivot extends SubsystemBase {
     if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
       setPower += feedFoward;
     } else {
-      setPower += feedFoward / 1.2;
+      setPower += feedFoward / 1.7;
     }
 
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
