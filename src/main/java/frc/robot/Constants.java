@@ -127,9 +127,9 @@ public class Constants {
 
         /* Drive Motor Characterization Values */ // TODO: tune me on real robot now
         // divide by 12 to convert from volts to 1 to -1 power range
-        public static final double DRIVE_KS = 0.338492;
-        public static final double DRIVE_KV = 1.533248;
-        public static final double DRIVE_KA = 0.305292;
+        public static final double DRIVE_KS = 0.501892;
+        public static final double DRIVE_KV = 1.874719;
+        public static final double DRIVE_KA = 0.296733;
 
 		/* Drive Motor Conversion Factors */
 		public static final double DRIVE_CONVERSION_POSITION_FACTOR =
