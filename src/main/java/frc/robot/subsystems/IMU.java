@@ -5,6 +5,8 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.BNO055;
 import frc.robot.Constants;
@@ -26,6 +28,8 @@ public class IMU extends SubsystemBase{
   }
 
   private void initializeLogger() {
+    ShuffleboardTab shooterTab = Shuffleboard.getTab("IMU");
+    shooterTab.addNumber("Heading", () -> getHeading().getDegrees());
     Logger.recordOutput("IMU heading", getHeading().getDegrees());
     Logger.recordOutput("IMU roll", getRoll());
     Logger.recordOutput("IMU pitch", getPitch());

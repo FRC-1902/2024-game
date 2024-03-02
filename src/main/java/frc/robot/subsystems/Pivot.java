@@ -38,7 +38,9 @@ public class Pivot extends SubsystemBase {
 
   /** Creates a new Pivot. */
   public Pivot(Shooter shooterSubsystem) {
+    // R pivot
     pivotMotor1 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
+    // L pivot
     pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_2_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.ALL); // XXX:
     CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor2, Usage.ALL); // XXX:
@@ -152,6 +154,14 @@ public class Pivot extends SubsystemBase {
     }
   }
 
+  private boolean friendlyPivotWarning() {
+    if (Math.abs(pivotMotor1.getOutputCurrent() - pivotMotor2.getOutputCurrent()) > 10) {
+      DataLogManager.log("CURRENT DIFF BAD!");
+      return true;
+    }
+    return false;
+  }
+
   public void resetPIDs() {
     pivotPID.reset(getAngle().getRotations());
   }
@@ -165,11 +175,14 @@ public class Pivot extends SubsystemBase {
     if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
       setPower += feedFoward;
     } else {
-      setPower += feedFoward / 1.3;
+      setPower += feedFoward / 1.2;
     }
 
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Power", setPower);
+    SmartDashboard.putNumber("Pivot Current", pivotMotor1.getOutputCurrent());
+
+    friendlyPivotWarning();
 
     // if the pivot is doing bad thigns or robot not enabled
     if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {
@@ -182,7 +195,7 @@ public class Pivot extends SubsystemBase {
       return;
     }
 
-    pivotMotor1.set(setPower);
-    pivotMotor2.set(setPower);
+    // pivotMotor1.set(setPower);
+    // pivotMotor2.set(setPower);
   }
 }

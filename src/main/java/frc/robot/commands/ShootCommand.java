@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
@@ -12,6 +13,7 @@ public class ShootCommand extends Command {
   Shooter shooterSubsystem;
   boolean earlyExit;
   Double shotTime;
+  Double elapsedTime;
 
   /** Creates a new ShootCommand. */
   public ShootCommand(Shooter shooterSubsystem) {
@@ -27,12 +29,14 @@ public class ShootCommand extends Command {
   @Override
   public void initialize() {
     if (!shooterSubsystem.pieceSensorActive()) {
+      DataLogManager.log("NO Piece Detected to Shoot, exiting shoot command early");
       earlyExit = true;
       return;
     } else {
       earlyExit = false;
     }
     shooterSubsystem.setFlywheel(1, 0);
+    elapsedTime = Timer.getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,8 +46,8 @@ public class ShootCommand extends Command {
       return;
     }
 
-    // shoot once revved up
-    if (shooterSubsystem.atRPM()) {
+    // shoot once revved up or time elapsed is greater than 1.5 seconds
+    if (shooterSubsystem.atRPM() || Timer.getFPGATimestamp() - elapsedTime > 1.5) {
       shooterSubsystem.setIndexer(1);
     }
 

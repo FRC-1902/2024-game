@@ -7,13 +7,14 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.TmpIndexCommand;
+import frc.robot.commands.IndexCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
@@ -33,7 +34,7 @@ public class RobotContainer {
     public AutoDriveBuilder autoDriveBuilder;
     AutoShootBuilder autoShootBuilder;
 
-    Command tmpIndexCommand;
+    Command intakeCommand, shootCommand;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -44,7 +45,12 @@ public class RobotContainer {
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
-        tmpIndexCommand = new TmpIndexCommand(shooterSubsystem);
+        intakeCommand = new ParallelCommandGroup(
+            new IndexCommand(shooterSubsystem), 
+            new SetPivotCommand(Rotation2d.fromRotations(0.17), pivotSubsystem)
+        );
+
+        shootCommand = new ShootCommand(shooterSubsystem);
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
         new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
@@ -57,18 +63,36 @@ public class RobotContainer {
      * See <a href="https://docs.google.com/spreadsheets/d/1wMP4YpzC1QxRhvHqJ1PFmJ7Ox0EeoEuYVAkCYsLmFI0/edit?usp=sharing">Button Map</a> for button bindings
      */
     private void configureButtonBindings() {
+        /* -------- drive code -------- */
+
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
-        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
-            .onTrue(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
+        /* -------- manip code -------- */
+        
+        // speaker lineup
+        controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
+            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        
+        // amp lineup
+        controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.05)
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem))
+            .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
+
+        // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(180), pivotSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+            .onTrue(shootCommand)
+            .onFalse(new InstantCommand(shootCommand::cancel));
 
-        controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)
-            .onTrue(tmpIndexCommand)
-            .onFalse(new InstantCommand(tmpIndexCommand::cancel));
+        // intake
+        controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
+            .onTrue(intakeCommand)
+            .onFalse(new InstantCommand(intakeCommand::cancel))
+            .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
+
+        
         // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
         //     .onTrue(new ShootCommand(shooterSubsystem));
         // 

@@ -29,10 +29,10 @@ public class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
         // PID Values // TODO: tune me
-        public static final double PIVOT_KP = 1.3;
-        public static final double PIVOT_KI = 0.05;
+        public static final double PIVOT_KP = 1.4;
+        public static final double PIVOT_KI = 0.08;
         public static final double PIVOT_KD = 0.12;
-        public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
+        public static final double PIVOT_KF = 0.085; // gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
@@ -42,9 +42,9 @@ public class Constants {
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
-        public static final int SHOOTER_CURRENT_LIMIT = 40;
-        public static final int INDEX_CURRENT_LIMIT = 60; // XXX: maybe?
-        public static final int PIVOT_CURRENT_LIMIT = 60; // XXX: maybe?
+        public static final int SHOOTER_CURRENT_LIMIT = 50;
+        public static final int INDEX_CURRENT_LIMIT = 60;
+        public static final int PIVOT_CURRENT_LIMIT = 60;
 
         // Arm lengths 
         public static final double PIVOT_LENGTH = Units.inchesToMeters(21.07);

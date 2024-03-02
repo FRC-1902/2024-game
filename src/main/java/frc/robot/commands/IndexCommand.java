@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class TmpIndexCommand extends Command {
+public class IndexCommand extends Command {
   Shooter shooterSubsystem;
   /** Creates a new TmpIndexCommand. */
-  public TmpIndexCommand(Shooter shooterSubsystem) {
+  public IndexCommand(Shooter shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);

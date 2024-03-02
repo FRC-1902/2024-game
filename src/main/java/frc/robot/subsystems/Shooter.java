@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase {
 
   // TODO: write this
   public boolean atRPM() {
-    return false;
+    return getRPM() > 5000;
   }
 
   public double getRPM() {
@@ -98,7 +98,6 @@ public class Shooter extends SubsystemBase {
     shooterTab.addDouble("RPM", this::getRPM);
     shooterTab.addBoolean("Piece Sensor Active", this::pieceSensorActive);
     shooterTab.addNumber("Piece Sensor Red", pieceSensor::getRed);
-    shooterTab.addBoolean("Is connected", pieceSensor::isConnected);
   }
 
   @Override
