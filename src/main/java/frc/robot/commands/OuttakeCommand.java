@@ -7,10 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class IndexCommand extends Command {
+public class OuttakeCommand extends Command {
+  /** Creates a new OuttakeCommand. */
   Shooter shooterSubsystem;
   /** Creates a new TmpIndexCommand. */
-  public IndexCommand(Shooter shooterSubsystem) {
+  public OuttakeCommand(Shooter shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
@@ -19,7 +20,7 @@ public class IndexCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterSubsystem.setIndexer(0.4);
+    shooterSubsystem.setIndexer(-0.4);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,6 +36,6 @@ public class IndexCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.pieceSensorActive();
+    return false;
   }
 }

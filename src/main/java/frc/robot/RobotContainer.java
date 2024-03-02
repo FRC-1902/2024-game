@@ -15,6 +15,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.IndexCommand;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
@@ -34,7 +35,7 @@ public class RobotContainer {
     public AutoDriveBuilder autoDriveBuilder;
     AutoShootBuilder autoShootBuilder;
 
-    Command intakeCommand, shootCommand;
+    Command intakeCommand, shootCommand, outtakeCommand;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -49,6 +50,8 @@ public class RobotContainer {
             new IndexCommand(shooterSubsystem), 
             new SetPivotCommand(Rotation2d.fromRotations(0.17), pivotSubsystem)
         );
+
+        outtakeCommand = new OuttakeCommand(shooterSubsystem);
 
         shootCommand = new ShootCommand(shooterSubsystem);
 
@@ -91,7 +94,11 @@ public class RobotContainer {
             .onTrue(intakeCommand)
             .onFalse(new InstantCommand(intakeCommand::cancel))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
-
+        
+        // outtake
+        controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
+            .onTrue(outtakeCommand)
+            .onFalse(new InstantCommand(outtakeCommand::cancel));
         
         // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
         //     .onTrue(new ShootCommand(shooterSubsystem));
