@@ -37,6 +37,7 @@ public class ShootCommand extends Command {
     }
     shooterSubsystem.setFlywheel(1, 0);
     elapsedTime = Timer.getFPGATimestamp();
+    shotTime = null;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

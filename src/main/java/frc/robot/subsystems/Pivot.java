@@ -56,9 +56,11 @@ public class Pivot extends SubsystemBase {
     pivotEncoder.setInverted(true);
     pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(2, 2.5));
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 100));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
     pivotPID.setIntegratorRange(-0.15, 0.15);
+    pivotPID.setIZone(0.1);
+    setAngle(getDefaultAngle());
   }
 
   /**
@@ -182,7 +184,9 @@ public class Pivot extends SubsystemBase {
 
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Power", setPower);
-    SmartDashboard.putNumber("Pivot Current", pivotMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());
+
 
     friendlyPivotWarning();
 

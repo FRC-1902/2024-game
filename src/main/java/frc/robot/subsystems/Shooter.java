@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase {
 
   // TODO: write this
   public boolean atRPM() {
-    return getRPM() > 5000;
+    return getRPM() > 5100;
   }
 
   public double getRPM() {

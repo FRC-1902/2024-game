@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -84,9 +85,9 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .whileTrue(new ShootCommand(shooterSubsystem));
         
-        // amp lineup // TODO: test me
+        // amp lineup
         controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem))
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.5), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
         // speaker lineup

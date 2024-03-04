@@ -38,7 +38,7 @@ public class Constants {
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
         public static final double PIVOT_DEGREES_TOLERANCE = 0.008;
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.642);
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.074);
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
