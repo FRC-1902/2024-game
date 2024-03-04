@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase;  
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -66,27 +67,31 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() { // XXX: maybe different motor power?
-    switch (targetDirection) {
+    switch (targetDirection) { // TODO: debug limit switches
       case UP:
+        DataLogManager.log("UP!");
+
         if (leftTopSwitch.get()) {
-          leftMotor.set(0.5);
+          // leftMotor.set(-0.10);
         } else {
           leftMotor.set(0.0);
         }
         if (rightTopSwitch.get()) {
-          rightMotor.set(0.5);
+          rightMotor.set(-0.10);
         } else {
           rightMotor.set(0.0);
         }
         break;
       case DOWN:
+        DataLogManager.log("DOWN!");
+
         if (leftBottomSwitch.get()) {
-          leftMotor.set(-0.5);
+          // leftMotor.set(0.10);
         } else {
           leftMotor.set(0.0);
         }
         if (rightBottomSwitch.get()) {
-          rightMotor.set(-0.5);
+          rightMotor.set(0.10);
         } else {
           rightMotor.set(0.0);
         }

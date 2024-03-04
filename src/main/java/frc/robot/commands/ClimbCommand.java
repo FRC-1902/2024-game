@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Controllers;
@@ -31,6 +32,11 @@ public class ClimbCommand extends Command {
   @Override
   public void execute() {
     double dpadAngle = controllers.getDPAD(ControllerName.MANIP);
+    // if dpad isn't pressed
+    if (dpadAngle == -1) {
+      return;
+    }
+    
     if (dpadAngle <= 45 || dpadAngle >= 315) {
       climberSubsystem.setDirection(Direction.UP);
     } else if (dpadAngle >= 135 && dpadAngle <= 225) {
