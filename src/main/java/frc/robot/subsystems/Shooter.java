@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean pieceSensorActive() {
-    return pieceSensor.getRed() > 600;
+    return pieceSensor.getRed() > 1200;
     // return pieceSensor.getVoltage() > Constants.Arm.PIECE_SENSOR_THRESHOLD_VOLTAGE;
     // return pieceSensor.getRange() <= Constants.Arm.PIECE_SENSOR_MIN_DIST && pieceSensor.getRange() >= Constants.Arm.PIECE_SENSOR_MAX_DIST;
   }

@@ -52,10 +52,6 @@ public class RobotContainer {
             new SetPivotCommand(Rotation2d.fromRotations(0.17), pivotSubsystem)
         );
 
-        outtakeCommand = new OuttakeCommand(shooterSubsystem);
-
-        shootCommand = new ShootCommand(shooterSubsystem);
-
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
         new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
 
@@ -91,24 +87,22 @@ public class RobotContainer {
 
         // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
-            .onTrue(shootCommand)
-            .onFalse(new InstantCommand(shootCommand::cancel));
+            .whileTrue(new ShootCommand(shooterSubsystem));
 
         // intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
-            .onTrue(intakeCommand)
-            .onFalse(new InstantCommand(intakeCommand::cancel))
+            .whileTrue(intakeCommand)
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
-            .onTrue(outtakeCommand)
-            .onFalse(new InstantCommand(outtakeCommand::cancel));
+            .whileTrue(new OuttakeCommand(shooterSubsystem));
         
+        // shoot speaker
         controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05) // TODO: Debug me, java lang exception
-            .onTrue(new SequentialCommandGroup(
+            .whileTrue(new SequentialCommandGroup(
                 new SetPivotCommand(Rotation2d.fromDegrees(111), pivotSubsystem),
-                shootCommand
+                new ShootCommand(shooterSubsystem)
             ));
         
         // controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.1)
