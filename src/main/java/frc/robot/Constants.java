@@ -34,6 +34,62 @@ public class Constants {
         public static final int CLIMBER_CURRENT_LIMIT = 40;
     }
 
+    public static final class Arm {
+        private Arm() {}
+
+        // CAN IDs
+        public static final int PIVOT_MOTOR_1_ID = 5;
+        public static final int PIVOT_MOTOR_2_ID = 8;
+        public static final int INDEXER_MOTOR_ID = 13;
+        public static final int TOP_SHOOTER_MOTOR_ID = 14; 
+        public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
+
+        // PID Values // TODO: tune me
+        public static final double PIVOT_KP = 1.8;
+        public static final double PIVOT_KI = 0.15;  //.35
+        public static final double PIVOT_KD = 0.015;
+        public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
+
+        // Pivot Positions
+        public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
+        public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
+        public static final double PIVOT_DEGREES_TOLERANCE = 0.008;
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.642);
+
+        // Power Considerations
+        public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
+        public static final int SHOOTER_CURRENT_LIMIT = 50;
+        public static final int INDEX_CURRENT_LIMIT = 60;
+        public static final int PIVOT_CURRENT_LIMIT = 60;
+
+        // Arm lengths 
+        public static final double PIVOT_LENGTH = Units.inchesToMeters(21.07);
+        public static final double ARM_LENGTH = Units.inchesToMeters(20.82);
+        public static final double WRIST_LENGTH = Units.inchesToMeters(12.06);
+        public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
+
+        // cubic curve magic numbers to relate pivot angle and distance from speaker
+        public static final double SHOOTER_MAGIC_A = 0.532;
+        public static final double SHOOTER_MAGIC_B = -7.106;
+        public static final double SHOOTER_MAGIC_C = 32.601;
+        public static final double SHOOTER_MAGIC_D = 135.591;
+
+        // max distance to shoot into the speaker in meters
+        public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance
+
+        // position to line up pivot with things on the field (0 is straight down)
+        public static final Rotation2d AMP_PIVOT_LINEUP = Rotation2d.fromDegrees(177.27);
+        public static final Rotation2d HP_PIVOT_LINEUP = Rotation2d.fromDegrees(144.39);
+        public static final Rotation2d STOW_PIVOT_LINEUP = Rotation2d.fromDegrees(65.0);
+        public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
+
+        // mm min and max distance to trigger the TOF piece sensor 
+        // public static final double PIECE_SENSOR_MIN_DIST = 11.0;
+        // public static final double PIECE_SENSOR_MAX_DIST = 38.0;
+        public static final int PIECE_SENSOR_PORT = 0;
+        public static final double PIECE_SENSOR_THRESHOLD_VOLTAGE = 2.0;
+    }
+
     public static final class Swerve {
         private Swerve() {} 
  
@@ -87,9 +143,9 @@ public class Constants {
 
         /* Drive Motor Characterization Values */ // TODO: tune me on real robot now
         // divide by 12 to convert from volts to 1 to -1 power range
-        public static final double DRIVE_KS = 0.338492;
-        public static final double DRIVE_KV = 1.533248;
-        public static final double DRIVE_KA = 0.305292;
+        public static final double DRIVE_KS = 0.501892;
+        public static final double DRIVE_KV = 1.874719;
+        public static final double DRIVE_KA = 0.296733;
 
 		/* Drive Motor Conversion Factors */
 		public static final double DRIVE_CONVERSION_POSITION_FACTOR =
@@ -119,7 +175,7 @@ public class Constants {
         public static final class Mod0 {
             private Mod0() {}
             public static final int DRIVE_MOTOR_ID = 2;
-            public static final int ANGLE_MOTOR_ID = 3;
+            public static final int ANGLE_MOTOR_ID = 1;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -128,8 +184,8 @@ public class Constants {
         /* Front Right Module - Module 1 */
         public static final class Mod1 {
             private Mod1() {}
-            public static final int DRIVE_MOTOR_ID = 4;
-            public static final int ANGLE_MOTOR_ID = 5;
+            public static final int DRIVE_MOTOR_ID = 10;
+            public static final int ANGLE_MOTOR_ID = 9;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -138,8 +194,8 @@ public class Constants {
         /* Back Left Module - Module 2 */
         public static final class Mod2 {
             private Mod2() {}
-            public static final int DRIVE_MOTOR_ID = 6;
-            public static final int ANGLE_MOTOR_ID = 7;
+            public static final int DRIVE_MOTOR_ID = 19;
+            public static final int ANGLE_MOTOR_ID = 20;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
@@ -148,8 +204,8 @@ public class Constants {
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
             private Mod3() {}
-            public static final int DRIVE_MOTOR_ID = 8;
-            public static final int ANGLE_MOTOR_ID = 9;
+            public static final int DRIVE_MOTOR_ID = 12;
+            public static final int ANGLE_MOTOR_ID = 11;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);

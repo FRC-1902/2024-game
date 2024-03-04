@@ -66,23 +66,23 @@ public class SwerveModule {
   }
 
   // use to calculate feed forward values
-  /*/
-  private double tmpTime = System.currentTimeMillis();
-  private double tmpVel = 0.0;
-  private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    double voltage = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed * 12.0;
-    driveMotor.setVoltage(voltage);
-
-    double accel = (driveEncoder.getVelocity()-tmpVel)/((System.currentTimeMillis()-tmpTime)/1000.0);
-
-    if (moduleNumber == 0 && voltage > 0 && accel > 0 && driveEncoder.getVelocity() > 0) {
-      double err = voltage - (Constants.Swerve.driveKA + Constants.Swerve.driveKV * driveEncoder.getVelocity() + Constants.Swerve.driveKA * accel);
-      System.out.format("Voltage: %.3f Velocity: %.4f Acceleration: %.5f Err: %.3f\n", voltage, driveEncoder.getVelocity(), accel, err);
-    }
-    tmpTime = System.currentTimeMillis();
-    tmpVel = driveEncoder.getVelocity();
-    
-  }*/
+  
+  // private double tmpTime = System.currentTimeMillis();
+  // private double tmpVel = 0.0;
+  // private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+  //   double voltage = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED * 12.0;
+  //   driveMotor.setVoltage(voltage);
+  // 
+  //   double accel = (driveEncoder.getVelocity()-tmpVel)/((System.currentTimeMillis()-tmpTime)/1000.0);
+  // 
+  //   if (moduleNumber == 0 && voltage > 0 && accel > 0 && driveEncoder.getVelocity() > 0) {
+  //     double err = voltage - (Constants.Swerve.DRIVE_KA + Constants.Swerve.DRIVE_KV * driveEncoder.getVelocity() + Constants.Swerve.DRIVE_KA * accel);
+  //     System.out.format("Voltage: %.3f Velocity: %.4f Acceleration: %.5f Err: %.3f\n", voltage, driveEncoder.getVelocity(), accel, err);
+  //   }
+  //   tmpTime = System.currentTimeMillis();
+  //   tmpVel = driveEncoder.getVelocity();
+  //   
+  // }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
     desiredSpeed = desiredState.speedMetersPerSecond;

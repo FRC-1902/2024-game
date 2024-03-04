@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
@@ -23,7 +24,7 @@ public class Swerve extends SubsystemBase {
     private SwerveModule[] mSwerveMods;
     private IMU imu;
 
-    GenericEntry rot, xPos;
+    private Field2d field;
 
     public Swerve() {
         imu = IMU.getInstance();
@@ -51,14 +52,7 @@ public class Swerve extends SubsystemBase {
             new Pose2d(0.0, 0.0, imu.getHeading()) // XXX: starting position on the field
         );
 
-        xPos = Shuffleboard.getTab("Swerve")
-            .add("xPos", 1)
-            .withWidget(BuiltInWidgets.kNumberSlider) // specify the widget here
-            .getEntry();
-        rot = Shuffleboard.getTab("Swerve")
-            .add("rot", 1)
-            .withWidget(BuiltInWidgets.kNumberSlider) // specify the widget here
-            .getEntry();
+        field = new Field2d();
     }
 
     private void logPeriodic() {
@@ -126,7 +120,7 @@ public class Swerve extends SubsystemBase {
      * @param pose estimated position to reset to
      */
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(imu.getHeading(), getModulePositions(), pose);
+        swerveOdometry.resetPosition(imu.getFieldHeading(), getModulePositions(), pose);
     }
 
     /**
@@ -173,28 +167,19 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         // vision odometry
-       Pose2d limelightEstimate;
-       DriverStation.Alliance alliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue);
-       
-       if (alliance == DriverStation.Alliance.Red) {
-           limelightEstimate = LimelightHelpers.getBotPose3d_wpiRed("").toPose2d();
-       } else {
-           limelightEstimate = LimelightHelpers.getBotPose3d_wpiBlue("").toPose2d();
-       }
+        // Pose2d limelightEstimate = LimelightHelpers.getBotPose3d_wpiBlue("").toPose2d();
 
         // update odometry if vision position deviates by less than 1 meter from current estimate (as per documentation estimate)
         //if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) { XXX: maybe reimplement me
     
-        swerveOdometry.addVisionMeasurement(
-            limelightEstimate, 
-            Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
-        ); 
+        // swerveOdometry.addVisionMeasurement(
+        //     limelightEstimate, 
+        //     Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
+        // );
 
-        swerveOdometry.update(imu.getHeading(), getModulePositions());
+        swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
+        field.setRobotPose(swerveOdometry.getEstimatedPosition());
         
         logPeriodic();
-
-        rot.setDouble(imu.getHeading().getDegrees());
-        xPos.setDouble(swerveOdometry.getEstimatedPosition().getX());
     }
 }

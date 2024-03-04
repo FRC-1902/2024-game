@@ -13,7 +13,10 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -26,6 +29,7 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
+  private static Robot instance;
 
   @Override
   public void robotInit() {
@@ -36,7 +40,7 @@ public class Robot extends LoggedRobot {
     if (isReal()) {
       Logger.addDataReceiver(new WPILOGWriter("/media/sda")); // Log to a USB stick
       // Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-      pdh = new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+      pdh = new PowerDistribution(21, ModuleType.kRev); // Enables power distribution logging
     } else {
       setUseTiming(false); // Run as fast as possible
       String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
@@ -50,6 +54,17 @@ public class Robot extends LoggedRobot {
     imu = IMU.getInstance();
     robotContainer = new RobotContainer();
     autoSelector = new AutoSelector(robotContainer);
+
+    // changes field offset based on alliance, to keep rotation relative to blue origin
+    DriverStation.getAlliance().ifPresent(alliance -> {
+      if (alliance == Alliance.Red) {
+        imu.setFieldOffset(Rotation2d.fromDegrees(180));
+      } else {
+        imu.setFieldOffset(Rotation2d.fromDegrees(0));
+      }
+    });
+
+    instance = this;
   }
 
   @Override
@@ -68,6 +83,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    robotContainer.resetPIDs();
+
     autonomousCommand = autoSelector.getSelectedCommand();
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -85,7 +102,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    robotContainer.resetPIDs();
+  }
 
   @Override
   public void teleopPeriodic() {}
@@ -94,11 +113,20 @@ public class Robot extends LoggedRobot {
   public void teleopExit() {}
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+    robotContainer.resetPIDs();
+  }
 
   @Override
   public void testPeriodic() {}
 
   @Override
   public void testExit() {}
+
+  public static Robot getInstance() {
+    if (instance == null) {
+      throw new IllegalStateException("Robot instance not initialized");
+    }
+    return instance;
+  }
 }
