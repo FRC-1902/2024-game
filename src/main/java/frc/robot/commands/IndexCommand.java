@@ -54,6 +54,6 @@ public class IndexCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count > 2;
+    return count > 3;
   }
 }
