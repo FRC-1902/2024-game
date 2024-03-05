@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.Timer;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Shooter;
 
 public class IndexCommand extends Command {
@@ -45,6 +46,9 @@ public class IndexCommand extends Command {
     shooterSubsystem.setIndexer(0.0);
 
     shooterSubsystem.setIndexer(0.0);
+
+    if (shooterSubsystem.pieceSensorActive())
+      Controllers.getInstance().vibrate(100, 0.5);
   }
 
   // Returns true when the command should end.

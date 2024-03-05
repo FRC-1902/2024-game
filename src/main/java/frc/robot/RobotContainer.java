@@ -37,7 +37,9 @@ public class RobotContainer {
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
 
-    Command intakeCommand, outtakeCommand;
+    Command floorIntakeCommand;
+    Command outtakeCommand;
+    Command hpIntakeCommand;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -48,9 +50,14 @@ public class RobotContainer {
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
-        intakeCommand = new ParallelCommandGroup(
+        floorIntakeCommand = new ParallelCommandGroup(
             new IndexCommand(shooterSubsystem), 
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
+        );
+
+        hpIntakeCommand = new ParallelCommandGroup(
+            new IndexCommand(shooterSubsystem), 
+            new SetPivotCommand(Rotation2d.fromRotations(0.370), pivotSubsystem)
         );
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
@@ -76,14 +83,19 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .whileTrue(new OuttakeCommand(shooterSubsystem));
 
-        // intake
+        // floor intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
-            .whileTrue(intakeCommand)
+            .whileTrue(floorIntakeCommand)
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
 
         // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .whileTrue(new ShootCommand(shooterSubsystem));
+        
+        // hp intake
+        controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)
+            .whileTrue(hpIntakeCommand)
+            .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
         // amp lineup
         controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.05)
