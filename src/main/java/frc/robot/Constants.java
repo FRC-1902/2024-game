@@ -30,7 +30,7 @@ public class Constants {
 
         // PID Values // TODO: tune me
         public static final double PIVOT_KP = 1.8;
-        public static final double PIVOT_KI = 0.15;  //.35
+        public static final double PIVOT_KI = 0.2;  //.35
         public static final double PIVOT_KD = 0.015;
         public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
 
@@ -38,13 +38,16 @@ public class Constants {
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
         public static final double PIVOT_DEGREES_TOLERANCE = 0.008;
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.074);
+
+        // Pivot Encoder Offset
+    /****NOTE**** ----------- Will need to be reset on every change of the pivot. ----------- ****NOTE****/
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.101);
 
         // Power Considerations
-        public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0; // XXX: lessen to improve consitency high power draw across robot
+        public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0;
         public static final int SHOOTER_CURRENT_LIMIT = 50;
         public static final int INDEX_CURRENT_LIMIT = 60;
-        public static final int PIVOT_CURRENT_LIMIT = 60;
+        public static final int PIVOT_CURRENT_LIMIT = 60; //60
 
         // Arm lengths 
         public static final double PIVOT_LENGTH = Units.inchesToMeters(21.07);

@@ -50,7 +50,7 @@ public class RobotContainer {
 
         intakeCommand = new ParallelCommandGroup(
             new IndexCommand(shooterSubsystem), 
-            new SetPivotCommand(Rotation2d.fromRotations(0.17), pivotSubsystem)
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         );
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
@@ -92,7 +92,7 @@ public class RobotContainer {
         
         // speaker lineup
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(111), pivotSubsystem))
+            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
     }
 

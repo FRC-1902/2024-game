@@ -56,7 +56,7 @@ public class Pivot extends SubsystemBase {
     pivotEncoder.setInverted(true);
     pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 100));
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 1.0));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
     pivotPID.setIntegratorRange(-0.15, 0.15);
     pivotPID.setIZone(0.1);
@@ -79,7 +79,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public Rotation2d getDefaultAngle() {
-    return Rotation2d.fromRotations(0.21);
+    return Rotation2d.fromRotations(0.154);
   }
 
   /**
@@ -158,7 +158,7 @@ public class Pivot extends SubsystemBase {
   }
 
   private boolean friendlyPivotWarning() {
-    // TODO: FIX ME
+    // TODO: FIX ME!!!
     // if (Math.abs(pivotMotor1.getOutputCurrent() - pivotMotor2.getOutputCurrent()) > 10) {
     //   DataLogManager.log("CURRENT DIFF BAD!");
     //   return true;
@@ -198,6 +198,13 @@ public class Pivot extends SubsystemBase {
       // integrator safety when stuck out of bounds
       resetPIDs();
 
+      return;
+    }
+
+    // don't power pivot when down
+    if (pivotPID.getSetpoint().position == getDefaultAngle().getRotations() && pivotPID.atSetpoint()) {
+      pivotMotor1.set(0);
+      pivotMotor2.set(0);
       return;
     }
 
