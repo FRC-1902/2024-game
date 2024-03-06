@@ -131,8 +131,4 @@ public class AutoDriveBuilder {
             );
         }
     }
-
-    public Command getExampleAutonomousCommand() {
-        return new PathPlannerAuto("Example Auto"); // XXX: no example auto present in this project yet
-    }
 }
