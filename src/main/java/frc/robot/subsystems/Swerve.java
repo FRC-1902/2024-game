@@ -12,7 +12,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -220,7 +222,7 @@ public class Swerve extends SubsystemBase {
         
 
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
-        field.setRobotPose(swerveOdometry.getEstimatedPosition());
+        field.setRobotPose(swerveOdometry.getEstimatedPosition().plus(new Transform2d(-0.428625,- 0.428625, Rotation2d.fromDegrees(0))));
         
         SmartDashboard.putData("Field", field);
         logPeriodic();
