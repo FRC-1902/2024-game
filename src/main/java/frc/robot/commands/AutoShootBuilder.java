@@ -34,20 +34,21 @@ public class AutoShootBuilder{
    */
   public void startShotSequence() {
     DataLogManager.log(String.format("Starting Shot Sequence at X: %.3f Y: %.3f", swerveSubsystem.getPose().getX(), swerveSubsystem.getPose().getY()));
+    DataLogManager.log("Distance: " + getVecDistance(calculateTargetVector()));
     
     if (getVecDistance(calculateTargetVector()) > Constants.Arm.SHOOTER_MAX_DISTANCE) {
       return;
     }
     
-    shotSequence = new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        autoDriveCommands.getTurnCommand(calculateFaceAngle()),
-        new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
-        new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
-      ),
-      new ShootCommand(shooterSubsystem, pivotSubsystem)
-    );
-    shotSequence.schedule();
+    // shotSequence = new SequentialCommandGroup(
+    //   new ParallelCommandGroup(
+    //     autoDriveCommands.getTurnCommand(calculateFaceAngle()),
+    //     new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
+    //     new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
+    //   ),
+    //   new ShootCommand(shooterSubsystem, pivotSubsystem)
+    // );
+    // shotSequence.schedule();
   }
 
   public void cancelShotSequence() {

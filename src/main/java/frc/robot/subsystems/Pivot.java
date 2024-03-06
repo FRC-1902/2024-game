@@ -202,7 +202,7 @@ public class Pivot extends SubsystemBase {
     }
 
     // don't power pivot when down
-    if (pivotPID.getSetpoint().position == getDefaultAngle().getRotations() && pivotPID.atSetpoint()) {
+    if (pivotPID.getSetpoint().position == getDefaultAngle().getRotations() && pivotPID.atSetpoint() || getAngle().getRotations() < getDefaultAngle().getRotations()) {
       pivotMotor1.set(0);
       pivotMotor2.set(0);
       return;

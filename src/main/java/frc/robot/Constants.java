@@ -201,7 +201,6 @@ public class Constants {
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, ANGLE_OFFSET);
         }
 
-        // TODO: test
         /* Photonvision camera transforms */
         public static final Transform3d LEFT_CAMERA_OFFSET = new Transform3d(
             new Translation3d(Units.inchesToMeters(11.44), Units.inchesToMeters(6.21875), Units.inchesToMeters(26.5)), 

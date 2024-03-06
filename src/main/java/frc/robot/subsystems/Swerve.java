@@ -86,6 +86,7 @@ public class Swerve extends SubsystemBase {
         leftPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         rightPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
+        // TODO: CALIBRATE CAMERAS
     }
 
     private void logPeriodic() {
@@ -204,16 +205,16 @@ public class Swerve extends SubsystemBase {
         if (optionalEstimatedPoseRight.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPoseRight.get();          
             swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
-            // SmartDashboard.putNumber("R X", estimatedPose.estimatedPose.getTranslation().getX());
-            // SmartDashboard.putNumber("R Y", estimatedPose.estimatedPose.getTranslation().getY());
+            SmartDashboard.putNumber("R X", estimatedPose.estimatedPose.getTranslation().getX());
+            SmartDashboard.putNumber("R Y", estimatedPose.estimatedPose.getTranslation().getY());
         }
 
         final Optional<EstimatedRobotPose> optionalEstimatedPoseLeft = leftPhotonPoseEstimator.update();
         if (optionalEstimatedPoseLeft.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPoseLeft.get();      
             swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
-            // SmartDashboard.putNumber("L X", estimatedPose.estimatedPose.getTranslation().getX());
-            // SmartDashboard.putNumber("L Y", estimatedPose.estimatedPose.getTranslation().getY());
+            SmartDashboard.putNumber("L X", estimatedPose.estimatedPose.getTranslation().getX());
+            SmartDashboard.putNumber("L Y", estimatedPose.estimatedPose.getTranslation().getY());
         }
 
         
