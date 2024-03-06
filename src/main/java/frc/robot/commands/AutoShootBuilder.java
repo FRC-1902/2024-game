@@ -45,7 +45,7 @@ public class AutoShootBuilder{
         new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
         new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
       ),
-      new ShootCommand(shooterSubsystem)
+      new ShootCommand(shooterSubsystem, pivotSubsystem)
     );
     shotSequence.schedule();
   }

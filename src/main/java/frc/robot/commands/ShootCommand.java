@@ -7,17 +7,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommand extends Command {
   Shooter shooterSubsystem;
+  Pivot pivotSubsystem;
   boolean earlyExit;
   Double shotTime;
   Double elapsedTime;
 
   /** Creates a new ShootCommand. */
-  public ShootCommand(Shooter shooterSubsystem) {
+  public ShootCommand(Shooter shooterSubsystem, Pivot pivotSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
+    this.pivotSubsystem = pivotSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
 
@@ -35,6 +38,7 @@ public class ShootCommand extends Command {
     } else {
       earlyExit = false;
     }
+
     shooterSubsystem.setFlywheel(1, 0);
     elapsedTime = Timer.getFPGATimestamp();
     shotTime = null;
@@ -47,8 +51,11 @@ public class ShootCommand extends Command {
       return;
     }
 
+    // at full shot rpm or shooting into amp
+    boolean atRPM = shooterSubsystem.getRPM() > 5100 || (pivotSubsystem.getAngle().getRotations() > 0.49 && shooterSubsystem.getRPM() > 2500);
+
     // shoot once revved up or time elapsed is greater than 1.5 seconds
-    if (shooterSubsystem.atRPM() || Timer.getFPGATimestamp() - elapsedTime > 1.5) {
+    if (atRPM || Timer.getFPGATimestamp() - elapsedTime > 1.5) {
       shooterSubsystem.setIndexer(1);
     }
 

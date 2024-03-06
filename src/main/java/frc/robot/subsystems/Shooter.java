@@ -70,11 +70,6 @@ public class Shooter extends SubsystemBase {
     bottomShooterMotor.set(power - differential);
   }
 
-  // TODO: write this
-  public boolean atRPM() {
-    return getRPM() > 5100;
-  }
-
   public double getRPM() {
     return (topShooterMotor.getEncoder().getVelocity() + bottomShooterMotor.getEncoder().getVelocity()) / 2.0;
   }

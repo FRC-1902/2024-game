@@ -71,8 +71,8 @@ public class Swerve extends SubsystemBase {
         // Photonvision things
         AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
         
-        PhotonCamera leftCamera = new PhotonCamera("leftCamera");
-        PhotonCamera rightCamera = new PhotonCamera("rightCamera");
+        PhotonCamera leftCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Left");
+        PhotonCamera rightCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right");
 
         leftCamera.setDriverMode(false);
         rightCamera.setDriverMode(false);
@@ -200,17 +200,23 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        final Optional<EstimatedRobotPose> optionalEstimatedPoseLeft = leftPhotonPoseEstimator.update();
-        if (optionalEstimatedPoseLeft.isPresent()) {
-            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseLeft.get();      
-            swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
-        }
-
         final Optional<EstimatedRobotPose> optionalEstimatedPoseRight = rightPhotonPoseEstimator.update();
         if (optionalEstimatedPoseRight.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPoseRight.get();          
             swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+            // SmartDashboard.putNumber("R X", estimatedPose.estimatedPose.getTranslation().getX());
+            // SmartDashboard.putNumber("R Y", estimatedPose.estimatedPose.getTranslation().getY());
         }
+
+        final Optional<EstimatedRobotPose> optionalEstimatedPoseLeft = leftPhotonPoseEstimator.update();
+        if (optionalEstimatedPoseLeft.isPresent()) {
+            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseLeft.get();      
+            swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+            // SmartDashboard.putNumber("L X", estimatedPose.estimatedPose.getTranslation().getX());
+            // SmartDashboard.putNumber("L Y", estimatedPose.estimatedPose.getTranslation().getY());
+        }
+
+        
 
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());

@@ -90,7 +90,7 @@ public class RobotContainer {
 
         // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
-            .whileTrue(new ShootCommand(shooterSubsystem));
+            .whileTrue(new ShootCommand(shooterSubsystem, pivotSubsystem));
         
         // hp intake
         controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)
