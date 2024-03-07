@@ -15,7 +15,7 @@ public class ShootCommand extends Command {
   Pivot pivotSubsystem;
   boolean earlyExit;
   Double shotTime;
-  Double elapsedTime;
+  Double startTime;
 
   /** Creates a new ShootCommand. */
   public ShootCommand(Shooter shooterSubsystem, Pivot pivotSubsystem) {
@@ -40,7 +40,7 @@ public class ShootCommand extends Command {
     }
 
     shooterSubsystem.setFlywheel(1, 0);
-    elapsedTime = Timer.getFPGATimestamp();
+    startTime = Timer.getFPGATimestamp();
     shotTime = null;
   }
 
@@ -52,15 +52,15 @@ public class ShootCommand extends Command {
     }
 
     // at full shot rpm or shooting into amp
-    boolean atRPM = shooterSubsystem.getRPM() > 5100 || (pivotSubsystem.getAngle().getRotations() > 0.49 && shooterSubsystem.getRPM() > 2500);
+    boolean atRPM = shooterSubsystem.getRPM() > 5100 || (pivotSubsystem.getAngle().getRotations() > 0.45 && shooterSubsystem.getRPM() > 3000);
 
     // shoot once revved up or time elapsed is greater than 1.5 seconds
-    if (atRPM || Timer.getFPGATimestamp() - elapsedTime > 1.5) {
+    if (atRPM || Timer.getFPGATimestamp() - startTime > 1.5) {
       shooterSubsystem.setIndexer(1);
     }
 
     // get ready to exit when piece is no longer detected
-    if (!shooterSubsystem.pieceSensorActive()) {
+    if (!shooterSubsystem.pieceSensorActive() && shotTime == null) {
       shotTime = Timer.getFPGATimestamp();
     }
   }
@@ -75,7 +75,10 @@ public class ShootCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // if time elapsed after shot is greater than 0.5 seconds, end command
-    return earlyExit || (shotTime != null && Timer.getFPGATimestamp() - shotTime > 0.5);
+    // if time elapsed after shot is greater than 0.2 seconds, end command
+    if (shotTime != null) 
+      DataLogManager.log("" + (Timer.getFPGATimestamp() - shotTime) + " : " + shotTime);
+
+    return earlyExit || (shotTime != null && Timer.getFPGATimestamp() - shotTime > 0.25);
   }
 }

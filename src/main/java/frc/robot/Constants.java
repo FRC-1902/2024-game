@@ -214,8 +214,8 @@ public class Constants {
 
     public static final class AutoConstants { 
         private AutoConstants() {}
-        // PID contstants for pathplannerlib
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.15, 20, 0.1, 0.2); // TODO: tune me on real robot
+        // PID contstants for pathplannerlib // 0.15
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.10, 20, 0.1, 0.2); // TODO: tune me on real robot
         public static final PIDConstants ROTATION_PID = new PIDConstants(0.15, 0, 0, 10); // TODO: tune me on real robot
 
         // turn in place command

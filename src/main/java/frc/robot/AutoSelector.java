@@ -4,16 +4,22 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.AutoDriveBuilder;
+import frc.robot.commands.IndexCommand;
+import frc.robot.commands.SetPivotCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.Swerve;
 
 /*
@@ -84,31 +90,79 @@ public class AutoSelector {
      */
     private SequentialCommandGroup getAmpAuto() {
         return new SequentialCommandGroup(
+            // setup odometry
+            new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.5, 7.75, Rotation2d.fromDegrees(0)))),
+            // drive to amp
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 1")),
-            // TODO: add shot to amp
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
-            // TODO: add shot to speaker
+            // shoot in amp
+            new SetPivotCommand(Rotation2d.fromRotations(0.51), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive & pick up piece
+            new ParallelCommandGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
+                new IndexCommand(shooterSubsystem)
+            ),
+            // shoot into speaker // TODO: debug from here, up until here it is tested
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive to end location
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 3" + getAlternativeAutoString()))
         );
     }
 
     /**
-     * 4 shots into the speaker (3 ground + 1 preload)
+     * 4 shots into the speaker (3 ground + 1 preload) // TODO: debug from here
      */
     private SequentialCommandGroup getThreePieceAuto(){
         return new SequentialCommandGroup(
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 1")),
-            // TODO: shot to speaker 
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 2")),
-            // TODO: shot to speaker 
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 3")),
-            // TODO: shot to speaker
+            // setup odometry
+            // TODO: setup me
+            // shoot speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive & pick up to first piece
+            new ParallelCommandGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 1")),
+                new IndexCommand(shooterSubsystem)
+            ),
+            // shoot into speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive & pick up to second piece
+            new ParallelCommandGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 2")),
+                new IndexCommand(shooterSubsystem)
+            ),
+            // shoot into speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive & pick up to third piece
+            new ParallelCommandGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 3")),
+                new IndexCommand(shooterSubsystem)
+            ),
+            // shoot into speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive to end location
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 4" + getAlternativeAutoString()))
         );
     }
 
     /**
-     * Single pre-loaded
+     * Single pre-loaded // TODO: debug from here
      */
     private SequentialCommandGroup getItsRealAuto(){
         return new SequentialCommandGroup(

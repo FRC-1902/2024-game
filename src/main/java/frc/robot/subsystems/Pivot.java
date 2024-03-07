@@ -134,7 +134,7 @@ public class Pivot extends SubsystemBase {
    * @return if the pivot pid is at the setpoint
    */
   public boolean atSetpoint() {
-    return pivotPID.atSetpoint();
+    return pivotPID.atGoal();
   }
 
   /**
