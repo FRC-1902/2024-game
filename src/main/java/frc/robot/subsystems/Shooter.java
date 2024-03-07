@@ -6,13 +6,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import com.revrobotics.SparkAbsoluteEncoder;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,9 +21,9 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 
 
 public class Shooter extends SubsystemBase {
-  private CANSparkMax topShooterMotor, bottomShooterMotor;
+  private CANSparkMax topShooterMotor;
+  private CANSparkMax bottomShooterMotor;
   private CANSparkMax indexMotor;
-  //private AnalogInput pieceSensor;
   private ColorSensorV3 pieceSensor;
 
   /** Creates a new Shooter. */ 
@@ -47,10 +45,8 @@ public class Shooter extends SubsystemBase {
     indexMotor = new CANSparkMax(Constants.Arm.INDEXER_MOTOR_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(indexMotor, Usage.MINIMAL);
     indexMotor.setSmartCurrentLimit(Constants.Arm.INDEX_CURRENT_LIMIT);
-    indexMotor.setIdleMode(IdleMode.kCoast); // XXX: maybe?
+    indexMotor.setIdleMode(IdleMode.kCoast);
 
-    // pieceSensor = new AnalogInput(Constants.Arm.PIECE_SENSOR_PORT);
-    // pieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
     pieceSensor = new ColorSensorV3(Port.kMXP);
 
     configureShuffleboardData();
@@ -84,8 +80,6 @@ public class Shooter extends SubsystemBase {
 
   public boolean pieceSensorActive() {
     return pieceSensor.getRed() > 1200;
-    // return pieceSensor.getVoltage() > Constants.Arm.PIECE_SENSOR_THRESHOLD_VOLTAGE;
-    // return pieceSensor.getRange() <= Constants.Arm.PIECE_SENSOR_MIN_DIST && pieceSensor.getRange() >= Constants.Arm.PIECE_SENSOR_MAX_DIST;
   }
 
   private void configureShuffleboardData() {

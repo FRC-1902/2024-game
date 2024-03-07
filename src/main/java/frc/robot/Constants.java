@@ -31,9 +31,9 @@ public class Constants {
         public static final int TOP_SHOOTER_MOTOR_ID = 14; 
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
-        // PID Values // TODO: tune me
+        // PID Values
         public static final double PIVOT_KP = 1.8;
-        public static final double PIVOT_KI = 0.2;  //.35
+        public static final double PIVOT_KI = 0.2;
         public static final double PIVOT_KD = 0.015;
         public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
 
@@ -73,9 +73,6 @@ public class Constants {
         public static final Rotation2d STOW_PIVOT_LINEUP = Rotation2d.fromDegrees(65.0);
         public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
 
-        // mm min and max distance to trigger the TOF piece sensor 
-        // public static final double PIECE_SENSOR_MIN_DIST = 11.0;
-        // public static final double PIECE_SENSOR_MAX_DIST = 38.0;
         public static final int PIECE_SENSOR_PORT = 0;
         public static final double PIECE_SENSOR_THRESHOLD_VOLTAGE = 2.0;
     }
@@ -125,13 +122,13 @@ public class Constants {
         public static final double ANGLE_KD = chosenModule.angleKD;
         public static final double ANGLE_KF = chosenModule.angleKF;
 
-        /* Drive Motor PID Values */  // TODO: tune me on real robot now
+        /* Drive Motor PID Values */
         public static final double DRIVE_KP = 0.25; 
         public static final double DRIVE_KI = 0.001;
         public static final double DRIVE_KD = 0.5;
         public static final double DRIVE_KF = 0.0;
 
-        /* Drive Motor Characterization Values */ // TODO: tune me on real robot now
+        /* Drive Motor Characterization Values */
         // divide by 12 to convert from volts to 1 to -1 power range
         public static final double DRIVE_KS = 0.501892;
         public static final double DRIVE_KV = 1.874719;
@@ -146,13 +143,13 @@ public class Constants {
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
-        public static final double MAX_SPEED = Units.feetToMeters(13.73); // TODO: theoretical Kevin values
+        public static final double MAX_SPEED = Units.feetToMeters(13.73);
         /** Meters per Second squared */
-        public static final double MAX_ACCELERATION = Units.feetToMeters(24.16); // TODO: theoretical Kevin values
+        public static final double MAX_ACCELERATION = Units.feetToMeters(24.16);
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Units.degreesToRadians(243.79) * 60; // TODO: theoretical Kevin values
+        public static final double MAX_ANGULAR_VELOCITY = Units.degreesToRadians(243.79) * 60;
         /** Radians per Second squared*/
-        public static final double MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(428.99) * 60; // TODO: set new Kevin values
+        public static final double MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(428.99) * 60;
         
         /* Neurtral (Idle) Modes */
         public static final IdleMode ANGLE_NEURTRAL_MODE = IdleMode.kCoast;
@@ -215,8 +212,8 @@ public class Constants {
     public static final class AutoConstants { 
         private AutoConstants() {}
         // PID contstants for pathplannerlib // 0.15
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.10, 20, 0.1, 0.2); // TODO: tune me on real robot
-        public static final PIDConstants ROTATION_PID = new PIDConstants(0.15, 0, 0, 10); // TODO: tune me on real robot
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.10, 20, 0.1, 0.2);
+        public static final PIDConstants ROTATION_PID = new PIDConstants(0.15, 0, 0, 10);
 
         // turn in place command
         public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me

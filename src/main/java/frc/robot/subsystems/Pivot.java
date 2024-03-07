@@ -9,21 +9,16 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
-import java.util.logging.LogManager;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -157,15 +152,6 @@ public class Pivot extends SubsystemBase {
     }
   }
 
-  private boolean friendlyPivotWarning() {
-    // TODO: FIX ME!!!
-    // if (Math.abs(pivotMotor1.getOutputCurrent() - pivotMotor2.getOutputCurrent()) > 10) {
-    //   DataLogManager.log("CURRENT DIFF BAD!");
-    //   return true;
-    // }
-    return false;
-  }
-
   public void resetPIDs() {
     pivotPID.reset(getAngle().getRotations());
   }
@@ -186,9 +172,6 @@ public class Pivot extends SubsystemBase {
     SmartDashboard.putNumber("Pivot Power", setPower);
     SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
     SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());
-
-
-    friendlyPivotWarning();
 
     // if the pivot is doing bad thigns or robot not enabled
     if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {

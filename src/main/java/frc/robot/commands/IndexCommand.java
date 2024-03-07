@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.Timer;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Shooter;

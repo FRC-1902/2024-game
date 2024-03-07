@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -7,12 +9,14 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -83,6 +87,16 @@ public class AutoSelector {
         return s;
     }
 
+    private boolean isBlue() {
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Blue;
+        } else {
+            // assume alliance is blue if alliance isn't set
+            return true;
+        }
+    }
+
     // Auto definitions
 
     /**
@@ -91,8 +105,17 @@ public class AutoSelector {
     private SequentialCommandGroup getAmpAuto() {
         return new SequentialCommandGroup(
             // setup odometry
-            new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.5, 7.75, Rotation2d.fromDegrees(0)))),
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.5, 7.75, Rotation2d.fromDegrees(0))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.5, 7.75, Rotation2d.fromDegrees(180)))) // TODO: get red starting point
+                ),
+                this::isBlue
+            ),
             // drive to amp
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 1")),
             // shoot in amp
@@ -100,7 +123,7 @@ public class AutoSelector {
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up piece
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
                 new IndexCommand(shooterSubsystem)
             ),
@@ -120,7 +143,17 @@ public class AutoSelector {
     private SequentialCommandGroup getThreePieceAuto(){
         return new SequentialCommandGroup(
             // setup odometry
-            // TODO: setup me
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(1.35, 5   , Rotation2d.fromDegrees(0)))) // TODO: get red starting point
+                ),
+                this::isBlue
+            ),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
             new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
@@ -137,7 +170,7 @@ public class AutoSelector {
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 2")),
                 new IndexCommand(shooterSubsystem)
             ),
@@ -147,7 +180,7 @@ public class AutoSelector {
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 3")),
                 new IndexCommand(shooterSubsystem)
             ),
@@ -166,8 +199,26 @@ public class AutoSelector {
      */
     private SequentialCommandGroup getItsRealAuto(){
         return new SequentialCommandGroup(
+            // setup odometry
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.50, 2.10, Rotation2d.fromDegrees(0))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))) // TODO: get red starting point
+                ),
+                this::isBlue
+            ),
+            // drive to shot location
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
-            // TODO: shot to speaker 
+            // shoot into speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive to end location
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 2" + getAlternativeAutoString()))
         ); 
     }
