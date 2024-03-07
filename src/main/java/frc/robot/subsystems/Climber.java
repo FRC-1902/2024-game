@@ -5,11 +5,16 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
+
 import com.revrobotics.CANSparkBase;  
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -26,6 +31,11 @@ public class Climber extends SubsystemBase {
   DigitalInput rightTopSwitch;
 
   Direction targetDirection;
+
+  LoggedDashboardBoolean leftBottomSwitchLogged;
+  LoggedDashboardBoolean leftTopSwitchLogged;
+  LoggedDashboardBoolean rightBottomSwitchLogged;
+  LoggedDashboardBoolean rightTopSwitchLogged;
 
   public enum Direction {
     UP, DOWN
@@ -48,6 +58,7 @@ public class Climber extends SubsystemBase {
     rightTopSwitch = new DigitalInput(Constants.Climber.RT_SWITCH_PORT);
 
     targetDirection = Direction.DOWN;
+    configureNTData();
   }
 
   public void setDirection(Direction targetDirection) {
@@ -65,18 +76,34 @@ public class Climber extends SubsystemBase {
     }
   }
 
+  private void configureNTData() {
+    leftBottomSwitchLogged = new LoggedDashboardBoolean("Climber/Left Bottom Switch");
+    leftTopSwitchLogged = new LoggedDashboardBoolean("Climber/Left Top Switch");
+    rightBottomSwitchLogged = new LoggedDashboardBoolean("Climber/Right Bottom Switch");
+    rightTopSwitchLogged = new LoggedDashboardBoolean("Climber/Right Top Switch");
+  }
+
+  private void putNTData() {
+    leftBottomSwitchLogged.set(!leftBottomSwitch.get());
+    leftTopSwitchLogged.set(!leftTopSwitch.get());
+    rightBottomSwitchLogged.set(!rightBottomSwitch.get());
+    rightTopSwitchLogged.set(!rightTopSwitch.get());
+  }
+
   @Override
   public void periodic() { // XXX: maybe different motor power?
-    switch (targetDirection) { // TODO: debug limit switches
+    putNTData();
+    
+    switch (targetDirection) {
       case UP:
         DataLogManager.log("UP!");
 
-        if (leftTopSwitch.get()) {
+        if (!leftTopSwitch.get()) {
           // leftMotor.set(-0.10);
         } else {
           leftMotor.set(0.0);
         }
-        if (rightTopSwitch.get()) {
+        if (!rightTopSwitch.get()) {
           rightMotor.set(-0.10);
         } else {
           rightMotor.set(0.0);
@@ -85,12 +112,12 @@ public class Climber extends SubsystemBase {
       case DOWN:
         DataLogManager.log("DOWN!");
 
-        if (leftBottomSwitch.get()) {
+        if (!leftBottomSwitch.get()) {
           // leftMotor.set(0.10);
         } else {
           leftMotor.set(0.0);
         }
-        if (rightBottomSwitch.get()) {
+        if (!rightBottomSwitch.get()) {
           rightMotor.set(0.10);
         } else {
           rightMotor.set(0.0);
@@ -99,6 +126,5 @@ public class Climber extends SubsystemBase {
       default:
         break;
     }
-    // This method will be called once per scheduler run
   }
 }
