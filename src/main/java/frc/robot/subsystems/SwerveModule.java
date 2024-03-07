@@ -87,7 +87,6 @@ public class SwerveModule {
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
     desiredSpeed = desiredState.speedMetersPerSecond;
     if(isOpenLoop){
-      // TODO: maybe use feedforward here instead
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
       driveMotor.set(percentOutput);
     }
@@ -143,7 +142,7 @@ public class SwerveModule {
     angleController.setI(Constants.Swerve.ANGLE_KI);
     angleController.setD(Constants.Swerve.ANGLE_KD);
     angleController.setFF(Constants.Swerve.ANGLE_KF);
-    angleController.setSmartMotionAllowedClosedLoopError(0.1, 0); // TODO: test me
+    angleController.setSmartMotionAllowedClosedLoopError(0.1, 0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.VOLTAGE_COMP);
     angleMotor.burnFlash();
     resetToAbsolute();

@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.137342772877097,
+        "y": 2.992030853491684
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.2341923446333025,
+        "y": 2.9719976421084917
+      },
+      "isLocked": false,
+      "linkedName": "OnePiece1"
+    },
+    {
+      "anchor": {
+        "x": 5.395280185676909,
+        "y": 4.148532012380341
+      },
+      "prevControl": {
+        "x": 4.339506353818479,
+        "y": 3.2372223789952574
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "CenterEndpoint"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "One Piece",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

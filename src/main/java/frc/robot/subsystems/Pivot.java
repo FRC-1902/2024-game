@@ -9,21 +9,16 @@ import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
-import java.util.logging.LogManager;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -56,9 +51,11 @@ public class Pivot extends SubsystemBase {
     pivotEncoder.setInverted(true);
     pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(2, 2.5));
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 1.0));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
     pivotPID.setIntegratorRange(-0.15, 0.15);
+    pivotPID.setIZone(0.1);
+    setAngle(getDefaultAngle());
   }
 
   /**
@@ -77,7 +74,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public Rotation2d getDefaultAngle() {
-    return Rotation2d.fromRotations(0.21);
+    return Rotation2d.fromRotations(0.154);
   }
 
   /**
@@ -132,7 +129,7 @@ public class Pivot extends SubsystemBase {
    * @return if the pivot pid is at the setpoint
    */
   public boolean atSetpoint() {
-    return pivotPID.atSetpoint();
+    return pivotPID.atGoal();
   }
 
   /**
@@ -155,15 +152,6 @@ public class Pivot extends SubsystemBase {
     }
   }
 
-  private boolean friendlyPivotWarning() {
-    // TODO: FIX ME
-    // if (Math.abs(pivotMotor1.getOutputCurrent() - pivotMotor2.getOutputCurrent()) > 10) {
-    //   DataLogManager.log("CURRENT DIFF BAD!");
-    //   return true;
-    // }
-    return false;
-  }
-
   public void resetPIDs() {
     pivotPID.reset(getAngle().getRotations());
   }
@@ -182,9 +170,8 @@ public class Pivot extends SubsystemBase {
 
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Power", setPower);
-    SmartDashboard.putNumber("Pivot Current", pivotMotor1.getOutputCurrent());
-
-    friendlyPivotWarning();
+    SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());
 
     // if the pivot is doing bad thigns or robot not enabled
     if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {
@@ -194,6 +181,13 @@ public class Pivot extends SubsystemBase {
       // integrator safety when stuck out of bounds
       resetPIDs();
 
+      return;
+    }
+
+    // don't power pivot when down
+    if (pivotPID.getSetpoint().position == getDefaultAngle().getRotations() && pivotPID.atSetpoint() || getAngle().getRotations() < getDefaultAngle().getRotations()) {
+      pivotMotor1.set(0);
+      pivotMotor2.set(0);
       return;
     }
 

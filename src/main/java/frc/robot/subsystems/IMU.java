@@ -19,7 +19,8 @@ public class IMU extends SubsystemBase{
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
     BNO055.vector_type_t.VECTOR_EULER, I2C.Port.kOnboard, BNO055.BNO055_ADDRESS_A);
 
-  private Rotation2d offset, fieldOffset;
+  private Rotation2d offset;
+  private Rotation2d fieldOffset;
 
   private IMU() {
     offset = Rotation2d.fromDegrees(0);

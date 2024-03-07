@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -130,9 +129,5 @@ public class AutoDriveBuilder {
                 false
             );
         }
-    }
-
-    public Command getExampleAutonomousCommand() {
-        return new PathPlannerAuto("Example Auto"); // XXX: no example auto present in this project yet
     }
 }

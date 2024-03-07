@@ -8,11 +8,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.IMU;
@@ -34,20 +34,22 @@ public class AutoShootBuilder{
    */
   public void startShotSequence() {
     DataLogManager.log(String.format("Starting Shot Sequence at X: %.3f Y: %.3f", swerveSubsystem.getPose().getX(), swerveSubsystem.getPose().getY()));
+    DataLogManager.log("Distance: " + getVecDistance(calculateTargetVector()));
     
     if (getVecDistance(calculateTargetVector()) > Constants.Arm.SHOOTER_MAX_DISTANCE) {
       return;
     }
     
-    shotSequence = new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        autoDriveCommands.getTurnCommand(calculateFaceAngle()),
-        new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
-        new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
-      ),
-      new ShootCommand(shooterSubsystem)
-    );
-    shotSequence.schedule();
+    // TODO: test & implement
+    // shotSequence = new SequentialCommandGroup(
+    //   new ParallelCommandGroup(
+    //     autoDriveCommands.getTurnCommand(calculateFaceAngle()),
+    //     new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
+    //     new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
+    //   ),
+    //   new ShootCommand(shooterSubsystem, pivotSubsystem)
+    // );
+    // shotSequence.schedule();
   }
 
   public void cancelShotSequence() {
@@ -100,8 +102,9 @@ public class AutoShootBuilder{
     Pose2d currentPosition = swerveSubsystem.getPose();
     Pose2d targetPosition;
 
-    if (DriverStation.getAlliance().isPresent()) {
-      if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+    Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      if (alliance.get() == DriverStation.Alliance.Blue) {
         targetPosition = FieldConstants.BlueConstants.SPEAKER;
       } else {
         targetPosition = FieldConstants.RedConstants.SPEAKER;

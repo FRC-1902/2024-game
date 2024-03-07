@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -39,7 +40,9 @@ public class RobotContainer {
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
 
-    Command intakeCommand, outtakeCommand;
+    Command floorIntakeCommand;
+    Command outtakeCommand;
+    Command hpIntakeCommand;
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -51,9 +54,14 @@ public class RobotContainer {
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
-        intakeCommand = new ParallelCommandGroup(
+        floorIntakeCommand = new ParallelCommandGroup(
             new IndexCommand(shooterSubsystem), 
-            new SetPivotCommand(Rotation2d.fromRotations(0.17), pivotSubsystem)
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
+        );
+
+        hpIntakeCommand = new ParallelCommandGroup(
+            new IndexCommand(shooterSubsystem), 
+            new SetPivotCommand(Rotation2d.fromRotations(0.370), pivotSubsystem)
         );
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
@@ -80,23 +88,33 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .whileTrue(new OuttakeCommand(shooterSubsystem));
 
-        // intake
+        // floor intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
-            .whileTrue(intakeCommand)
+            .whileTrue(floorIntakeCommand)
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
 
         // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
-            .whileTrue(new ShootCommand(shooterSubsystem));
+            .whileTrue(new ShootCommand(shooterSubsystem, pivotSubsystem));
         
-        // amp lineup // TODO: test me
+        // auto shoot
+        controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
+            .onTrue(new InstantCommand(() -> autoShootBuilder.startShotSequence()))
+            .onFalse(new InstantCommand(() -> autoShootBuilder.cancelShotSequence()));
+        
+        // hp intake
+        controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)
+            .whileTrue(hpIntakeCommand)
+            .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
+        
+        // amp lineup
         controllers.getTrigger(ControllerName.MANIP, Button.LB).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem))
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.5), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
         // speaker lineup
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(111), pivotSubsystem))
+            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
     }
 

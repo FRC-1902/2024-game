@@ -1,22 +1,28 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.sensors.LimelightHelpers;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
@@ -25,6 +31,8 @@ public class Swerve extends SubsystemBase {
     private IMU imu;
 
     private Field2d field;
+
+    PhotonPoseEstimator leftPhotonPoseEstimator, rightPhotonPoseEstimator;
 
     public Swerve() {
         imu = IMU.getInstance();
@@ -49,10 +57,30 @@ public class Swerve extends SubsystemBase {
             Constants.Swerve.swerveKinematics, 
             imu.getHeading(), 
             getModulePositions(), 
-            new Pose2d(0.0, 0.0, imu.getHeading()) // XXX: starting position on the field
+            new Pose2d(0.0, 0.0, imu.getHeading())
         );
 
         field = new Field2d();
+
+        // Photonvision things
+        AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+        
+        PhotonCamera leftCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Left");
+        PhotonCamera rightCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right");
+
+        leftCamera.setDriverMode(false);
+        rightCamera.setDriverMode(false);
+
+        Transform3d leftRobotToCam = Constants.Swerve.LEFT_CAMERA_OFFSET;
+        Transform3d rightRobotToCam = Constants.Swerve.RIGHT_CAMERA_OFFSET;
+
+        leftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftCamera, leftRobotToCam);
+        rightPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, rightCamera, rightRobotToCam);
+
+        leftPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        rightPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+
+        // TODO: CALIBRATE CAMERAS
     }
 
     private void logPeriodic() {
@@ -164,22 +192,31 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+
     @Override
     public void periodic(){
-        // vision odometry
-        // Pose2d limelightEstimate = LimelightHelpers.getBotPose3d_wpiBlue("").toPose2d();
+        final Optional<EstimatedRobotPose> optionalEstimatedPoseRight = rightPhotonPoseEstimator.update();
+        if (optionalEstimatedPoseRight.isPresent()) {
+            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseRight.get();          
+            swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+            SmartDashboard.putNumber("R X", estimatedPose.estimatedPose.getTranslation().getX());
+            SmartDashboard.putNumber("R Y", estimatedPose.estimatedPose.getTranslation().getY());
+        }
 
-        // update odometry if vision position deviates by less than 1 meter from current estimate (as per documentation estimate)
-        //if (limelightEstimate.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) < 1) { XXX: maybe reimplement me
-    
-        // swerveOdometry.addVisionMeasurement(
-        //     limelightEstimate, 
-        //     Timer.getFPGATimestamp() - (LimelightHelpers.getLatency_Capture("")/1000.0) - (LimelightHelpers.getLatency_Pipeline("")/1000.0)
-        // );
+        final Optional<EstimatedRobotPose> optionalEstimatedPoseLeft = leftPhotonPoseEstimator.update();
+        if (optionalEstimatedPoseLeft.isPresent()) {
+            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseLeft.get();      
+            swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+            SmartDashboard.putNumber("L X", estimatedPose.estimatedPose.getTranslation().getX());
+            SmartDashboard.putNumber("L Y", estimatedPose.estimatedPose.getTranslation().getY());
+        }
+
+        
 
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
-        field.setRobotPose(swerveOdometry.getEstimatedPosition());
+        field.setRobotPose(swerveOdometry.getEstimatedPosition().plus(new Transform2d(-0.428625,- 0.428625, Rotation2d.fromDegrees(0))));
         
+        SmartDashboard.putData("Field", field);
         logPeriodic();
     }
 }
