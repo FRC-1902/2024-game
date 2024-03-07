@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.revrobotics.CANSparkBase;  
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -36,6 +37,8 @@ public class Climber extends SubsystemBase {
   LoggedDashboardBoolean leftTopSwitchLogged;
   LoggedDashboardBoolean rightBottomSwitchLogged;
   LoggedDashboardBoolean rightTopSwitchLogged;
+
+  LoggedDashboardChooser<Boolean> climberDisabledChooser;
 
   public enum Direction {
     UP, DOWN
@@ -81,6 +84,10 @@ public class Climber extends SubsystemBase {
     leftTopSwitchLogged = new LoggedDashboardBoolean("Climber/Left Top Switch");
     rightBottomSwitchLogged = new LoggedDashboardBoolean("Climber/Right Bottom Switch");
     rightTopSwitchLogged = new LoggedDashboardBoolean("Climber/Right Top Switch");
+
+    climberDisabledChooser = new LoggedDashboardChooser<>("Climber/Climber Disable");
+    climberDisabledChooser.addDefaultOption("Normal Climbing", false);
+    climberDisabledChooser.addOption("STOP CLIMBER", true);
   }
 
   private void putNTData() {
@@ -88,16 +95,22 @@ public class Climber extends SubsystemBase {
     leftTopSwitchLogged.set(!leftTopSwitch.get());
     rightBottomSwitchLogged.set(!rightBottomSwitch.get());
     rightTopSwitchLogged.set(!rightTopSwitch.get());
+
+    
   }
 
   @Override
   public void periodic() { // XXX: maybe different motor power?
     putNTData();
+
+    if (climberDisabledChooser.get() == true) {
+      leftMotor.set(0.0);
+      rightMotor.set(0.0);
+      return;
+    }
     
     switch (targetDirection) {
       case UP:
-        DataLogManager.log("UP!");
-
         if (!leftTopSwitch.get()) {
           // leftMotor.set(-0.10);
         } else {
@@ -110,8 +123,6 @@ public class Climber extends SubsystemBase {
         }
         break;
       case DOWN:
-        DataLogManager.log("DOWN!");
-
         if (!leftBottomSwitch.get()) {
           // leftMotor.set(0.10);
         } else {
