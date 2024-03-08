@@ -41,7 +41,7 @@ public class Climber extends SubsystemBase {
   LoggedDashboardChooser<Boolean> climberDisabledChooser;
 
   public enum Direction {
-    UP, DOWN
+    UP, DOWN, STOP
   }
 
   public Climber() {
@@ -53,6 +53,8 @@ public class Climber extends SubsystemBase {
     rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
     leftMotor.setSmartCurrentLimit(Constants.Climber.CLIMBER_CURRENT_LIMIT);
     rightMotor.setSmartCurrentLimit(Constants.Climber.CLIMBER_CURRENT_LIMIT);
+    leftMotor.setInverted(false);
+    rightMotor.setInverted(true);
 
     // normally closed limit switches
     leftBottomSwitch =  new DigitalInput(Constants.Climber.LB_SWITCH_PORT);
@@ -60,7 +62,7 @@ public class Climber extends SubsystemBase {
     leftTopSwitch = new DigitalInput(Constants.Climber.LT_SWITCH_PORT); 
     rightTopSwitch = new DigitalInput(Constants.Climber.RT_SWITCH_PORT);
 
-    targetDirection = Direction.DOWN;
+    targetDirection = Direction.STOP;
     configureNTData();
   }
 
@@ -95,8 +97,6 @@ public class Climber extends SubsystemBase {
     leftTopSwitchLogged.set(!leftTopSwitch.get());
     rightBottomSwitchLogged.set(!rightBottomSwitch.get());
     rightTopSwitchLogged.set(!rightTopSwitch.get());
-
-    
   }
 
   @Override
@@ -110,29 +110,33 @@ public class Climber extends SubsystemBase {
     }
     
     switch (targetDirection) {
-      case UP:
-        if (!leftTopSwitch.get()) {
-          // leftMotor.set(-0.10);
+      case UP:        
+        if (leftTopSwitch.get()) {
+          leftMotor.set(1);
         } else {
           leftMotor.set(0.0);
         }
-        if (!rightTopSwitch.get()) {
-          rightMotor.set(-0.10);
+        if (rightTopSwitch.get()) {
+          rightMotor.set(1);
         } else {
           rightMotor.set(0.0);
         }
         break;
       case DOWN:
-        if (!leftBottomSwitch.get()) {
-          // leftMotor.set(0.10);
+        if (leftBottomSwitch.get()) {
+          leftMotor.set(-1);
         } else {
           leftMotor.set(0.0);
         }
-        if (!rightBottomSwitch.get()) {
-          rightMotor.set(0.10);
+        if (rightBottomSwitch.get()) {
+          rightMotor.set(-1);
         } else {
           rightMotor.set(0.0);
         }
+        break;
+      case STOP:
+        leftMotor.set(0);
+        rightMotor.set(0);
         break;
       default:
         break;

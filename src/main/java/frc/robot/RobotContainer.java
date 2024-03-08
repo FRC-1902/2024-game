@@ -35,7 +35,7 @@ public class RobotContainer {
     Swerve swerveSubsystem;
     Shooter shooterSubsystem;
     Pivot pivotSubsystem;
-    Climber climberSubsystem;
+    public Climber climberSubsystem;
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;

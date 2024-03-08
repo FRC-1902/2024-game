@@ -41,6 +41,8 @@ public class ClimbCommand extends Command {
       climberSubsystem.setDirection(Direction.UP);
     } else if (dpadAngle >= 135 && dpadAngle <= 225) {
       climberSubsystem.setDirection(Direction.DOWN);
+    } else if (dpadAngle == 90 || dpadAngle == 270) {
+      climberSubsystem.setDirection(Direction.STOP);
     }
   }
 

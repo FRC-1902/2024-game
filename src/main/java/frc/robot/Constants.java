@@ -25,7 +25,7 @@ public class Constants {
         private Climber() {}
         // CAN ids
         public static final int LEFT_MOTOR_ID = 4; 
-        public static final int RIGHT_MOTOR_ID = 7; 
+        public static final int RIGHT_MOTOR_ID = 7;
 
         // DIO ports
         public static final int LB_SWITCH_PORT = 0; 

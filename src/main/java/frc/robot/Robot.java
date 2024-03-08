@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.Climber;
 
 public class Robot extends LoggedRobot {
   private IMU imu;
@@ -75,7 +76,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    robotContainer.climberSubsystem.setDirection(Climber.Direction.STOP);
+  }
 
   @Override
   public void disabledPeriodic() {}
