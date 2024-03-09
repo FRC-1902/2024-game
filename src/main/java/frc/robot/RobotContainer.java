@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +35,7 @@ public class RobotContainer {
 
     Swerve swerveSubsystem;
     Shooter shooterSubsystem;
-    Pivot pivotSubsystem;
+    public Pivot pivotSubsystem;
     public Climber climberSubsystem;
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
@@ -87,6 +88,9 @@ public class RobotContainer {
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .whileTrue(new OuttakeCommand(shooterSubsystem));
+
+        controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
+            .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.8, Rotation2d.fromDegrees(90))));
 
         // floor intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)

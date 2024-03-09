@@ -44,7 +44,7 @@ public class DriveCommand extends Command {
     strafeVal = Math.pow(strafeVal, 3.0);
     strafeVal *= 1.0;
     rotationVal = Math.pow(rotationVal, 3.0);
-    rotationVal *= 0.3;
+    rotationVal *= 0.2;
 
     // drive
     swerveSubsystem.drive(

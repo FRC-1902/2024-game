@@ -173,8 +173,11 @@ public class Pivot extends SubsystemBase {
     SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
     SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());
 
-    // if the pivot is doing bad thigns or robot not enabled
-    if (checkPivotWatchdog() || !Robot.getInstance().isEnabled()) {
+    // just yell if pivot out of bounds
+    checkPivotWatchdog();
+
+    // robot not enabled
+    if (!Robot.getInstance().isEnabled()) {
       pivotMotor1.set(0);
       pivotMotor2.set(0);
 

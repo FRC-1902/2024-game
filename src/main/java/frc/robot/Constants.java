@@ -228,8 +228,8 @@ public class Constants {
     public static final class AutoConstants { 
         private AutoConstants() {}
         // PID contstants for pathplannerlib // 0.15
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.10, 20, 0.1, 0.2);
-        public static final PIDConstants ROTATION_PID = new PIDConstants(0.15, 0, 0, 10);
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(3.2, 0.0, 0.0, 0.0);
+        public static final PIDConstants ROTATION_PID = new PIDConstants(1.5, 0.0, 0, 0.0);
 
         // turn in place command
         public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me

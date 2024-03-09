@@ -78,6 +78,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     robotContainer.climberSubsystem.setDirection(Climber.Direction.STOP);
+    robotContainer.pivotSubsystem.setAngle(robotContainer.pivotSubsystem.getDefaultAngle());
   }
 
   @Override
