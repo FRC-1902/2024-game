@@ -31,13 +31,13 @@ public class ShootCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // if (!shooterSubsystem.pieceSensorActive()) {
-    //   DataLogManager.log("NO Piece Detected to Shoot, exiting shoot command early");
-    //   earlyExit = true;
-    //   return;
-    // } else {
-    //   earlyExit = false;
-    // }
+    if (!shooterSubsystem.pieceSensorActive()) {
+      DataLogManager.log("NO Piece Detected to Shoot, exiting shoot command early");
+      earlyExit = true;
+      return;
+    } else {
+      earlyExit = false;
+    }
 
     shooterSubsystem.setFlywheel(1, 0);
     startTime = Timer.getFPGATimestamp();
