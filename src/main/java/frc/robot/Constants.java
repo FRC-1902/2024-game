@@ -215,12 +215,13 @@ public class Constants {
         }
 
         /* Photonvision camera transforms */
+        
         public static final Transform3d LEFT_CAMERA_OFFSET = new Transform3d(
-            new Translation3d(Units.inchesToMeters(11.44), Units.inchesToMeters(6.21875), Units.inchesToMeters(26.5)), 
+            new Translation3d(Units.inchesToMeters(28.8604), Units.inchesToMeters(6.12), Units.inchesToMeters(0.4485)), 
             new Rotation3d(0,Units.degreesToRadians(24.24),0)
         );
         public static final Transform3d RIGHT_CAMERA_OFFSET = new Transform3d(
-            new Translation3d(Units.inchesToMeters(11.44), Units.inchesToMeters(-6.21875), Units.inchesToMeters(26.5)), 
+            new Translation3d(Units.inchesToMeters(28.8604), Units.inchesToMeters(-6.12), Units.inchesToMeters(0.4485)), 
             new Rotation3d(0,Units.degreesToRadians(24.24),0)
         );
     }
