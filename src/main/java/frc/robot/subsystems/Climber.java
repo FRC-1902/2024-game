@@ -110,7 +110,11 @@ public class Climber extends SubsystemBase {
     }
     
     switch (targetDirection) {
-      case UP:        
+      case UP:
+        // TODO: disabled for orlando
+        leftMotor.set(1);
+        rightMotor.set(1);
+        /*      
         if (leftTopSwitch.get()) {
           leftMotor.set(1);
         } else {
@@ -121,6 +125,7 @@ public class Climber extends SubsystemBase {
         } else {
           rightMotor.set(0.0);
         }
+        */
         break;
       case DOWN:
         if (leftBottomSwitch.get()) {

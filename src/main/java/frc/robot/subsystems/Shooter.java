@@ -79,7 +79,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean pieceSensorActive() {
-    return pieceSensor.getRed() > 3000;
+    return pieceSensor.getRed() > 1150;
   }
 
   private void configureShuffleboardData() {

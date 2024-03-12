@@ -59,7 +59,7 @@ public class Constants {
         public static final double PIVOT_DEGREES_TOLERANCE = 0.008;
 
         // Pivot Encoder Offset
-    /****NOTE**** ----------- Will need to be reset on every change of the pivot. ----------- ****NOTE****/
+    /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
         public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.101);
 
         // Power Considerations
@@ -229,8 +229,8 @@ public class Constants {
     public static final class AutoConstants { 
         private AutoConstants() {}
         // PID contstants for pathplannerlib // 0.15
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(3.2, 0.0, 0.0, 0.0);
-        public static final PIDConstants ROTATION_PID = new PIDConstants(1.5, 0.0, 0, 0.0);
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(2.8, 0.0, 0.0, 0.5);
+        public static final PIDConstants ROTATION_PID = new PIDConstants(2.6, 0.0, 0, 0.1);
 
         // turn in place command
         public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me

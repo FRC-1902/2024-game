@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.137342772877097,
-        "y": 2.992030853491684
+        "x": 2.2699561658834755,
+        "y": 2.994669160814459
       },
       "prevControl": {
-        "x": 2.16538195583625,
-        "y": 3.4652046497380034
+        "x": 1.2979953488426288,
+        "y": 3.4678429570607783
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 130.0,
-    "rotateFast": false
+    "rotation": 130.9846879662379,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "One Piece",

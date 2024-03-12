@@ -89,6 +89,7 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .whileTrue(new OuttakeCommand(shooterSubsystem));
 
+        // TODO: remove tmp debug code
         controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
             .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.8, Rotation2d.fromDegrees(90))));
 
@@ -96,7 +97,7 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
             .whileTrue(floorIntakeCommand)
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
-
+        
         // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .whileTrue(new ShootCommand(shooterSubsystem, pivotSubsystem));

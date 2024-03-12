@@ -244,13 +244,15 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
 
-        field.setRobotPose(swerveOdometry.getEstimatedPosition().plus(
+        field.setRobotPose(swerveOdometry.getEstimatedPosition());
+
+        /*.plus(
             new Transform2d(
                 Math.sin(imu.getFieldHeading().getRadians() + Math.PI / 4) * 0.606, 
                 Math.cos(imu.getFieldHeading().getRadians() + Math.PI / 4) * 0.606, 
                 Rotation2d.fromDegrees(0)
             )
-        ));
+        ) */
 
         SmartDashboard.putNumber("X", swerveOdometry.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Y", swerveOdometry.getEstimatedPosition().getY());

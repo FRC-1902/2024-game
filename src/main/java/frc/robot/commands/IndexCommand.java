@@ -27,7 +27,7 @@ public class IndexCommand extends Command {
       earlyExit = true;
       return;
     }
-    shooterSubsystem.setIndexer(0.8);
+    shooterSubsystem.setIndexer(1);
     count = 0;
   }
 
@@ -61,6 +61,6 @@ public class IndexCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count > 3 || earlyExit;
+    return count > 7 || earlyExit;
   }
 }
