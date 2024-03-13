@@ -85,10 +85,6 @@ public class Swerve extends SubsystemBase {
         rightPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 
-    private void logPeriodic() {
-        Logger.recordOutput("Swerve Estimated Pose", swerveOdometry.getEstimatedPosition());
-    }
-
     /**
      * Drive the swerve drive by inputing velocities, and specifying control modes
      * @param translation X and Y velocities as Translation2D object (a velocity vector)
@@ -197,67 +193,33 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        
+        // right vision
         final Optional<EstimatedRobotPose> optionalEstimatedPoseRight = rightPhotonPoseEstimator.update();
         if (optionalEstimatedPoseRight.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPoseRight.get();      
             swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
             SmartDashboard.putNumber("R X", estimatedPose.estimatedPose.getTranslation().getX());
             SmartDashboard.putNumber("R Y", estimatedPose.estimatedPose.getTranslation().getY());
-            SmartDashboard.putNumber("R Z", estimatedPose.estimatedPose.getTranslation().getZ());
-
+            // SmartDashboard.putNumber("R Z", estimatedPose.estimatedPose.getTranslation().getZ());
         }
-
+        // left vision
         final Optional<EstimatedRobotPose> optionalEstimatedPoseLeft = leftPhotonPoseEstimator.update();
         if (optionalEstimatedPoseLeft.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPoseLeft.get();      
             swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
             SmartDashboard.putNumber("L X", estimatedPose.estimatedPose.getTranslation().getX());
             SmartDashboard.putNumber("L Y", estimatedPose.estimatedPose.getTranslation().getY());
-            SmartDashboard.putNumber("L Z", estimatedPose.estimatedPose.getTranslation().getZ());
-
-        }
-        
-        /*
-        var rRes = rightCamera.getLatestResult();
-        if (rRes.getMultiTagResult().estimatedPose.isPresent) {
-            Transform3d fieldToCamera = rRes.getMultiTagResult().estimatedPose.best;
-            Transform3d fieldToRobot = fieldToCamera.plus(Constants.Swerve.RIGHT_CAMERA_OFFSET_A).plus(Constants.Swerve.RIGHT_CAMERA_OFFSET_B);
-            // swerveOdometry.addVisionMeasurement(new Pose2d(fieldToRobot.getTranslation().toTranslation2d(), fieldToRobot.getRotation().toRotation2d()), rRes.getTimestampSeconds());
-            SmartDashboard.putNumber("R X", fieldToRobot.getX());
-            SmartDashboard.putNumber("R Y", fieldToRobot.getY());
-            SmartDashboard.putNumber("R Z", fieldToRobot.getZ());
+            // SmartDashboard.putNumber("L Z", estimatedPose.estimatedPose.getTranslation().getZ());
         }
 
-        var lRes = leftCamera.getLatestResult();
-        if (lRes.getMultiTagResult().estimatedPose.isPresent) {
-            Transform3d fieldToCamera = lRes.getMultiTagResult().estimatedPose.best;
-            Transform3d fieldToRobot = fieldToCamera.plus(Constants.Swerve.LEFT_CAMERA_OFFSET_A).plus(Constants.Swerve.LEFT_CAMERA_OFFSET_B);
-            // swerveOdometry.addVisionMeasurement(new Pose2d(fieldToRobot.getTranslation().toTranslation2d(), fieldToRobot.getRotation().toRotation2d()), lRes.getTimestampSeconds());
-
-            SmartDashboard.putNumber("L X", fieldToRobot.getX());
-            SmartDashboard.putNumber("L Y", fieldToRobot.getY());
-            SmartDashboard.putNumber("L Z", fieldToRobot.getZ());
-        }
-        */
-        
-
+        // process & log odometry
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());
+        Pose2d odometryPose = swerveOdometry.getEstimatedPosition();
+        field.setRobotPose(odometryPose);
+        Logger.recordOutput("Swerve/Pose", odometryPose);
 
-        field.setRobotPose(swerveOdometry.getEstimatedPosition());
-
-        /*.plus(
-            new Transform2d(
-                Math.sin(imu.getFieldHeading().getRadians() + Math.PI / 4) * 0.606, 
-                Math.cos(imu.getFieldHeading().getRadians() + Math.PI / 4) * 0.606, 
-                Rotation2d.fromDegrees(0)
-            )
-        ) */
-
-        SmartDashboard.putNumber("X", swerveOdometry.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Y", swerveOdometry.getEstimatedPosition().getY());
-        
+        SmartDashboard.putNumber("X", odometryPose.getX());
+        SmartDashboard.putNumber("Y", odometryPose.getY());
         SmartDashboard.putData("Field", field);
-        logPeriodic();
     }
 }

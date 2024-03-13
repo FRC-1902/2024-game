@@ -103,9 +103,9 @@ public class RobotContainer {
             .whileTrue(new ShootCommand(shooterSubsystem, pivotSubsystem));
         
         // auto shoot
-        controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
-            .onTrue(new InstantCommand(() -> autoShootBuilder.startShotSequence()))
-            .onFalse(new InstantCommand(() -> autoShootBuilder.cancelShotSequence()));
+        // controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
+        //     .onTrue(new InstantCommand(() -> autoShootBuilder.startShotSequence()))
+        //     .onFalse(new InstantCommand(() -> autoShootBuilder.cancelShotSequence()));
         
         // hp intake
         controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)

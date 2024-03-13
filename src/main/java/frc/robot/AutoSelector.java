@@ -130,7 +130,7 @@ public class AutoSelector {
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
                 new IndexCommand(shooterSubsystem)
             ),
-            // shoot into speaker // TODO: debug from here, up until here it is tested
+            // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
             new SetPivotCommand(Rotation2d.fromRotations(0.35), pivotSubsystem), // TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),

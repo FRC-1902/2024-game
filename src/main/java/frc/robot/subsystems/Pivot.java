@@ -168,6 +168,7 @@ public class Pivot extends SubsystemBase {
       setPower += feedFoward / 1.7;
     }
 
+    // XXX: maybe migrate to logs?
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Power", setPower);
     SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
