@@ -79,7 +79,7 @@ public class AutoSelector {
         return autoChooser.get();
     }  
 
-    // TODO: properly debug the alternative selector later
+    // TODO: properly debug the alternative selector later, for now no alternative selectors
     private String getAlternativeAutoString() {
         String s = alternativeSelector.get();
         if (s == null) {
@@ -109,11 +109,13 @@ public class AutoSelector {
             new ConditionalCommand(
                 new SequentialCommandGroup( // blue starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
                     new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.44, 7.77, Rotation2d.fromDegrees(0))))
                 ),
                 new SequentialCommandGroup( // red starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
-                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.5, 7.75, Rotation2d.fromDegrees(180)))) // TODO: get red starting point
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(16.05, 7.77, Rotation2d.fromDegrees(180))))
                 ),
                 this::isBlue
             ),
@@ -139,7 +141,7 @@ public class AutoSelector {
     }
 
     /**
-     * 4 shots into the speaker (3 ground + 1 preload) // TODO: debug from here
+     * 4 shots into the speaker (3 ground + 1 preload)
      */
     private SequentialCommandGroup getThreePieceAuto(){
         return new SequentialCommandGroup(
@@ -147,11 +149,13 @@ public class AutoSelector {
             new ConditionalCommand(
                 new SequentialCommandGroup( // blue starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(180))),
                     new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))))
                 ),
                 new SequentialCommandGroup( // red starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
-                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(1.35, 5   , Rotation2d.fromDegrees(0)))) // TODO: get red starting point
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))))
                 ),
                 this::isBlue
             ),
@@ -204,11 +208,13 @@ public class AutoSelector {
             new ConditionalCommand(
                 new SequentialCommandGroup( // blue starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
                     new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.50, 2.10, Rotation2d.fromDegrees(0))))
                 ),
                 new SequentialCommandGroup( // red starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
-                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))) // TODO: get red starting point
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(16.05, 2.10, Rotation2d.fromDegrees(180))))
                 ),
                 this::isBlue
             ),
