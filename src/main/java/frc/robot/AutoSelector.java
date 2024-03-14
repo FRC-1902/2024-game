@@ -172,7 +172,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.345), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
