@@ -223,7 +223,7 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.32), pivotSubsystem), // TODO: find good angle, 0.3 too low (shot too high)
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location
