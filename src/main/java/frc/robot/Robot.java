@@ -58,15 +58,6 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
     autoSelector = new AutoSelector(robotContainer);
 
-    // changes field offset based on alliance, to keep rotation relative to blue origin
-    DriverStation.getAlliance().ifPresent(alliance -> {
-      if (alliance == Alliance.Red) {
-        imu.setFieldOffset(Rotation2d.fromDegrees(180));
-      } else {
-        imu.setFieldOffset(Rotation2d.fromDegrees(0));
-      }
-    });
-
     instance = this;
   }
 

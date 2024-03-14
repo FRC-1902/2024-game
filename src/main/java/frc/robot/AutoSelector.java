@@ -93,8 +93,9 @@ public class AutoSelector {
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Blue;
         } else {
-            // assume alliance is blue if alliance isn't set
-            return true;
+            // TODO: make blue again
+            // assume alliance is red if alliance isn't set
+            return false;
         }
     }
 
@@ -171,7 +172,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.35), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.345), pivotSubsystem), // TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
