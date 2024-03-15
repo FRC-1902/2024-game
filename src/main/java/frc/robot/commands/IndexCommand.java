@@ -61,6 +61,6 @@ public class IndexCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count > 3 || earlyExit;
+    return count > 4 || earlyExit; // 3 kinda reliable ig but sometimes intakes too far
   }
 }

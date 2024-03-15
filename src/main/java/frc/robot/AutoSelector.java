@@ -133,7 +133,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.35), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.347), pivotSubsystem), // 0.35 shot just barely too low
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location
@@ -172,7 +172,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.30), pivotSubsystem), // TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
@@ -182,7 +182,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.32), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.322), pivotSubsystem), // TODO: find good angle // 0.32 just slightly too high
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
@@ -223,7 +223,7 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.32), pivotSubsystem), // TODO: find good angle, 0.3 too low (shot too high)
+            new SetPivotCommand(Rotation2d.fromRotations(0.34), pivotSubsystem), // TODO: find good angle, 0.32 too low (shot too high)
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location
