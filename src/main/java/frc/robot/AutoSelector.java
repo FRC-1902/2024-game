@@ -133,7 +133,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.347), pivotSubsystem), // 0.35 shot just barely too low
+            new SetPivotCommand(Rotation2d.fromRotations(0.346), pivotSubsystem), // 0.347 shot just BARELY too low
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location
