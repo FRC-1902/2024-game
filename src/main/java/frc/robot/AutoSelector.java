@@ -182,7 +182,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.322), pivotSubsystem), // TODO: find good angle // 0.32 just slightly too high
+            new SetPivotCommand(Rotation2d.fromRotations(0.321), pivotSubsystem), // TODO: find good angle // 0.32 just slightly too high & 0.322 slightly too low
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
@@ -223,7 +223,7 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.34), pivotSubsystem), // TODO: find good angle, 0.32 too low (shot too high)
+            new SetPivotCommand(Rotation2d.fromRotations(0.343), pivotSubsystem), // TODO: find good angle, 0.34 just SLIGHTLY too low (shot too high)
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location

@@ -56,7 +56,7 @@ public class Constants {
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
-        public static final double PIVOT_DEGREES_TOLERANCE = 0.008;
+        public static final double PIVOT_DEGREES_TOLERANCE = 0.007; // XXX: 0.008 earlier
 
         // Pivot Encoder Offset
     /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
