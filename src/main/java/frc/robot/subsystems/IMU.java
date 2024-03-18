@@ -5,6 +5,8 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.BNO055;
 import frc.robot.Constants;
@@ -18,18 +20,23 @@ public class IMU extends SubsystemBase{
     BNO055.vector_type_t.VECTOR_EULER, I2C.Port.kOnboard, BNO055.BNO055_ADDRESS_A);
 
   private Rotation2d offset;
+  private Rotation2d fieldOffset;
 
   private IMU() {
     offset = Rotation2d.fromDegrees(0);
+    fieldOffset = Rotation2d.fromDegrees(0);
     initializeLogger();
   }
 
   private void initializeLogger() {
+    ShuffleboardTab shooterTab = Shuffleboard.getTab("IMU");
+    shooterTab.addNumber("Heading", () -> getHeading().getDegrees());
     Logger.recordOutput("IMU heading", getHeading().getDegrees());
     Logger.recordOutput("IMU roll", getRoll());
     Logger.recordOutput("IMU pitch", getPitch());
     Logger.recordOutput("IMU turn", getTurns());
     Logger.recordOutput("IMU offset", offset.getDegrees());
+    Logger.recordOutput("IMU field offset", fieldOffset.getDegrees());
   }
 
   @Override
@@ -46,6 +53,14 @@ public class IMU extends SubsystemBase{
   public Rotation2d getHeading() {
     double[] xyz = bno055Euler.getVector();
     return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(offset) : Rotation2d.fromDegrees(xyz[0]).plus(offset);
+  }
+
+  /**
+   * @return returns the imu's x scalar (heading/yaw) as a Rotation2d object for blue field origin
+   */
+  public Rotation2d getFieldHeading() {
+    double[] xyz = bno055Euler.getVector();
+    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(fieldOffset) : Rotation2d.fromDegrees(xyz[0]).plus(fieldOffset);
   }
 
   /**
@@ -79,6 +94,14 @@ public class IMU extends SubsystemBase{
   public void setOffset(Rotation2d offset) {
     this.offset = offset;
     Logger.recordOutput("IMU offset", offset.getDegrees());
+  }
+
+  /**
+   * @param offset sets imu x heading offset for blue field origin
+   */
+  public void setFieldOffset(Rotation2d fieldOffset) {
+    this.fieldOffset = fieldOffset;
+    Logger.recordOutput("IMU field offset", fieldOffset.getDegrees());
   }
 
   /**

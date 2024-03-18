@@ -40,11 +40,11 @@ public class DriveCommand extends Command {
 
     // cube controls for better handling, and scale down for softer pre-season movement
     translationVal = Math.pow(translationVal, 3.0);
-    translationVal *= 0.5;
+    translationVal *= 1.0;
     strafeVal = Math.pow(strafeVal, 3.0);
-    strafeVal *= 0.5;
+    strafeVal *= 1.0;
     rotationVal = Math.pow(rotationVal, 3.0);
-    rotationVal *= 0.5;
+    rotationVal *= 0.2;
 
     // drive
     swerveSubsystem.drive(

@@ -1,6 +1,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,7 +20,7 @@ public class Controllers {
   public enum Button{
     A(1), B(2), X(3), Y(4), LB(5), RB(6), LS(9), RS(10);
 
-    public final int id;
+    public final int id; 
     Button(int id) {
       this.id = id;
     }
@@ -107,6 +110,25 @@ public class Controllers {
       default:
         return 0;
     }
+  }
+
+  /**
+   * Vibrate both controllers for a specified duration and intensity
+   * @param msDuration duration of vibration in milliseconds
+   * @param intensity 0-1 strenght of vibration
+   */
+  public void vibrate(long msDuration, double intensity) {
+    driveController.setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, intensity);
+    manipController.setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, intensity);
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        driveController.setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0);
+        manipController.setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, 0);
+      }
+    }, msDuration);
   }
 
   public static Controllers getInstance(){

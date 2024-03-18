@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -17,11 +16,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Swerve;
 
-public class AutoDriveCommands {
+public class AutoDriveBuilder {
     private Swerve swerveSubsystem;
     private IMU imu;
 
-    public AutoDriveCommands(Swerve swerveSubsystem) {
+    public AutoDriveBuilder(Swerve swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
 
         AutoBuilder.configureHolonomic(
@@ -71,14 +70,20 @@ public class AutoDriveCommands {
         );
     }
 
-    public Command followPathCommand(PathPlannerPath path) {
+    public Command getFollowPathCommand(PathPlannerPath path) {
         return AutoBuilder.followPath(path);
     }
 
-    public Command turnCommand(Rotation2d rot) {
+    /**
+     * @return command to turn to a specific field-centric angle relative to the blue origin
+     */
+    public Command getTurnCommand(Rotation2d rot) {
         return new TurnCommand(rot);
     }
 
+    /**
+     * Turn to a specific field-centric angle relative to the blue origin
+     */
     private class TurnCommand extends Command {
         private PIDController turnPID;
         private Rotation2d targetRot;
@@ -104,7 +109,7 @@ public class AutoDriveCommands {
         public void execute() {
             swerveSubsystem.drive(
                 new Translation2d(0, 0), 
-                turnPID.calculate(imu.getHeading().getRotations()), 
+                turnPID.calculate(imu.getFieldHeading().getRotations()), 
                 false, 
                 false
             );
@@ -124,9 +129,5 @@ public class AutoDriveCommands {
                 false
             );
         }
-    }
-
-    public Command getExampleAutonomousCommand() {
-        return new PathPlannerAuto("Example Auto"); // XXX: no example auto present in this project yet
     }
 }

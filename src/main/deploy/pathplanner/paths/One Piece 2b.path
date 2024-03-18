@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4,
-        "y": 5.5
+        "x": 2.2699561658834755,
+        "y": 2.994669160814459
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9,
-        "y": 5.5
+        "x": 3.366805737639681,
+        "y": 2.9746359494312666
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "OnePiece1"
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 2.0
+        "x": 5.395280185676909,
+        "y": 4.148532012380341
       },
       "prevControl": {
-        "x": 2.5,
-        "y": 2.0
+        "x": 4.339506353818479,
+        "y": 3.2372223789952574
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterEndpoint"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "One Piece",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

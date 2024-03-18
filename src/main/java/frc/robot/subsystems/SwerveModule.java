@@ -66,28 +66,27 @@ public class SwerveModule {
   }
 
   // use to calculate feed forward values
-  /*/
-  private double tmpTime = System.currentTimeMillis();
-  private double tmpVel = 0.0;
-  private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    double voltage = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed * 12.0;
-    driveMotor.setVoltage(voltage);
-
-    double accel = (driveEncoder.getVelocity()-tmpVel)/((System.currentTimeMillis()-tmpTime)/1000.0);
-
-    if (moduleNumber == 0 && voltage > 0 && accel > 0 && driveEncoder.getVelocity() > 0) {
-      double err = voltage - (Constants.Swerve.driveKA + Constants.Swerve.driveKV * driveEncoder.getVelocity() + Constants.Swerve.driveKA * accel);
-      System.out.format("Voltage: %.3f Velocity: %.4f Acceleration: %.5f Err: %.3f\n", voltage, driveEncoder.getVelocity(), accel, err);
-    }
-    tmpTime = System.currentTimeMillis();
-    tmpVel = driveEncoder.getVelocity();
-    
-  }*/
+  
+  // private double tmpTime = System.currentTimeMillis();
+  // private double tmpVel = 0.0;
+  // private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+  //   double voltage = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED * 12.0;
+  //   driveMotor.setVoltage(voltage);
+  // 
+  //   double accel = (driveEncoder.getVelocity()-tmpVel)/((System.currentTimeMillis()-tmpTime)/1000.0);
+  // 
+  //   if (moduleNumber == 0 && voltage > 0 && accel > 0 && driveEncoder.getVelocity() > 0) {
+  //     double err = voltage - (Constants.Swerve.DRIVE_KA + Constants.Swerve.DRIVE_KV * driveEncoder.getVelocity() + Constants.Swerve.DRIVE_KA * accel);
+  //     System.out.format("Voltage: %.3f Velocity: %.4f Acceleration: %.5f Err: %.3f\n", voltage, driveEncoder.getVelocity(), accel, err);
+  //   }
+  //   tmpTime = System.currentTimeMillis();
+  //   tmpVel = driveEncoder.getVelocity();
+  //   
+  // }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
     desiredSpeed = desiredState.speedMetersPerSecond;
     if(isOpenLoop){
-      // TODO: maybe use feedforward here instead
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
       driveMotor.set(percentOutput);
     }
@@ -143,7 +142,7 @@ public class SwerveModule {
     angleController.setI(Constants.Swerve.ANGLE_KI);
     angleController.setD(Constants.Swerve.ANGLE_KD);
     angleController.setFF(Constants.Swerve.ANGLE_KF);
-    angleController.setSmartMotionAllowedClosedLoopError(0.1, 0); // TODO: test me
+    angleController.setSmartMotionAllowedClosedLoopError(0.1, 0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.VOLTAGE_COMP);
     angleMotor.burnFlash();
     resetToAbsolute();
