@@ -43,7 +43,7 @@ public class AutoDriveBuilder {
                 if (alliance.isPresent()) {
                     return alliance.get() == DriverStation.Alliance.Red;
                 }
-                return true; // TODO: make false for blue
+                return false; // make false for blue default
             },
             swerveSubsystem
         );

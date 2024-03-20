@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.IndexCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.Swerve;
@@ -38,6 +40,7 @@ public class AutoSelector {
     Swerve swerveSubsystem;
     Pivot pivotSubsystem;
     Shooter shooterSubsystem;
+    Intake intakeSubsystem;
 
     Command shootCommand;
     AutoDriveBuilder autoDriveBuilder;
@@ -48,6 +51,7 @@ public class AutoSelector {
         swerveSubsystem = robotContainer.swerveSubsystem;
         shooterSubsystem = robotContainer.shooterSubsystem;
         pivotSubsystem = robotContainer.pivotSubsystem;
+        intakeSubsystem = robotContainer.intakeSubsystem;
 
         alternativeSelector = new LoggedDashboardChooser<>("Alternative Auto Chooser");
         alternativeSelector.addDefaultOption("Regular Side Endpoint", "a");
@@ -93,9 +97,8 @@ public class AutoSelector {
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Blue;
         } else {
-            // TODO: make blue again
             // assume alliance is red if alliance isn't set
-            return false;
+            return true;
         }
     }
 
@@ -129,7 +132,8 @@ public class AutoSelector {
             // drive & pick up piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
-                new IndexCommand(shooterSubsystem)
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
@@ -168,7 +172,8 @@ public class AutoSelector {
             // drive & pick up to first piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 1")),
-                new IndexCommand(shooterSubsystem)
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
@@ -178,7 +183,8 @@ public class AutoSelector {
             // drive & pick up to second piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 2")),
-                new IndexCommand(shooterSubsystem)
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
@@ -188,7 +194,8 @@ public class AutoSelector {
             // drive & pick up to third piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 3")),
-                new IndexCommand(shooterSubsystem)
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 4")),
             // shoot into speaker

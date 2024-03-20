@@ -37,6 +37,11 @@ public class Constants {
         public static final int CLIMBER_CURRENT_LIMIT = 40;
     }
 
+    public static final class Intake {
+        public static final int INTAKE_MOTOR_ID = 3;
+        public static final int INTAKE_CURRENT_LIMIT = 40;
+    }
+
     public static final class Arm {
         private Arm() {}
 
@@ -48,15 +53,15 @@ public class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
         // PID Values
-        public static final double PIVOT_KP = 1.8;
-        public static final double PIVOT_KI = 0.2;
-        public static final double PIVOT_KD = 0.015;
-        public static final double PIVOT_KF = 0.1; // gravity compensation feedforward
+        public static final double PIVOT_KP = 1.0;// 1.8;
+        public static final double PIVOT_KI = 0.3;// 0.2;
+        public static final double PIVOT_KD = 0.0;// 0.015;
+        public static final double PIVOT_KF = 0.07;// 0.1; // gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
-        public static final double PIVOT_DEGREES_TOLERANCE = 0.007; // XXX: 0.008 earlier
+        public static final double PIVOT_DEGREES_TOLERANCE = 0.008; // XXX: 0.008 earlier
 
         // Pivot Encoder Offset
     /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/

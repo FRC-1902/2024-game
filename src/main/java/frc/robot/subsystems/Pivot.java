@@ -51,9 +51,9 @@ public class Pivot extends SubsystemBase {
     pivotEncoder.setInverted(true);
     pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 1.0));
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 4.0));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
-    pivotPID.setIntegratorRange(-0.15, 0.15);
+    pivotPID.setIntegratorRange(-0.1, 0.1);
     pivotPID.setIZone(0.1);
     setAngle(getDefaultAngle());
   }
@@ -165,7 +165,7 @@ public class Pivot extends SubsystemBase {
     if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
       setPower += feedFoward;
     } else {
-      setPower += feedFoward / 1.7;
+      setPower += feedFoward / 1.0;
     }
 
     // XXX: maybe migrate to logs?

@@ -21,8 +21,10 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.IndexCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
@@ -38,6 +40,7 @@ public class RobotContainer {
     Shooter shooterSubsystem;
     public Pivot pivotSubsystem;
     public Climber climberSubsystem;
+    public Intake intakeSubsystem;
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
@@ -51,6 +54,7 @@ public class RobotContainer {
         shooterSubsystem = new Shooter();
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
+        intakeSubsystem = new Intake();
         controllers = Controllers.getInstance();
 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
@@ -58,7 +62,8 @@ public class RobotContainer {
 
         floorIntakeCommand = new ParallelCommandGroup(
             new IndexCommand(shooterSubsystem), 
-            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            new IntakeCommand(intakeSubsystem, shooterSubsystem)
         );
 
         hpIntakeCommand = new ParallelCommandGroup(
@@ -88,7 +93,7 @@ public class RobotContainer {
 
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
-            .whileTrue(new OuttakeCommand(shooterSubsystem));
+            .whileTrue(new OuttakeCommand(shooterSubsystem, intakeSubsystem));
 
         // TODO: remove tmp debug code
         // charge at blue amp
