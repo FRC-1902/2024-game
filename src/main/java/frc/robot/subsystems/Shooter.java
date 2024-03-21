@@ -36,8 +36,8 @@ public class Shooter extends SubsystemBase {
     bottomShooterMotor.enableVoltageCompensation(Constants.Arm.SHOOTER_VOLTAGE_COMPENSATION);
     topShooterMotor.setSmartCurrentLimit(Constants.Arm.SHOOTER_CURRENT_LIMIT);
     bottomShooterMotor.setSmartCurrentLimit(Constants.Arm.SHOOTER_CURRENT_LIMIT);
-    topShooterMotor.setIdleMode(IdleMode.kCoast);
-    bottomShooterMotor.setIdleMode(IdleMode.kCoast);
+    topShooterMotor.setIdleMode(IdleMode.kBrake);
+    bottomShooterMotor.setIdleMode(IdleMode.kBrake);
 
     topShooterMotor.setInverted(true);
     bottomShooterMotor.setInverted(true);

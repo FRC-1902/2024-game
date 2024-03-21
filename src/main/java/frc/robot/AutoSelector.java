@@ -97,8 +97,7 @@ public class AutoSelector {
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Blue;
         } else {
-            // assume alliance is red if alliance isn't set
-            return true;
+            return false; // true for default to blue alliance
         }
     }
 
@@ -166,7 +165,7 @@ public class AutoSelector {
             ),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.282), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to first piece
@@ -177,7 +176,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.30), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.32), pivotSubsystem), // 0.30 shot way too high TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
@@ -188,7 +187,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.321), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.325), pivotSubsystem), // 0.321 shot too high, TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
