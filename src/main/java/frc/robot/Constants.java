@@ -53,9 +53,9 @@ public class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
         // PID Values
-        public static final double PIVOT_KP = 1.0;// 1.8;
-        public static final double PIVOT_KI = 0.3;// 0.2;
-        public static final double PIVOT_KD = 0.0;// 0.015;
+        public static final double PIVOT_KP = 1.4;// 1.8;
+        public static final double PIVOT_KI = 0.4;// 0.2;
+        public static final double PIVOT_KD = 0.01;// 0.015;
         public static final double PIVOT_KF = 0.07;// 0.1; // gravity compensation feedforward
 
         // Pivot Positions
