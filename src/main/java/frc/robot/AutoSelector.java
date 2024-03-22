@@ -176,7 +176,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.32), pivotSubsystem), // 0.30 shot way too high TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.34), pivotSubsystem), // 0.335 slightly shot too high q32 TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
@@ -187,7 +187,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.325), pivotSubsystem), // 0.321 shot too high, TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.33), pivotSubsystem), // 0.325 slightly too high q32, TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
