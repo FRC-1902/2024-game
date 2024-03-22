@@ -20,7 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "One Piece 2b"
+            "pathName": "One Piece 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "One Piece 3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         }
       ]
