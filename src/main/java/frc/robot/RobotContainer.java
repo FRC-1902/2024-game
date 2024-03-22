@@ -4,15 +4,15 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.subsystems.Climber;
@@ -85,8 +85,24 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* -------- drive code -------- */
 
+        // reset driver field-centric gyro offset
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
+
+        // charge at amp
+        controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
+            .whileTrue(new ConditionalCommand(
+                autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))), // blue amp
+                autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))), // red amp
+                this::isBlue
+            ));
+        // charge at speaker
+        controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
+            .whileTrue(new ConditionalCommand(
+                autoDriveBuilder.getPathFindingCommand(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))), // blue speaker
+                autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
+                this::isBlue
+            ));
 
 
         /* -------- manip code -------- */
@@ -94,14 +110,6 @@ public class RobotContainer {
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .whileTrue(new OuttakeCommand(shooterSubsystem, intakeSubsystem));
-
-        // TODO: remove tmp debug code
-        // charge at blue amp
-        controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
-            .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))));
-        // charge at red amp
-        controllers.getTrigger(ControllerName.DRIVE, Button.B).debounce(0.05)
-            .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))));
 
         // floor intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
@@ -132,6 +140,15 @@ public class RobotContainer {
             .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
+    }
+
+    private boolean isBlue() {
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Blue;
+        } else {
+            return false; // true for default to blue alliance
+        }
     }
 
     public void resetPIDs() {

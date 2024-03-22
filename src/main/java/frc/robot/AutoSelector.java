@@ -62,7 +62,7 @@ public class AutoSelector {
         autoChooser.addOption("Amp", getAmpAuto());
         autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());
-        autoChooser.addOption("Test" ,getTestAuto());
+        autoChooser.addOption("Single Pringle", getSinglePreLoadAmpSide());
 
         
 
@@ -235,6 +235,34 @@ public class AutoSelector {
             // drive to end location
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 2" + getAlternativeAutoString()))
         ); 
+    }
+
+    /**
+     * Just shoot pre-loaded shot into speaker on the amp side // TODO: validate both sides
+     * @return
+     */
+    private SequentialCommandGroup getSinglePreLoadAmpSide() {
+        return new SequentialCommandGroup(
+            // setup odometry
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(240))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(240))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.70, 6.70, Rotation2d.fromDegrees(240))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(300))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(120))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(15.90, 6.70, Rotation2d.fromDegrees(300))))
+                ),
+                this::isBlue
+            ),
+            // shoot speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
+        );
     }
 
     private SequentialCommandGroup getTestAuto() {
