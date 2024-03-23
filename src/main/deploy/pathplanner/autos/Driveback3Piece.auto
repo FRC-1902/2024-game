@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.35,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,31 +14,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Amp 1"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
+            "pathName": "Driveback 3 Piece 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Amp 2"
+            "pathName": "Driveback 3 Piece 2"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Amp 3b"
+            "pathName": "Driveback 3 Piece 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Driveback 3 Piece 4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         }
       ]
