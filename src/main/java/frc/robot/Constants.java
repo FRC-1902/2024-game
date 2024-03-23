@@ -53,7 +53,7 @@ public class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
         // PID Values
-        public static final double PIVOT_KP = 1.4;// 1.8;
+        public static final double PIVOT_KP = 1.8;// 1.8;
         public static final double PIVOT_KI = 0.4;// 0.2;
         public static final double PIVOT_KD = 0.01;// 0.015;
         public static final double PIVOT_KF = 0.07;// 0.1; // gravity compensation feedforward
@@ -65,7 +65,7 @@ public class Constants {
 
         // Pivot Encoder Offset
     /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.120); // 0.101
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.070); // 0.101
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0;
