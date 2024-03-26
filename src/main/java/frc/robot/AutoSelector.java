@@ -63,16 +63,9 @@ public class AutoSelector {
         autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());
         autoChooser.addOption("Single Pringle", getSinglePreLoadAmpSide());
-
-        
+        autoChooser.addOption("Driveback 3 Piece", driveback3Piece());
 
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
-        
-
-        // shootCommand = new SequentialCommandGroup(
-        //     new InstantCommand(robotContainer.autoShootBuilder::startShotSequence),
-        //     new WaitUntilCommand(robotContainer.autoShootBuilder::isShotDone)
-        // );
     }
 
     /**
@@ -81,15 +74,6 @@ public class AutoSelector {
     public Command getSelectedCommand() {
         DataLogManager.log("Sending command: " + autoChooser.get().toString());
         return autoChooser.get();
-    }  
-
-    // TODO: properly debug the alternative selector later, for now no alternative selectors
-    private String getAlternativeAutoString() {
-        String s = alternativeSelector.get();
-        if (s == null) {
-            s = "a";
-        }
-        return s;
     }
 
     private boolean isBlue() {
@@ -140,7 +124,7 @@ public class AutoSelector {
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 3" + getAlternativeAutoString()))
+            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 3a"))
         );
     }
 
@@ -276,11 +260,53 @@ public class AutoSelector {
         );
     }
 
-    private SequentialCommandGroup getTestAuto() {
+    private SequentialCommandGroup driveback3Piece() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(0)))),
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Example Path"))
+            // setup odometry
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))))
+                ),
+                this::isBlue
+            ),
+            // shoot speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive & pick up to first piece
+            new ParallelDeadlineGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 1")),
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
+            ),
+            // drive back to speaker
+            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 2")),
+            // shoot speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
+            // drive & pick up to first piece
+            new ParallelDeadlineGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 3")),
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
+            ),
+            // drive back to speaker
+            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 4")),
+            // shoot speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         );
     }
 }
