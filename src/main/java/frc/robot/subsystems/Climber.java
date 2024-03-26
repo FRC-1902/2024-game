@@ -100,15 +100,16 @@ public class Climber extends SubsystemBase {
   public void periodic() { // XXX: maybe different motor power?
     putNTData();
 
-    if (climberDisabledChooser.get() == true) {
+    if (Boolean.TRUE.equals(climberDisabledChooser.get())) {
       leftMotor.set(0.0);
       rightMotor.set(0.0);
       return;
     }
     
+    // TODO: refactor this
     switch (targetDirection) {
       case UP:
-        // TODO: disabled for orlando
+        // XXX: up limit switches disabled
         leftMotor.set(1);
         rightMotor.set(1);
         /*      

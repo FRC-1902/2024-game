@@ -38,6 +38,8 @@ public class Constants {
     }
 
     public static final class Intake {
+        private Intake() {}
+
         public static final int INTAKE_MOTOR_ID = 3;
         public static final int INTAKE_CURRENT_LIMIT = 40;
     }
@@ -52,20 +54,20 @@ public class Constants {
         public static final int TOP_SHOOTER_MOTOR_ID = 14; 
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
-        // PID Values
-        public static final double PIVOT_KP = 1.8;// 1.8;
-        public static final double PIVOT_KI = 0.4;// 0.2;
-        public static final double PIVOT_KD = 0.01;// 0.015;
-        public static final double PIVOT_KF = 0.07;// 0.1; // gravity compensation feedforward
+        // Pivot Encoder Offset
+    /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.0014);
+
+        // PID Values - Old arm values: 1.8, 0.2, 0.015, 0.1
+        public static final double PIVOT_KP = 1.8;
+        public static final double PIVOT_KI = 0.4;
+        public static final double PIVOT_KD = 0.01;
+        public static final double PIVOT_KF = 0.07;// gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
-        public static final double PIVOT_DEGREES_TOLERANCE = 0.008; // XXX: 0.008 earlier
-
-        // Pivot Encoder Offset
-    /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.0014); // 0.101
+        public static final Rotation2d PIVOT_DEGREES_TOLERANCE = Rotation2d.fromRotations(0.008); // tuned in just above mechanical slop
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0;

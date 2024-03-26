@@ -33,28 +33,31 @@ public class Pivot extends SubsystemBase {
 
   /** Creates a new Pivot. */
   public Pivot(Shooter shooterSubsystem) {
-    // R pivot
+    // motor config
     pivotMotor1 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_1_ID, MotorType.kBrushless);
-    // L pivot
     pivotMotor2 = new CANSparkMax(Constants.Arm.PIVOT_MOTOR_2_ID, MotorType.kBrushless);
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.ALL); // XXX:
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor2, Usage.ALL); // XXX:
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor1, Usage.ALL); // want to know if it's not working
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(pivotMotor2, Usage.ALL); // want to know if it's not working
     pivotMotor1.setSmartCurrentLimit(Constants.Arm.PIVOT_CURRENT_LIMIT);
     pivotMotor2.setSmartCurrentLimit(Constants.Arm.PIVOT_CURRENT_LIMIT);
     pivotMotor1.setIdleMode(IdleMode.kBrake);
     pivotMotor2.setIdleMode(IdleMode.kBrake);
-
     pivotMotor1.setInverted(false);
     pivotMotor2.setInverted(true);
 
+    // encoder config
     pivotEncoder = shooterSubsystem.getPivotEncoder();
     pivotEncoder.setInverted(true);
     pivotEncoder.setZeroOffset(Constants.Arm.PIVOT_ANGLE_OFFSET.getRotations());
 
-    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD, new TrapezoidProfile.Constraints(100, 4.0));
-    pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE);
+    // pid config
+    pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD,
+        new TrapezoidProfile.Constraints(100, 4.0));
+    pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE.getRotations());
     pivotPID.setIntegratorRange(-0.1, 0.1);
     pivotPID.setIZone(0.1);
+
+    // set down @ init
     setAngle(getDefaultAngle());
   }
 
@@ -94,14 +97,14 @@ public class Pivot extends SubsystemBase {
    */
   public static Rotation2d getShooterTheta(Rotation2d pivotAngle) {
     Translation2d armTranslation = new Translation2d(
-        -Constants.Arm.ARM_LENGTH * Math.sin(pivotAngle.getRadians()),
-        -Constants.Arm.ARM_LENGTH * Math.cos(pivotAngle.getRadians()));
+      -Constants.Arm.ARM_LENGTH * Math.sin(pivotAngle.getRadians()),
+      -Constants.Arm.ARM_LENGTH * Math.cos(pivotAngle.getRadians()));
 
     Translation2d wristTranslation = new Translation2d(
-        armTranslation.getX() + Constants.Arm.WRIST_LENGTH
-            * Math.cos(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()),
-        armTranslation.getY() + Constants.Arm.WRIST_LENGTH
-            * Math.sin(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()));
+      armTranslation.getX() + Constants.Arm.WRIST_LENGTH
+        * Math.cos(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()),
+      armTranslation.getY() + Constants.Arm.WRIST_LENGTH
+        * Math.sin(Constants.Arm.WRIST_OFFSET.getRadians() + (Math.PI / 2.0) - pivotAngle.getRadians()));
 
     // Stop divide by 0 errors if pointed straight up or down
     if (armTranslation.getX() == wristTranslation.getX()) {
@@ -113,7 +116,7 @@ public class Pivot extends SubsystemBase {
     }
 
     return Rotation2d.fromRadians(Math.atan(
-        (armTranslation.getY() - wristTranslation.getY()) / (armTranslation.getX() - wristTranslation.getX())));
+      (armTranslation.getY() - wristTranslation.getY()) / (armTranslation.getX() - wristTranslation.getX())));
   }
 
   /**
@@ -161,14 +164,14 @@ public class Pivot extends SubsystemBase {
     double setPower = pivotPID.calculate(getAngle().getRotations());
     double feedFoward = Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians());
 
-    // reducing feedforward power on down strokes 
+    // reducing feedforward power on down strokes
     if (Math.signum(setPower) == Math.signum(feedFoward) || setPower == 0.0) {
       setPower += feedFoward;
     } else {
       setPower += feedFoward / 1.0;
     }
 
-    // XXX: maybe migrate to logs?
+    // TODO: migrate to logs
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
     SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());
@@ -189,7 +192,8 @@ public class Pivot extends SubsystemBase {
     }
 
     // don't power pivot when down
-    if (pivotPID.getGoal().position == getDefaultAngle().getRotations() && (pivotPID.atGoal() || getAngle().getRotations() < getDefaultAngle().getRotations())) {
+    if (pivotPID.getGoal().position == getDefaultAngle().getRotations()
+        && (pivotPID.atGoal() || getAngle().getRotations() < getDefaultAngle().getRotations())) {
       pivotMotor1.set(0);
       pivotMotor2.set(0);
       return;
