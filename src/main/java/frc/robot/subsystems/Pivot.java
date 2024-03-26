@@ -170,9 +170,9 @@ public class Pivot extends SubsystemBase {
 
     // XXX: maybe migrate to logs?
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
-    SmartDashboard.putNumber("Pivot Power", setPower);
     SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
     SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());
+    SmartDashboard.putNumber("Pivot Power", setPower);
 
     // just yell if pivot out of bounds
     checkPivotWatchdog();
@@ -189,7 +189,7 @@ public class Pivot extends SubsystemBase {
     }
 
     // don't power pivot when down
-    if (pivotPID.getSetpoint().position == getDefaultAngle().getRotations() && pivotPID.atSetpoint() || getAngle().getRotations() < getDefaultAngle().getRotations()) {
+    if (pivotPID.getGoal().position == getDefaultAngle().getRotations() && (pivotPID.atGoal() || getAngle().getRotations() < getDefaultAngle().getRotations())) {
       pivotMotor1.set(0);
       pivotMotor2.set(0);
       return;

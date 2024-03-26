@@ -55,12 +55,12 @@ public class IndexCommand extends Command {
     shooterSubsystem.setIndexer(0.0);
 
     if (shooterSubsystem.pieceSensorActive())
-      Controllers.getInstance().vibrate(100, 0.5);
+          Controllers.getInstance().vibrate(100, 0.5);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count > 7 || earlyExit;
+    return count > 4 || earlyExit; // 3 kinda reliable ig but sometimes intakes too far
   }
 }

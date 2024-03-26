@@ -56,7 +56,7 @@ public class AutoSelector {
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
         autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
         autoChooser.addOption("Amp", getAmpAuto());
-        autoChooser.addOption("3 Piece", getThreePieceAuto());
+        autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());
         autoChooser.addOption("Test" ,getTestAuto());
 
@@ -93,8 +93,9 @@ public class AutoSelector {
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Blue;
         } else {
-            // assume alliance is blue if alliance isn't set
-            return true;
+            // TODO: make blue again
+            // assume alliance is red if alliance isn't set
+            return false;
         }
     }
 
@@ -110,12 +111,12 @@ public class AutoSelector {
                 new SequentialCommandGroup( // blue starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
                     new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
-                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.44, 7.77, Rotation2d.fromDegrees(0))))
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.44, 7.35, Rotation2d.fromDegrees(0))))
                 ),
                 new SequentialCommandGroup( // red starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
                     new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
-                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(16.05, 7.77, Rotation2d.fromDegrees(180))))
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(16.05, 7.35, Rotation2d.fromDegrees(180))))
                 ),
                 this::isBlue
             ),
@@ -132,7 +133,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.35), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.346), pivotSubsystem), // 0.347 shot just BARELY too low
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location
@@ -143,7 +144,7 @@ public class AutoSelector {
     /**
      * 4 shots into the speaker (3 ground + 1 preload)
      */
-    private SequentialCommandGroup getThreePieceAuto(){
+    private SequentialCommandGroup getFourPieceAuto(){
         return new SequentialCommandGroup(
             // setup odometry
             new ConditionalCommand(
@@ -171,7 +172,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.35), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.30), pivotSubsystem), // TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
@@ -181,7 +182,7 @@ public class AutoSelector {
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.32), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.321), pivotSubsystem), // TODO: find good angle // 0.32 just slightly too high & 0.322 slightly too low
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
@@ -222,7 +223,7 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.343), pivotSubsystem), // TODO: find good angle, 0.34 just SLIGHTLY too low (shot too high)
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive to end location

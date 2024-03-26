@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.subsystems.Climber;
@@ -90,8 +91,12 @@ public class RobotContainer {
             .whileTrue(new OuttakeCommand(shooterSubsystem));
 
         // TODO: remove tmp debug code
-        controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
-            .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.8, Rotation2d.fromDegrees(90))));
+        // charge at blue amp
+        controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
+            .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))));
+        // charge at red amp
+        controllers.getTrigger(ControllerName.DRIVE, Button.B).debounce(0.05)
+            .whileTrue(autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))));
 
         // floor intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
@@ -121,6 +126,7 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
+        
     }
 
     public void resetPIDs() {
