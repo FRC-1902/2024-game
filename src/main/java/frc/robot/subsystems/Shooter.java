@@ -28,6 +28,7 @@ public class Shooter extends SubsystemBase {
 
   /** Creates a new Shooter. */ 
   public Shooter() {
+    // shooter motors setup
     topShooterMotor = new CANSparkMax(Constants.Arm.TOP_SHOOTER_MOTOR_ID, MotorType.kBrushless);
     bottomShooterMotor = new CANSparkMax(Constants.Arm.BOTTOM_SHOOTER_MOTOR_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(topShooterMotor, Usage.VELOCITY_ONLY);
@@ -38,20 +39,25 @@ public class Shooter extends SubsystemBase {
     bottomShooterMotor.setSmartCurrentLimit(Constants.Arm.SHOOTER_CURRENT_LIMIT);
     topShooterMotor.setIdleMode(IdleMode.kBrake);
     bottomShooterMotor.setIdleMode(IdleMode.kBrake);
-
     topShooterMotor.setInverted(true);
     bottomShooterMotor.setInverted(true);
 
+    // indexer motors setup
     indexMotor = new CANSparkMax(Constants.Arm.INDEXER_MOTOR_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(indexMotor, Usage.MINIMAL);
     indexMotor.setSmartCurrentLimit(Constants.Arm.INDEX_CURRENT_LIMIT);
     indexMotor.setIdleMode(IdleMode.kCoast);
 
+    // piece sensor setup
     pieceSensor = new ColorSensorV3(Port.kMXP);
 
     configureShuffleboardData();
   }
 
+  /**
+   * Get the pivot encoder, currently mounted on one of the spark maxes on the shooter
+   * @return
+   */
   public SparkAbsoluteEncoder getPivotEncoder() {  
     return topShooterMotor.getAbsoluteEncoder();
   }
@@ -66,6 +72,10 @@ public class Shooter extends SubsystemBase {
     bottomShooterMotor.set(power - differential);
   }
 
+  /**
+   * Average flywheel motors' RPM.
+   * @return shooter rpm
+   */
   public double getRPM() {
     return (topShooterMotor.getEncoder().getVelocity() + bottomShooterMotor.getEncoder().getVelocity()) / 2.0;
   }
@@ -78,6 +88,10 @@ public class Shooter extends SubsystemBase {
     indexMotor.set(power);
   }
 
+  /**
+   * Is the color sensor past some threshold
+   * @return isActive
+   */
   public boolean pieceSensorActive() {
     return pieceSensor.getRed() > 1300;
   }
@@ -91,7 +105,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     // This method will be called once per scheduler run
   }
 }

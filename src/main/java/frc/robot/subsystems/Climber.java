@@ -12,10 +12,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.revrobotics.CANSparkBase;  
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -103,15 +100,16 @@ public class Climber extends SubsystemBase {
   public void periodic() { // XXX: maybe different motor power?
     putNTData();
 
-    if (climberDisabledChooser.get() == true) {
+    if (Boolean.TRUE.equals(climberDisabledChooser.get())) {
       leftMotor.set(0.0);
       rightMotor.set(0.0);
       return;
     }
     
+    // TODO: refactor this
     switch (targetDirection) {
       case UP:
-        // TODO: disabled for orlando
+        // XXX: up limit switches disabled
         leftMotor.set(1);
         rightMotor.set(1);
         /*      

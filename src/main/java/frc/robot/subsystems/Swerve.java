@@ -12,9 +12,6 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -36,12 +33,12 @@ public class Swerve extends SubsystemBase {
     PhotonCamera leftCamera;
     PhotonCamera rightCamera;
 
-    PhotonPoseEstimator leftPhotonPoseEstimator, rightPhotonPoseEstimator;
+    PhotonPoseEstimator leftPhotonPoseEstimator;
+    PhotonPoseEstimator rightPhotonPoseEstimator;
 
     public Swerve() {
         imu = IMU.getInstance();
         zeroGyro();
-        
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -49,13 +46,6 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(2, Constants.Swerve.Mod2.constants),
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
-
-        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-         * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-         * Commentented out, but may need to be re-added if issue comes up
-         */
-        // Timer.delay(1.0);
-        // resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics, 
@@ -81,8 +71,8 @@ public class Swerve extends SubsystemBase {
         leftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftCamera, leftRobotToCam);
         rightPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, rightCamera, rightRobotToCam);
 
-        // leftPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-        // rightPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        leftPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        rightPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 
     /**
@@ -95,15 +85,15 @@ public class Swerve extends SubsystemBase {
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         ChassisSpeeds speeds = 
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation, 
-                                    imu.getHeading()
-                                )
-                                : new ChassisSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation);
+                    translation.getX(), 
+                    translation.getY(), 
+                    rotation, 
+                    imu.getHeading()
+                )
+                : new ChassisSpeeds(
+                    translation.getX(), 
+                    translation.getY(), 
+                    rotation);
         drive(speeds, isOpenLoop);
     }
 
