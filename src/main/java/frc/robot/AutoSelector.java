@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.IndexCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.Swerve;
@@ -38,6 +40,7 @@ public class AutoSelector {
     Swerve swerveSubsystem;
     Pivot pivotSubsystem;
     Shooter shooterSubsystem;
+    Intake intakeSubsystem;
 
     Command shootCommand;
     AutoDriveBuilder autoDriveBuilder;
@@ -48,6 +51,7 @@ public class AutoSelector {
         swerveSubsystem = robotContainer.swerveSubsystem;
         shooterSubsystem = robotContainer.shooterSubsystem;
         pivotSubsystem = robotContainer.pivotSubsystem;
+        intakeSubsystem = robotContainer.intakeSubsystem;
 
         alternativeSelector = new LoggedDashboardChooser<>("Alternative Auto Chooser");
         alternativeSelector.addDefaultOption("Regular Side Endpoint", "a");
@@ -58,7 +62,7 @@ public class AutoSelector {
         autoChooser.addOption("Amp", getAmpAuto());
         autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());
-        autoChooser.addOption("Test" ,getTestAuto());
+        autoChooser.addOption("Single Pringle", getSinglePreLoadAmpSide());
 
         
 
@@ -93,9 +97,7 @@ public class AutoSelector {
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Blue;
         } else {
-            // TODO: make blue again
-            // assume alliance is red if alliance isn't set
-            return false;
+            return false; // true for default to blue alliance
         }
     }
 
@@ -129,7 +131,8 @@ public class AutoSelector {
             // drive & pick up piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
-                new IndexCommand(shooterSubsystem)
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
@@ -162,35 +165,38 @@ public class AutoSelector {
             ),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.282), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to first piece
             new ParallelDeadlineGroup(
-                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 1")),
-                new IndexCommand(shooterSubsystem)
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 1")),
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.30), pivotSubsystem), // TODO: find good angle
+            new SetPivotCommand(Rotation2d.fromRotations(0.34), pivotSubsystem), // 0.335 slightly shot too high q32 TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to second piece
             new ParallelDeadlineGroup(
-                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 2")),
-                new IndexCommand(shooterSubsystem)
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 2")),
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.321), pivotSubsystem), // TODO: find good angle // 0.32 just slightly too high & 0.322 slightly too low
+            new SetPivotCommand(Rotation2d.fromRotations(0.33), pivotSubsystem), // 0.325 slightly too high q32, TODO: find good angle
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to third piece
             new ParallelDeadlineGroup(
-                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 3")),
-                new IndexCommand(shooterSubsystem)
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 3")),
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("3 Piece 4")),
+            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 4")),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
             new SetPivotCommand(Rotation2d.fromRotations(0.35), pivotSubsystem), // TODO: find good angle
@@ -201,7 +207,7 @@ public class AutoSelector {
     }
 
     /**
-     * Single pre-loaded // TODO: debug from here
+     * Single pre-loaded
      */
     private SequentialCommandGroup getItsRealAuto(){
         return new SequentialCommandGroup(
@@ -223,12 +229,51 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 1")),
             // shoot into speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromRotations(0.343), pivotSubsystem), // TODO: find good angle, 0.34 just SLIGHTLY too low (shot too high)
+            new SetPivotCommand(Rotation2d.fromRotations(0.342), pivotSubsystem), // TODO: find good angle, 0.340 shot too high 0.343 shot too low
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
-            // drive to end location
-            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 2" + getAlternativeAutoString()))
+            // drive & pick up centerline piece // TODO: debug from here
+            new ParallelDeadlineGroup(
+                autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 2")),
+                new IndexCommand(shooterSubsystem),
+                new IntakeCommand(intakeSubsystem, shooterSubsystem)
+            ),
+            // drive to shot location
+            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 3")),
+            // shoot into speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromRotations(0.342), pivotSubsystem), // TODO: find good angle, 0.340 shot too high 0.343 shot too low
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         ); 
+    }
+
+    /**
+     * Just shoot pre-loaded shot into speaker on the amp side 
+     * @return
+     */
+    private SequentialCommandGroup getSinglePreLoadAmpSide() {
+        return new SequentialCommandGroup(
+            // setup odometry
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(240))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(240))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.70, 6.70, Rotation2d.fromDegrees(240))))
+                ),
+                new SequentialCommandGroup( // red starting point // TODO: validate this side
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(300))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(120))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(15.90, 6.70, Rotation2d.fromDegrees(300))))
+                ),
+                this::isBlue
+            ),
+            // shoot speaker
+            new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
+            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
+            new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
+        );
     }
 
     private SequentialCommandGroup getTestAuto() {
