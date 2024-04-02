@@ -31,7 +31,7 @@ public class ShootCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!shooterSubsystem.pieceSensorActive()) {
+    if (!shooterSubsystem.midPieceSensorActive()) {
       DataLogManager.log("NO Piece Detected to Shoot, exiting shoot command early");
       earlyExit = true;
       return;
@@ -60,7 +60,7 @@ public class ShootCommand extends Command {
     }
 
     // get ready to exit when piece is no longer detected
-    if (!shooterSubsystem.pieceSensorActive() && shotTime == null) {
+    if (!shooterSubsystem.topPieceSensorActive() && !shooterSubsystem.midPieceSensorActive() && shotTime == null) {
       shotTime = Timer.getFPGATimestamp();
     }
   }

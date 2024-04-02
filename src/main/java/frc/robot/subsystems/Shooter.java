@@ -6,25 +6,26 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import com.revrobotics.SparkAbsoluteEncoder;
 
-import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
+import com.revrobotics.Rev2mDistanceSensor;
 
 
 public class Shooter extends SubsystemBase {
   private CANSparkMax topShooterMotor;
   private CANSparkMax bottomShooterMotor;
   private CANSparkMax indexMotor;
-  private ColorSensorV3 pieceSensor;
+  private DigitalInput midPieceSensor;
+  private Rev2mDistanceSensor topPieceSensor;
 
   /** Creates a new Shooter. */ 
   public Shooter() {
@@ -49,7 +50,10 @@ public class Shooter extends SubsystemBase {
     indexMotor.setIdleMode(IdleMode.kCoast);
 
     // piece sensor setup
-    pieceSensor = new ColorSensorV3(Port.kMXP);
+    midPieceSensor = new DigitalInput(Constants.Arm.IR_PIECE_SENSOR_PORT);
+    topPieceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kMXP);
+    topPieceSensor.setAutomaticMode(true);
+    topPieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
 
     configureShuffleboardData();
   }
@@ -89,18 +93,26 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Is the color sensor past some threshold
+   * Is the 2m dts sensor past some threshold
    * @return isActive
    */
-  public boolean pieceSensorActive() {
-    return pieceSensor.getRed() > 1300;
+  public boolean topPieceSensorActive() {
+    return topPieceSensor.getRange() < 200 && topPieceSensor.getRange() > 1;
+  }
+
+  /**
+   * Is the ir sensor triggered
+   * @return isActive
+   */
+  public boolean midPieceSensorActive() {
+    return midPieceSensor.get();
   }
 
   private void configureShuffleboardData() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
     shooterTab.addDouble("RPM", this::getRPM);
-    shooterTab.addBoolean("Piece Sensor Active", this::pieceSensorActive);
-    shooterTab.addNumber("Piece Sensor Red", pieceSensor::getRed);
+    shooterTab.addBoolean("Piece Sensor Active", this::topPieceSensorActive);
+    shooterTab.addNumber("2m Dts", topPieceSensor::getRange);
   }
 
   @Override

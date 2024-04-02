@@ -96,8 +96,7 @@ public class Constants {
         public static final Rotation2d STOW_PIVOT_LINEUP = Rotation2d.fromDegrees(65.0);
         public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
 
-        public static final int PIECE_SENSOR_PORT = 0;
-        public static final double PIECE_SENSOR_THRESHOLD_VOLTAGE = 2.0;
+        public static final int IR_PIECE_SENSOR_PORT = 4;
     }
 
     public static final class Swerve {
