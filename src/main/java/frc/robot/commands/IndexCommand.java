@@ -28,7 +28,7 @@ public class IndexCommand extends Command {
   @Override
   public void execute() {
     if (shooterSubsystem.topPieceSensorActive()) {
-      shooterSubsystem.setIndexer(-0.1);
+      shooterSubsystem.setIndexer(-0.5);
     } else {
       shooterSubsystem.setIndexer(1.0);
     }

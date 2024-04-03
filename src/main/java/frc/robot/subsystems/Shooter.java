@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
    * @return isActive
    */
   public boolean topPieceSensorActive() {
-    return topPieceSensor.getRange() < 200 && topPieceSensor.getRange() > 1;
+    return topPieceSensor.getRange() < 140 && topPieceSensor.getRange() > 1;
   }
 
   /**
@@ -105,13 +105,14 @@ public class Shooter extends SubsystemBase {
    * @return isActive
    */
   public boolean midPieceSensorActive() {
-    return midPieceSensor.get();
+    return !midPieceSensor.get();
   }
 
   private void configureShuffleboardData() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
     shooterTab.addDouble("RPM", this::getRPM);
-    shooterTab.addBoolean("Piece Sensor Active", this::topPieceSensorActive);
+    shooterTab.addBoolean("Top Piece Sensor Active", this::topPieceSensorActive);
+    shooterTab.addBoolean("Mid Piece Sensor Active", this::midPieceSensorActive);
     shooterTab.addNumber("2m Dts", topPieceSensor::getRange);
   }
 
