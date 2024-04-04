@@ -239,9 +239,9 @@ public class Constants {
         public static final PIDConstants ROTATION_PID = new PIDConstants(2.6, 0.0, 0, 0.1);
 
         // turn in place command
-        public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me
-        public static final double TURN_KP = 15; // TODO: set me on real robot
-        public static final double TURN_KI = 0.01; // TODO: set me on real robot
-        public static final double TURN_KD = 0.0; // TODO: set me on real robot
+        public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4);
+        public static final double TURN_KP = 19;
+        public static final double TURN_KI = 0.01;
+        public static final double TURN_KD = 0.0;
     }
 }

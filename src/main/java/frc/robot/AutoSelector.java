@@ -58,7 +58,7 @@ public class AutoSelector {
         alternativeSelector.addOption("Under Stage Endpoint", "b");
 
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
-        autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
+        autoChooser.addDefaultOption("Do Nothing", new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))));
         autoChooser.addOption("Amp", getAmpAuto());
         autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());
@@ -149,7 +149,7 @@ public class AutoSelector {
             ),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to first piece
@@ -254,7 +254,7 @@ public class AutoSelector {
             ),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         );
@@ -278,7 +278,7 @@ public class AutoSelector {
             ),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to first piece
@@ -291,7 +291,7 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 2")),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up to first piece
@@ -304,7 +304,7 @@ public class AutoSelector {
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 4")),
             // shoot speaker
             new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0)), // pre-rev
-            new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem),
+            new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         );

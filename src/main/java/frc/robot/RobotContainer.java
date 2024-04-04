@@ -24,6 +24,7 @@ import frc.robot.commands.IndexCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
+import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
@@ -107,6 +108,12 @@ public class RobotContainer {
 
         /* -------- manip code -------- */
 
+        /* TEST CODE TODO: remove me */
+        controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
+            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+            // .onTrue(autoDriveBuilder.getTurnCommand(IMU.getInstance().getFieldHeading().plus(Rotation2d.fromDegrees(90))));
+
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
             .whileTrue(new OuttakeCommand(shooterSubsystem, intakeSubsystem));
@@ -137,7 +144,7 @@ public class RobotContainer {
         
         // speaker lineup
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromDegrees(105), pivotSubsystem))
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
     }

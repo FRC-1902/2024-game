@@ -10,7 +10,7 @@ import frc.robot.subsystems.Shooter;
 
 public class IndexCommand extends Command {
   Shooter shooterSubsystem;
-  int count;
+  boolean exit;
   /** Creates a new TmpIndexCommand. */
   public IndexCommand(Shooter shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
@@ -22,13 +22,15 @@ public class IndexCommand extends Command {
   @Override
   public void initialize() {
     shooterSubsystem.setIndexer(1);
+    exit = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (shooterSubsystem.topPieceSensorActive()) {
-      shooterSubsystem.setIndexer(-0.5);
+      shooterSubsystem.setIndexer(-0.15);
+      exit = true;
     } else {
       shooterSubsystem.setIndexer(1.0);
     }
@@ -46,6 +48,6 @@ public class IndexCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.midPieceSensorActive() && !shooterSubsystem.topPieceSensorActive();
+    return shooterSubsystem.midPieceSensorActive() && !shooterSubsystem.topPieceSensorActive() && exit;
   }
 }

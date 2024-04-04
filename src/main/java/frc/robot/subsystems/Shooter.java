@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
    * @return isActive
    */
   public boolean topPieceSensorActive() {
-    return topPieceSensor.getRange() < 140 && topPieceSensor.getRange() > 1;
+    return topPieceSensor.getRange() < 150 && topPieceSensor.getRange() > 1;
   }
 
   /**
