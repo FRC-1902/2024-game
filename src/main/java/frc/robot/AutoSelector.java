@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.IMU;
@@ -22,7 +21,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.AutoDriveBuilder;
-import frc.robot.commands.IndexCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
@@ -115,7 +113,6 @@ public class AutoSelector {
             // drive & pick up piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 2")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
@@ -155,7 +152,6 @@ public class AutoSelector {
             // drive & pick up to first piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 1")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
@@ -166,7 +162,6 @@ public class AutoSelector {
             // drive & pick up to second piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 2")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // shoot into speaker
@@ -177,7 +172,6 @@ public class AutoSelector {
             // drive & pick up to third piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 3")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("4 Piece 4")),
@@ -219,7 +213,6 @@ public class AutoSelector {
             // drive & pick up centerline piece // TODO: debug from here
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 2")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // drive to shot location
@@ -284,7 +277,6 @@ public class AutoSelector {
             // drive & pick up to first piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 1")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // drive back to speaker
@@ -297,7 +289,6 @@ public class AutoSelector {
             // drive & pick up to first piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Driveback 3 Piece 3")),
-                new IndexCommand(shooterSubsystem),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)
             ),
             // drive back to speaker

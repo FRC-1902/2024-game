@@ -20,11 +20,9 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.IndexCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
-import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Controllers.Button;
 import frc.robot.subsystems.Controllers.ControllerName;
@@ -62,13 +60,12 @@ public class RobotContainer {
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
         floorIntakeCommand = new ParallelCommandGroup(
-            new IndexCommand(shooterSubsystem), 
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             new IntakeCommand(intakeSubsystem, shooterSubsystem)
         );
 
         hpIntakeCommand = new ParallelCommandGroup(
-            new IndexCommand(shooterSubsystem), 
+            new IntakeCommand(intakeSubsystem, shooterSubsystem), 
             new SetPivotCommand(Rotation2d.fromRotations(0.370), pivotSubsystem)
         );
 
