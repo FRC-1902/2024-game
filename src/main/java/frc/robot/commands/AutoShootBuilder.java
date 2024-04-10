@@ -57,7 +57,7 @@ public class AutoShootBuilder{
 
   public void cancelShotSequence() {
     if (shotSequence != null && !shotSequence.isFinished()) {
-      shooterSubsystem.setFlywheel(0, 0);
+      shooterSubsystem.setFlywheelRPM(0);
       shotSequence.cancel();
     }
   }

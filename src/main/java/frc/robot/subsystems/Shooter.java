@@ -27,6 +27,8 @@ public class Shooter extends SubsystemBase {
   private DigitalInput midPieceSensor;
   private Rev2mDistanceSensor topPieceSensor;
 
+  double targetRPM;
+
   /** Creates a new Shooter. */ 
   public Shooter() {
     // shooter motors setup
@@ -56,6 +58,8 @@ public class Shooter extends SubsystemBase {
     topPieceSensor.setDistanceUnits(Rev2mDistanceSensor.Unit.kMillimeters);
 
     configureShuffleboardData();
+
+    targetRPM = 0;
   }
 
   /**
@@ -68,12 +72,10 @@ public class Shooter extends SubsystemBase {
 
   /**
    * Sets the flywheel to a given power.
-   * @param power The power to set the flywheel to between -1 and 1
-   * @param differential The differential of power between sides, as to not push power above -1 or
+   * @param rpm The power to set the flywheel to between -1 and 1
    */
-  public void setFlywheel(double power, double differential) {
-    topShooterMotor.set(power + differential);
-    bottomShooterMotor.set(power - differential);
+  public void setFlywheelRPM(double rpm) {
+    targetRPM = rpm;
   }
 
   /**
@@ -118,6 +120,20 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (targetRPM == 0) {
+      topShooterMotor.set(0);
+      bottomShooterMotor.set(0);
+    }
+
+    // XXX: quick botch, devise better control system if targeting various rpms
+    // partial bang bang controller best suited for ~5200 rpm
+    if (Math.abs(getRPM()) < Math.abs(targetRPM)) {
+      topShooterMotor.set(1 * Math.signum(targetRPM));
+      bottomShooterMotor.set(1 * Math.signum(targetRPM));
+    } else {
+      topShooterMotor.set(0.92 * Math.signum(targetRPM));
+      bottomShooterMotor.set(0.92 * Math.signum(targetRPM));
+    }
     // This method will be called once per scheduler run
   }
 }

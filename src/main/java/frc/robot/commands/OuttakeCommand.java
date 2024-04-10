@@ -24,7 +24,7 @@ public class OuttakeCommand extends Command {
   @Override
   public void initialize() {
     shooterSubsystem.setIndexer(-0.4);
-    shooterSubsystem.setFlywheel(-7,0);
+    shooterSubsystem.setFlywheelRPM(-5200);
     intakeSubsystem.set(-0.5);
   }
 
@@ -36,7 +36,7 @@ public class OuttakeCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     shooterSubsystem.setIndexer(0.0);
-    shooterSubsystem.setFlywheel(0,0);
+    shooterSubsystem.setFlywheelRPM(0);
     intakeSubsystem.set(0);
   }
 
