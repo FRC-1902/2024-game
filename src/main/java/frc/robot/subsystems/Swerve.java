@@ -12,12 +12,17 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,11 +35,11 @@ public class Swerve extends SubsystemBase {
 
     private Field2d field;
 
-    PhotonCamera leftCamera;
-    PhotonCamera rightCamera;
+    PhotonCamera backCamera;
+    PhotonCamera frontCamera;
 
-    PhotonPoseEstimator leftPhotonPoseEstimator;
-    PhotonPoseEstimator rightPhotonPoseEstimator;
+    PhotonPoseEstimator backPhotonPoseEstimator;
+    PhotonPoseEstimator frontPhotonPoseEstimator;
 
     public Swerve() {
         imu = IMU.getInstance();
@@ -59,20 +64,20 @@ public class Swerve extends SubsystemBase {
         // Photonvision things
         AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
         
-        leftCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Left");
-        rightCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right");
+        backCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Left");
+        frontCamera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right");
 
-        leftCamera.setDriverMode(false);
-        rightCamera.setDriverMode(false);
+        backCamera.setDriverMode(false);
+        frontCamera.setDriverMode(false);
 
-        Transform3d leftRobotToCam = Constants.Swerve.LEFT_CAMERA_OFFSET;
-        Transform3d rightRobotToCam = Constants.Swerve.RIGHT_CAMERA_OFFSET;
+        Transform3d backRobotToCam  = new Transform3d();// Constants.Swerve.BACK_CAMERA_OFFSET;
+        Transform3d frontRobotToCam = new Transform3d();// Constants.Swerve.FRONT_CAMERA_OFFSET;
 
-        leftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftCamera, leftRobotToCam);
-        rightPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, rightCamera, rightRobotToCam);
+        backPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, backRobotToCam);
+        frontPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, frontRobotToCam);
 
-        leftPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-        rightPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        backPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        frontPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 
     /**
@@ -183,23 +188,32 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        // right vision
-        final Optional<EstimatedRobotPose> optionalEstimatedPoseRight = rightPhotonPoseEstimator.update();
-        if (optionalEstimatedPoseRight.isPresent()) {
-            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseRight.get();      
-            swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
-            SmartDashboard.putNumber("R X", estimatedPose.estimatedPose.getTranslation().getX());
-            SmartDashboard.putNumber("R Y", estimatedPose.estimatedPose.getTranslation().getY());
-            // SmartDashboard.putNumber("R Z", estimatedPose.estimatedPose.getTranslation().getZ());
+        // front vision
+        final Optional<EstimatedRobotPose> optionalEstimatedPoseFront = frontPhotonPoseEstimator.update();
+        if (optionalEstimatedPoseFront.isPresent()) {
+            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseFront.get();
+            Pose3d estimatedPoseTransformed = estimatedPose.estimatedPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0,-estimatedPose.estimatedPose.getRotation().getY(),0)));
+            estimatedPoseTransformed = estimatedPoseTransformed.plus(Constants.Swerve.FRONT_CAMERA_OFFSET);
+            swerveOdometry.addVisionMeasurement(estimatedPoseTransformed.toPose2d(), estimatedPose.timestampSeconds);
+            SmartDashboard.putNumber("R X", estimatedPoseTransformed.getTranslation().getX());
+            SmartDashboard.putNumber("R Y", estimatedPoseTransformed.getTranslation().getY());
+            SmartDashboard.putNumber("R Z", estimatedPoseTransformed.getTranslation().getZ());
         }
-        // left vision
-        final Optional<EstimatedRobotPose> optionalEstimatedPoseLeft = leftPhotonPoseEstimator.update();
-        if (optionalEstimatedPoseLeft.isPresent()) {
-            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseLeft.get();      
-            swerveOdometry.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
-            SmartDashboard.putNumber("L X", estimatedPose.estimatedPose.getTranslation().getX());
-            SmartDashboard.putNumber("L Y", estimatedPose.estimatedPose.getTranslation().getY());
-            // SmartDashboard.putNumber("L Z", estimatedPose.estimatedPose.getTranslation().getZ());
+        // back vision
+        final Optional<EstimatedRobotPose> optionalEstimatedPoseBack = backPhotonPoseEstimator.update();
+        if (optionalEstimatedPoseBack.isPresent()) {
+            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseBack.get();
+            Pose3d estimatedPoseTransformed = estimatedPose.estimatedPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0,-estimatedPose.estimatedPose.getRotation().getY(),0)));
+            estimatedPoseTransformed = estimatedPoseTransformed.plus(Constants.Swerve.BACK_CAMERA_OFFSET);
+            swerveOdometry.addVisionMeasurement(
+                new Pose2d(
+                    estimatedPoseTransformed.toPose2d().getTranslation(), 
+                    estimatedPoseTransformed.toPose2d().getRotation().plus(Rotation2d.fromDegrees(180))), 
+                estimatedPose.timestampSeconds
+            );
+            SmartDashboard.putNumber("L X", estimatedPoseTransformed.getTranslation().getX());
+            SmartDashboard.putNumber("L Y", estimatedPoseTransformed.getTranslation().getY());
+            SmartDashboard.putNumber("L Z", estimatedPoseTransformed.getTranslation().getZ());
         }
 
         // process & log odometry

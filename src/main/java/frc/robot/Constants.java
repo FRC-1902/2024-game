@@ -221,14 +221,14 @@ public class Constants {
         }
 
         /* Photonvision camera transforms */
-        
-        public static final Transform3d LEFT_CAMERA_OFFSET = new Transform3d(
-            new Translation3d(Units.inchesToMeters(28.8604), Units.inchesToMeters(6.12), Units.inchesToMeters(0.4485)), 
-            new Rotation3d(0,Units.degreesToRadians(24.24),0)
+        /* NOTE: DO NOT SET ROTATION, this is set elsewhere in the swerve code */
+        public static final Transform3d FRONT_CAMERA_OFFSET = new Transform3d(
+            new Translation3d(-0.292, Units.inchesToMeters(6.12), -0.666), 
+            new Rotation3d(0,0,0)
         );
-        public static final Transform3d RIGHT_CAMERA_OFFSET = new Transform3d(
-            new Translation3d(Units.inchesToMeters(28.8604), Units.inchesToMeters(-6.12), Units.inchesToMeters(0.4485)), 
-            new Rotation3d(0,Units.degreesToRadians(24.24),0)
+        public static final Transform3d BACK_CAMERA_OFFSET = new Transform3d(
+            new Translation3d(-0.15, Units.inchesToMeters(-6.12), -0.666), 
+            new Rotation3d(0,0,0)
         );
     }
 

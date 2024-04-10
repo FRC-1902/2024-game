@@ -40,7 +40,7 @@ public class IntakeCommand extends Command {
     intakeSubsystem.set(0);
     shooterSubsystem.setIndexer(0);
 
-    if (shooterSubsystem.topPieceSensorActive())
+    if (shooterSubsystem.topPieceSensorActive() || (shooterSubsystem.midPieceSensorActive() && interrupted))
       indexCommand.schedule();
 
     if (shooterSubsystem.midPieceSensorActive())
