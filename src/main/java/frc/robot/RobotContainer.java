@@ -111,11 +111,15 @@ public class RobotContainer {
 
         /* -------- manip code -------- */
 
-        /* TEST CODE TODO: remove me */
+        // auto shoot
         controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
             .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
             .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
-            // .onTrue(autoDriveBuilder.getTurnCommand(IMU.getInstance().getFieldHeading().plus(Rotation2d.fromDegrees(90))));
+
+        // auto shoot
+        controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
+            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
 
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
@@ -124,16 +128,12 @@ public class RobotContainer {
         // floor intake
         controllers.getTrigger(ControllerName.MANIP, Button.A).debounce(0.05)
             .whileTrue(floorIntakeCommand)
+            .onFalse(new IndexCommand(shooterSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
         // shoot
         controllers.getTrigger(ControllerName.MANIP, Button.B).debounce(0.05)
             .whileTrue(new ShootCommand(shooterSubsystem, pivotSubsystem));
-        
-        // auto shoot
-        // controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
-        //     .onTrue(new InstantCommand(() -> autoShootBuilder.startShotSequence()))
-        //     .onFalse(new InstantCommand(() -> autoShootBuilder.cancelShotSequence()));
         
         // hp intake
         controllers.getTrigger(ControllerName.MANIP, Button.Y).debounce(0.05)

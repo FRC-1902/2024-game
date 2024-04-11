@@ -113,7 +113,10 @@ public class AutoSelector {
             // drive to amp
             autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Amp 1")),
             // shoot in amp
-            new SetPivotCommand(Rotation2d.fromRotations(0.51), pivotSubsystem),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> pivotSubsystem.getAngle().getRotations() > 0.5),
+                new SetPivotCommand(Rotation2d.fromRotations(0.51), pivotSubsystem)
+            ),
             new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
             // drive & pick up piece

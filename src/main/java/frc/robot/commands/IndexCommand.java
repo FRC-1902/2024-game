@@ -9,6 +9,7 @@ import frc.robot.subsystems.Shooter;
 
 public class IndexCommand extends Command {
   Shooter shooterSubsystem;
+  boolean earlyExit;
   /** Creates a new TmpIndexCommand. */
   public IndexCommand(Shooter shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
@@ -19,6 +20,8 @@ public class IndexCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // exit early if no note inside
+    earlyExit = !(shooterSubsystem.topPieceSensorActive() || shooterSubsystem.midPieceSensorActive());
     shooterSubsystem.setIndexer(-0.15);
   }
 
@@ -35,6 +38,6 @@ public class IndexCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !shooterSubsystem.topPieceSensorActive();
+    return !shooterSubsystem.topPieceSensorActive() || earlyExit;
   }
 }

@@ -197,7 +197,7 @@ public class Swerve extends SubsystemBase {
             swerveOdometry.addVisionMeasurement(estimatedPoseTransformed.toPose2d(), estimatedPose.timestampSeconds);
             SmartDashboard.putNumber("R X", estimatedPoseTransformed.getTranslation().getX());
             SmartDashboard.putNumber("R Y", estimatedPoseTransformed.getTranslation().getY());
-            SmartDashboard.putNumber("R Z", estimatedPoseTransformed.getTranslation().getZ());
+            // SmartDashboard.putNumber("R Z", estimatedPoseTransformed.getTranslation().getZ());
         }
         // back vision
         final Optional<EstimatedRobotPose> optionalEstimatedPoseBack = backPhotonPoseEstimator.update();
@@ -213,7 +213,7 @@ public class Swerve extends SubsystemBase {
             );
             SmartDashboard.putNumber("L X", estimatedPoseTransformed.getTranslation().getX());
             SmartDashboard.putNumber("L Y", estimatedPoseTransformed.getTranslation().getY());
-            SmartDashboard.putNumber("L Z", estimatedPoseTransformed.getTranslation().getZ());
+            // SmartDashboard.putNumber("L Z", estimatedPoseTransformed.getTranslation().getZ());
         }
 
         // process & log odometry

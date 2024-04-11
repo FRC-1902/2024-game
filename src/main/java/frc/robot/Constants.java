@@ -82,10 +82,10 @@ public class Constants {
         public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
 
         // cubic curve magic numbers to relate pivot angle and distance from speaker
-        public static final double SHOOTER_MAGIC_A = 1.34;
+        public static final double SHOOTER_MAGIC_A = 1.38;
         public static final double SHOOTER_MAGIC_B = -13.080;
         public static final double SHOOTER_MAGIC_C = 45.704;
-        public static final double SHOOTER_MAGIC_D = 72.0;
+        public static final double SHOOTER_MAGIC_D = 71.0; // 72.0
 
         // max distance to shoot into the speaker in meters
         public static final double SHOOTER_MAX_DISTANCE = 2.7; // TODO: set me after testing robot's shooter performance
