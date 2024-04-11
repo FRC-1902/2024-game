@@ -62,7 +62,7 @@ public class AutoSelector {
         alternativeSelector.addOption("Under Stage Endpoint", "b");
 
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
-        autoChooser.addDefaultOption("Do Nothing", new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))));
+        autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
         autoChooser.addOption("Amp", getAmpAuto());
         autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());

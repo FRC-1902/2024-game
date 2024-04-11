@@ -44,7 +44,8 @@ public class AutoShootBuilder{
         new SequentialCommandGroup(
           new ParallelCommandGroup(
             autoDriveCommands.getTurnCommand(this::calculateFaceAngle),
-            new InstantCommand(() -> System.out.println(calculateShotAngle())),
+            new InstantCommand(() -> System.out.println("Face angle: " + calculateFaceAngle())),
+            new InstantCommand(() -> System.out.println("Shot angle: " + calculateShotAngle())),
             new SetPivotCommand(this::calculateShotAngle, pivotSubsystem),
             new InstantCommand(() -> shooterSubsystem.setFlywheelRPM(3200))
           ),
@@ -52,7 +53,7 @@ public class AutoShootBuilder{
         ),
         // if not within distance
         new InstantCommand(() -> DataLogManager.log("BAD SHOT DISTANCE")),
-        () -> getVecDistance(calculateTargetVector()) < Constants.Arm.SHOOTER_MAX_DISTANCE || shooterSubsystem.midPieceSensorActive()
+        () -> getVecDistance(calculateTargetVector()) < Constants.Arm.SHOOTER_MAX_DISTANCE && shooterSubsystem.midPieceSensorActive()
       )
     );
     return shotSequence;
@@ -135,8 +136,5 @@ public class AutoShootBuilder{
 
     // redefine target position vector relative to current position as new origin
     return currentPosition.relativeTo(targetPosition).getTranslation().times(-1);
-    // targetPosition = targetPosition.relativeTo(currentPosition);
-
-    // return targetPosition.getTranslation();
   }
 }
