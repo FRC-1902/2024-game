@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.subsystems.Climber;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IndexCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.IntakeCommand;
@@ -59,14 +61,18 @@ public class RobotContainer {
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
-        floorIntakeCommand = new ParallelCommandGroup(
+        floorIntakeCommand = new SequentialCommandGroup(
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
-            new IntakeCommand(intakeSubsystem, shooterSubsystem)
+            new IntakeCommand(intakeSubsystem, shooterSubsystem),
+            new IndexCommand(shooterSubsystem)
         );
 
         hpIntakeCommand = new ParallelCommandGroup(
-            new IntakeCommand(intakeSubsystem, shooterSubsystem), 
-            new SetPivotCommand(Rotation2d.fromRotations(0.370), pivotSubsystem)
+            new SetPivotCommand(Rotation2d.fromRotations(0.370), pivotSubsystem),
+            new SequentialCommandGroup(
+                new IntakeCommand(intakeSubsystem, shooterSubsystem), 
+                new IndexCommand(shooterSubsystem)
+            )
         );
 
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));

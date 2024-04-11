@@ -62,7 +62,7 @@ public class Constants {
         public static final double PIVOT_KP = 1.8;
         public static final double PIVOT_KI = 0.4;
         public static final double PIVOT_KD = 0.01;
-        public static final double PIVOT_KF = 0.07;// gravity compensation feedforward
+        public static final double PIVOT_KF = 0.06;// gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
@@ -82,13 +82,13 @@ public class Constants {
         public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
 
         // cubic curve magic numbers to relate pivot angle and distance from speaker
-        public static final double SHOOTER_MAGIC_A = 0.532;
-        public static final double SHOOTER_MAGIC_B = -7.106;
-        public static final double SHOOTER_MAGIC_C = 32.601;
-        public static final double SHOOTER_MAGIC_D = 135.591;
+        public static final double SHOOTER_MAGIC_A = 1.34;
+        public static final double SHOOTER_MAGIC_B = -13.080;
+        public static final double SHOOTER_MAGIC_C = 45.704;
+        public static final double SHOOTER_MAGIC_D = 72.0;
 
         // max distance to shoot into the speaker in meters
-        public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance
+        public static final double SHOOTER_MAX_DISTANCE = 2.7; // TODO: set me after testing robot's shooter performance
 
         // position to line up pivot with things on the field (0 is straight down)
         public static final Rotation2d AMP_PIVOT_LINEUP = Rotation2d.fromDegrees(177.27);
@@ -241,7 +241,7 @@ public class Constants {
         // turn in place command
         public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4);
         public static final double TURN_KP = 19;
-        public static final double TURN_KI = 0.01;
+        public static final double TURN_KI = 0.02;
         public static final double TURN_KD = 0.0;
     }
 }
