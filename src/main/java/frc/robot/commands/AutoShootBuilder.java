@@ -23,8 +23,6 @@ import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.commands.SetPivotCommand;;
-
 
 public class AutoShootBuilder{
   Shooter shooterSubsystem;

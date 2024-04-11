@@ -9,10 +9,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
  */
 public final class FieldConstants {
     public final class BlueConstants {
-        public static final Pose2d SPEAKER = new Pose2d(0, 5.55, new Rotation2d(0)); // TODO: set me from michael, needed for auto speaker shooting
+        public static final Pose2d SPEAKER = new Pose2d(0, 5.55, new Rotation2d(0));
     }
 
     public final class RedConstants {
-        public static final Pose2d SPEAKER = new Pose2d(16.525, 5.55, new Rotation2d(0)); // TODO: set me from michael, needed for auto speaker shooting
+        public static final Pose2d SPEAKER = new Pose2d(16.525, 5.55, new Rotation2d(0));
     }
 }

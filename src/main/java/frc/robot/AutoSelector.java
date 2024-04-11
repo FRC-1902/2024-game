@@ -216,7 +216,7 @@ public class AutoSelector {
             // shoot into speaker
             autoShootBuilder.getShotSequence(),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem),
-            // drive & pick up centerline piece // TODO: debug from here
+            // drive & pick up centerline piece
             new ParallelDeadlineGroup(
                 autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("One Piece 2")),
                 new IntakeCommand(intakeSubsystem, shooterSubsystem)

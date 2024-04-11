@@ -22,7 +22,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -70,8 +69,10 @@ public class Swerve extends SubsystemBase {
         backCamera.setDriverMode(false);
         frontCamera.setDriverMode(false);
 
-        Transform3d backRobotToCam  = new Transform3d();// Constants.Swerve.BACK_CAMERA_OFFSET;
-        Transform3d frontRobotToCam = new Transform3d();// Constants.Swerve.FRONT_CAMERA_OFFSET;
+        // blank transform as it is implemented later
+        // avoids issue with the cameras mounted at an angle
+        Transform3d backRobotToCam  = new Transform3d();
+        Transform3d frontRobotToCam = new Transform3d();
 
         backPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, backRobotToCam);
         frontPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, frontRobotToCam);

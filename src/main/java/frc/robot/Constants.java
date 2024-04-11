@@ -88,7 +88,7 @@ public class Constants {
         public static final double SHOOTER_MAGIC_D = 71.0; // 72.0
 
         // max distance to shoot into the speaker in meters
-        public static final double SHOOTER_MAX_DISTANCE = 2.7; // TODO: set me after testing robot's shooter performance
+        public static final double SHOOTER_MAX_DISTANCE = 2.7;
 
         // position to line up pivot with things on the field (0 is straight down)
         public static final Rotation2d AMP_PIVOT_LINEUP = Rotation2d.fromDegrees(177.27);
