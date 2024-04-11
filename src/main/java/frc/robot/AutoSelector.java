@@ -62,7 +62,7 @@ public class AutoSelector {
         alternativeSelector.addOption("Under Stage Endpoint", "b");
 
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
-        autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
+        autoChooser.addDefaultOption("Do Nothing", getDoNothingAuto());
         autoChooser.addOption("Amp", getAmpAuto());
         autoChooser.addOption("4 Piece", getFourPieceAuto());
         autoChooser.addOption("One Piece!", getItsRealAuto());
@@ -90,6 +90,24 @@ public class AutoSelector {
     }
 
     // Auto definitions
+
+    private SequentialCommandGroup getDoNothingAuto() {
+        return new SequentialCommandGroup(
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0, 0, Rotation2d.fromDegrees(180))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0, 0, Rotation2d.fromDegrees(0))))
+                ),
+                this::isBlue
+            )
+        );
+    }
 
     /**
      * Shot into the amp + single note from the ground into the speaker
