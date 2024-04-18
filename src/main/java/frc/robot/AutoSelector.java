@@ -63,11 +63,11 @@ public class AutoSelector {
 
         autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
         autoChooser.addDefaultOption("Do Nothing", getDoNothingAuto());
-        autoChooser.addOption("Amp", getAmpAuto());
-        autoChooser.addOption("4 Piece", getFourPieceAuto());
-        autoChooser.addOption("One Piece!", getItsRealAuto());
+        autoChooser.addOption("Amp [Amp]", getAmpAuto());
+        autoChooser.addOption("3 Piece [Center]", getFourPieceAuto());
+        autoChooser.addOption("Source [Source]", getItsRealAuto());
         autoChooser.addOption("Single Pringle", getSinglePreLoadAmpSide());
-        autoChooser.addOption("Driveback 3 Piece", driveback3Piece());
+        autoChooser.addOption("Driveback 3 Piece [Center]", driveback3Piece());
 
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
     }

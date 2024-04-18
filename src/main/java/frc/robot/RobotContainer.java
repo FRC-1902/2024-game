@@ -147,7 +147,7 @@ public class RobotContainer {
         
         // speaker lineup
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
-            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.3), pivotSubsystem))
+            .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.31), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
         
     }
