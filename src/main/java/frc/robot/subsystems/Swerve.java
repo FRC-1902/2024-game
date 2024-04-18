@@ -201,21 +201,21 @@ public class Swerve extends SubsystemBase {
             // SmartDashboard.putNumber("R Z", estimatedPoseTransformed.getTranslation().getZ());
         }
         // back vision
-        final Optional<EstimatedRobotPose> optionalEstimatedPoseBack = backPhotonPoseEstimator.update();
-        if (optionalEstimatedPoseBack.isPresent()) {
-            final EstimatedRobotPose estimatedPose = optionalEstimatedPoseBack.get();
-            Pose3d estimatedPoseTransformed = estimatedPose.estimatedPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0,-estimatedPose.estimatedPose.getRotation().getY(), 0)));
-            estimatedPoseTransformed = estimatedPoseTransformed.plus(Constants.Swerve.BACK_CAMERA_OFFSET);
-            swerveOdometry.addVisionMeasurement(
-                new Pose2d(
-                    estimatedPoseTransformed.toPose2d().getTranslation(), 
-                    estimatedPoseTransformed.toPose2d().getRotation().plus(Rotation2d.fromDegrees(180))), 
-                estimatedPose.timestampSeconds
-            );
-            SmartDashboard.putNumber("L X", estimatedPoseTransformed.getTranslation().getX());
-            SmartDashboard.putNumber("L Y", estimatedPoseTransformed.getTranslation().getY());
-            // SmartDashboard.putNumber("L Z", estimatedPoseTransformed.getTranslation().getZ());
-        }
+        // final Optional<EstimatedRobotPose> optionalEstimatedPoseBack = backPhotonPoseEstimator.update();
+        // if (optionalEstimatedPoseBack.isPresent()) {
+        //     final EstimatedRobotPose estimatedPose = optionalEstimatedPoseBack.get();
+        //     Pose3d estimatedPoseTransformed = estimatedPose.estimatedPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0,-estimatedPose.estimatedPose.getRotation().getY(), 0)));
+        //     estimatedPoseTransformed = estimatedPoseTransformed.plus(Constants.Swerve.BACK_CAMERA_OFFSET);
+        //     swerveOdometry.addVisionMeasurement(
+        //         new Pose2d(
+        //             estimatedPoseTransformed.toPose2d().getTranslation(), 
+        //             estimatedPoseTransformed.toPose2d().getRotation().plus(Rotation2d.fromDegrees(180))), 
+        //         estimatedPose.timestampSeconds
+        //     );
+        //     SmartDashboard.putNumber("L X", estimatedPoseTransformed.getTranslation().getX());
+        //     SmartDashboard.putNumber("L Y", estimatedPoseTransformed.getTranslation().getY());
+        //     // SmartDashboard.putNumber("L Z", estimatedPoseTransformed.getTranslation().getZ());
+        // }
 
         // process & log odometry
         swerveOdometry.update(imu.getFieldHeading(), getModulePositions());

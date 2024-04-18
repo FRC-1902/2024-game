@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5006130892543479,
-        "y": 3.7824482295091357
+        "x": 1.214431471593243,
+        "y": 4.124650396914556
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.290735091251959,
-        "y": 3.006171158087069
+        "x": 1.8804473735473555,
+        "y": 3.221847031929358
       },
       "isLocked": false,
       "linkedName": "OnePiece1"
     },
     {
       "anchor": {
-        "x": 8.097782161158108,
-        "y": 0.7826122838705171
+        "x": 5.630145730324757,
+        "y": 1.6603239366301152
       },
       "prevControl": {
-        "x": 6.30886764825694,
-        "y": 0.5983572566479206
+        "x": 3.8284184282020064,
+        "y": 1.7337839281671907
+      },
+      "nextControl": {
+        "x": 6.28202433469299,
+        "y": 1.6337455544833432
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.112730415249954,
+        "y": 2.3416084124066137
+      },
+      "prevControl": {
+        "x": 6.879926545646654,
+        "y": 1.8908829604562654
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,11 +55,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -163.87314765431893,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "One Piece",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 131.49106335816415,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

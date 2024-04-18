@@ -68,6 +68,7 @@ public class AutoSelector {
         autoChooser.addOption("Source [Source]", getItsRealAuto());
         autoChooser.addOption("Single Pringle", getSinglePreLoadAmpSide());
         autoChooser.addOption("Driveback 3 Piece [Center]", driveback3Piece());
+        autoChooser.addOption("Disruption [Source]", getDisruptionAuto());
 
         SmartDashboard.putData("Auto Choices", autoChooser.getSendableChooser());
     }
@@ -316,5 +317,29 @@ public class AutoSelector {
             autoShootBuilder.getShotSequence(),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         );
+    }
+
+    /**
+     * Disrupt, no shots made
+     */
+    private SequentialCommandGroup getDisruptionAuto(){
+        return new SequentialCommandGroup(
+            // setup odometry
+            new ConditionalCommand(
+                new SequentialCommandGroup( // blue starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.50, 2.10, Rotation2d.fromDegrees(0))))
+                ),
+                new SequentialCommandGroup( // red starting point
+                    new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(180))),
+                    new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(0))),
+                    new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(16.05, 2.10, Rotation2d.fromDegrees(180))))
+                ),
+                this::isBlue
+            ),
+            // drive to shot location
+            autoDriveBuilder.getFollowPathCommand(PathPlannerPath.fromPathFile("Disruption"))
+        ); 
     }
 }
