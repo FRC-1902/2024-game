@@ -262,7 +262,7 @@ public class AutoSelector {
                     new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(240))),
                     new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(0.70, 6.70, Rotation2d.fromDegrees(240))))
                 ),
-                new SequentialCommandGroup( // red starting point // TODO: validate this side
+                new SequentialCommandGroup( // red starting point
                     new InstantCommand(() -> IMU.getInstance().setFieldOffset(Rotation2d.fromDegrees(300))),
                     new InstantCommand(() -> IMU.getInstance().setOffset(Rotation2d.fromDegrees(120))),
                     new InstantCommand(() -> swerveSubsystem.resetOdometry(new Pose2d(15.90, 6.70, Rotation2d.fromDegrees(300))))
@@ -270,7 +270,8 @@ public class AutoSelector {
                 this::isBlue
             ),
             // shoot speaker
-            autoShootBuilder.getShotSequence(),
+            new SetPivotCommand(Rotation2d.fromRotations(0.31), pivotSubsystem),
+            new ShootCommand(shooterSubsystem, pivotSubsystem),
             new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem)
         );
     }
