@@ -42,8 +42,8 @@ public class AutoShootBuilder{
         new SequentialCommandGroup(
           new ParallelCommandGroup(
             autoDriveCommands.getTurnCommand(this::calculateFaceAngle),
-            new InstantCommand(() -> System.out.println("Face angle: " + calculateFaceAngle())),
-            new InstantCommand(() -> System.out.println("Shot angle: " + calculateShotAngle())),
+            new InstantCommand(() -> DataLogManager.log("Face angle: " + calculateFaceAngle())),
+            new InstantCommand(() -> DataLogManager.log("Shot angle: " + calculateShotAngle())),
             new SetPivotCommand(this::calculateShotAngle, pivotSubsystem),
             new InstantCommand(() -> shooterSubsystem.setFlywheelRPM(3200))
           ),

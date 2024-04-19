@@ -212,7 +212,7 @@ public class AutoSelector {
     }
 
     /**
-     * Single pre-loaded
+     * Off to the side auto, single pre-loaded + centerline
      */
     private SequentialCommandGroup getItsRealAuto(){
         return new SequentialCommandGroup(
@@ -250,7 +250,7 @@ public class AutoSelector {
     }
 
     /**
-     * Just shoot pre-loaded shot into speaker on the amp side 
+     * Just shoot pre-loaded shot into speaker on the amp side of subwoofer
      * @return
      */
     private SequentialCommandGroup getSinglePreLoadAmpSide() {
