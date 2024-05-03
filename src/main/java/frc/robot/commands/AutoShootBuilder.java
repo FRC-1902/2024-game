@@ -13,6 +13,10 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.IMU;
@@ -29,34 +33,48 @@ public class AutoShootBuilder{
 
   Command shotSequence;
 
+  public Command getShotSequence() {    
+    shotSequence = new SequentialCommandGroup(
+      new InstantCommand(() -> DataLogManager.log("Distance: " + getVecDistance(calculateTargetVector()))),
+      // check is within distance
+      new ConditionalCommand(
+        // proper shot sequence
+        new SequentialCommandGroup(
+          new ParallelCommandGroup(
+            autoDriveCommands.getTurnCommand(this::calculateFaceAngle),
+            new InstantCommand(() -> DataLogManager.log("Face angle: " + calculateFaceAngle())),
+            new InstantCommand(() -> DataLogManager.log("Shot angle: " + calculateShotAngle())),
+            new SetPivotCommand(this::calculateShotAngle, pivotSubsystem),
+            new InstantCommand(() -> shooterSubsystem.setFlywheelRPM(3200))
+          ),
+          new ShootCommand(shooterSubsystem, pivotSubsystem)
+        ),
+        // if not within distance
+        new InstantCommand(() -> DataLogManager.log("BAD SHOT DISTANCE")),
+        () -> getVecDistance(calculateTargetVector()) < Constants.Arm.SHOOTER_MAX_DISTANCE && shooterSubsystem.midPieceSensorActive()
+      )
+    );
+    return shotSequence;
+  }
+
   /**
    * Immediately schedules routine to shoot automatically into the speaker
    */
   public void startShotSequence() {
-    DataLogManager.log(String.format("Starting Shot Sequence at X: %.3f Y: %.3f", swerveSubsystem.getPose().getX(), swerveSubsystem.getPose().getY()));
-    DataLogManager.log("Distance: " + getVecDistance(calculateTargetVector()));
-    
-    if (getVecDistance(calculateTargetVector()) > Constants.Arm.SHOOTER_MAX_DISTANCE) {
-      return;
-    }
-    
-    // TODO: test & implement
-    // shotSequence = new SequentialCommandGroup(
-    //   new ParallelCommandGroup(
-    //     autoDriveCommands.getTurnCommand(calculateFaceAngle()),
-    //     new SetPivotCommand(calculateShotAngle(), pivotSubsystem),
-    //     new InstantCommand(() -> shooterSubsystem.setFlywheel(1, 0))
-    //   ),
-    //   new ShootCommand(shooterSubsystem, pivotSubsystem)
-    // );
-    // shotSequence.schedule();
+    shotSequence = getShotSequence();
+    shotSequence.schedule();
   }
 
   public void cancelShotSequence() {
     if (shotSequence != null && !shotSequence.isFinished()) {
-      shooterSubsystem.setFlywheel(0, 0);
+      new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
+      shooterSubsystem.setFlywheelRPM(0);
       shotSequence.cancel();
     }
+  }
+
+  public boolean shotSequenceFinished() {
+    return shotSequence != null && shotSequence.isFinished();
   }
 
   public boolean isShotDone() {
@@ -87,7 +105,7 @@ public class AutoShootBuilder{
       Constants.Arm.SHOOTER_MAGIC_A * Math.pow(distance, 3) + 
       Constants.Arm.SHOOTER_MAGIC_B * Math.pow(distance, 2) + 
       Constants.Arm.SHOOTER_MAGIC_C * distance + 
-      Constants.Arm.SHOOTER_MAGIC_C
+      Constants.Arm.SHOOTER_MAGIC_D
     );
   }
 
@@ -115,8 +133,6 @@ public class AutoShootBuilder{
     }
 
     // redefine target position vector relative to current position as new origin
-    targetPosition = targetPosition.relativeTo(currentPosition);
-
-    return targetPosition.getTranslation();
+    return currentPosition.relativeTo(targetPosition).getTranslation().times(-1);
   }
 }

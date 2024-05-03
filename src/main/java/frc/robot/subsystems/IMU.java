@@ -31,6 +31,7 @@ public class IMU extends SubsystemBase{
   private void initializeLogger() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("IMU");
     shooterTab.addNumber("Heading", () -> getHeading().getDegrees());
+    shooterTab.addNumber("Field Heading", () -> getFieldHeading().getDegrees());
     Logger.recordOutput("IMU heading", getHeading().getDegrees());
     Logger.recordOutput("IMU roll", getRoll());
     Logger.recordOutput("IMU pitch", getPitch());

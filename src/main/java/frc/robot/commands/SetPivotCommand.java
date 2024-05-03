@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Pivot;
@@ -11,13 +13,17 @@ import frc.robot.subsystems.Pivot;
 public class SetPivotCommand extends Command {
   Pivot pivotSubsystem;
 
-  Rotation2d angle;
+  Supplier<Rotation2d> angle;
 
   /**
    * Creates a new SetPivotCommand.
    * @param angle rotation from directly down
    */
   public SetPivotCommand(Rotation2d angle, Pivot pivotSubsystem) {
+    this(() -> angle, pivotSubsystem);
+  }
+
+  public SetPivotCommand(Supplier<Rotation2d> angle, Pivot pivotSubsystem) {
     this.pivotSubsystem = pivotSubsystem;
     this.angle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,7 +33,7 @@ public class SetPivotCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pivotSubsystem.setAngle(angle);
+    pivotSubsystem.setAngle(angle.get());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

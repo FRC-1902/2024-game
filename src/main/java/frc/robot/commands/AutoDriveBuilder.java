@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -81,14 +83,22 @@ public class AutoDriveBuilder {
         return new TurnCommand(rot);
     }
 
+    public Command getTurnCommand(Supplier<Rotation2d> rot) {
+        return new TurnCommand(rot);
+    }
+
     /**
      * Turn to a specific field-centric angle relative to the blue origin
      */
     private class TurnCommand extends Command {
         private PIDController turnPID;
-        private Rotation2d targetRot;
+        private Supplier<Rotation2d> targetRot;
 
         public TurnCommand(Rotation2d targetRot) {
+            this(() -> targetRot);
+        }
+
+        public TurnCommand(Supplier<Rotation2d> targetRot) {
             this.targetRot = targetRot;
 
             turnPID = new PIDController(Constants.AutoConstants.TURN_KP, Constants.AutoConstants.TURN_KI, Constants.AutoConstants.TURN_KD);
@@ -102,7 +112,7 @@ public class AutoDriveBuilder {
         @Override
         public void initialize() {
             turnPID.reset();
-            turnPID.setSetpoint(targetRot.getRotations());
+            turnPID.setSetpoint(targetRot.get().getRotations());
         }
 
         @Override

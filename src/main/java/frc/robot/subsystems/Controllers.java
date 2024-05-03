@@ -85,6 +85,13 @@ public class Controllers {
     }
   }
 
+  /**
+   * Returns the command trigger for the specified button
+   * @param name Controller name DRIVE/MANIP
+   * @param button Button name
+   * @return boolean if button is pressed.
+   * If controller is specified incorrectly, returns null
+   */
   public Trigger getTrigger(ControllerName name, Button b){
     switch(name){
     case DRIVE:

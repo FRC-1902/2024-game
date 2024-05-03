@@ -38,6 +38,8 @@ public class Constants {
     }
 
     public static final class Intake {
+        private Intake() {}
+
         public static final int INTAKE_MOTOR_ID = 3;
         public static final int INTAKE_CURRENT_LIMIT = 40;
     }
@@ -52,20 +54,20 @@ public class Constants {
         public static final int TOP_SHOOTER_MOTOR_ID = 14; 
         public static final int BOTTOM_SHOOTER_MOTOR_ID = 15;
 
-        // PID Values
-        public static final double PIVOT_KP = 1.8;// 1.8;
-        public static final double PIVOT_KI = 0.4;// 0.2;
-        public static final double PIVOT_KD = 0.01;// 0.015;
-        public static final double PIVOT_KF = 0.07;// 0.1; // gravity compensation feedforward
+        // Pivot Encoder Offset
+    /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.420);
+
+        // PID Values - Old arm values: 1.8, 0.2, 0.015, 0.1
+        public static final double PIVOT_KP = 1.8;
+        public static final double PIVOT_KI = 0.4;
+        public static final double PIVOT_KD = 0.01;
+        public static final double PIVOT_KF = 0.06;// gravity compensation feedforward
 
         // Pivot Positions
         public static final Rotation2d PIVOT_MIN_ROTATION = Rotation2d.fromDegrees(50);
         public static final Rotation2d PIVOT_MAX_ROTATION = Rotation2d.fromDegrees(195.84);
-        public static final double PIVOT_DEGREES_TOLERANCE = 0.008; // XXX: 0.008 earlier
-
-        // Pivot Encoder Offset
-    /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.0014); // 0.101
+        public static final Rotation2d PIVOT_DEGREES_TOLERANCE = Rotation2d.fromRotations(0.008); // tuned in just above mechanical slop
 
         // Power Considerations
         public static final double SHOOTER_VOLTAGE_COMPENSATION = 12.0;
@@ -80,13 +82,13 @@ public class Constants {
         public static final Rotation2d WRIST_OFFSET = Rotation2d.fromDegrees(61.72);
 
         // cubic curve magic numbers to relate pivot angle and distance from speaker
-        public static final double SHOOTER_MAGIC_A = 0.532;
-        public static final double SHOOTER_MAGIC_B = -7.106;
-        public static final double SHOOTER_MAGIC_C = 32.601;
-        public static final double SHOOTER_MAGIC_D = 135.591;
+        public static final double SHOOTER_MAGIC_A = 1.38;
+        public static final double SHOOTER_MAGIC_B = -13.080;
+        public static final double SHOOTER_MAGIC_C = 45.704;
+        public static final double SHOOTER_MAGIC_D = 71.0; // 72.0
 
         // max distance to shoot into the speaker in meters
-        public static final double SHOOTER_MAX_DISTANCE = 5.0; // TODO: set me after testing robot's shooter performance
+        public static final double SHOOTER_MAX_DISTANCE = 2.7;
 
         // position to line up pivot with things on the field (0 is straight down)
         public static final Rotation2d AMP_PIVOT_LINEUP = Rotation2d.fromDegrees(177.27);
@@ -94,8 +96,7 @@ public class Constants {
         public static final Rotation2d STOW_PIVOT_LINEUP = Rotation2d.fromDegrees(65.0);
         public static final Rotation2d INTAKE_PIVOT_LINEUP = Rotation2d.fromDegrees(53.76);
 
-        public static final int PIECE_SENSOR_PORT = 0;
-        public static final double PIECE_SENSOR_THRESHOLD_VOLTAGE = 2.0;
+        public static final int IR_PIECE_SENSOR_PORT = 4;
     }
 
     public static final class Swerve {
@@ -220,14 +221,14 @@ public class Constants {
         }
 
         /* Photonvision camera transforms */
-        
-        public static final Transform3d LEFT_CAMERA_OFFSET = new Transform3d(
-            new Translation3d(Units.inchesToMeters(28.8604), Units.inchesToMeters(6.12), Units.inchesToMeters(0.4485)), 
-            new Rotation3d(0,Units.degreesToRadians(24.24),0)
+        /* NOTE: DO NOT SET ROTATION, this is set elsewhere in the swerve code */
+        public static final Transform3d FRONT_CAMERA_OFFSET = new Transform3d(
+            new Translation3d(-0.292, Units.inchesToMeters(6.12), -0.666), 
+            new Rotation3d(0,0,0)
         );
-        public static final Transform3d RIGHT_CAMERA_OFFSET = new Transform3d(
-            new Translation3d(Units.inchesToMeters(28.8604), Units.inchesToMeters(-6.12), Units.inchesToMeters(0.4485)), 
-            new Rotation3d(0,Units.degreesToRadians(24.24),0)
+        public static final Transform3d BACK_CAMERA_OFFSET = new Transform3d(
+            new Translation3d(-0.15, Units.inchesToMeters(-6.12), -0.666), 
+            new Rotation3d(0,0,0)
         );
     }
 
@@ -238,9 +239,9 @@ public class Constants {
         public static final PIDConstants ROTATION_PID = new PIDConstants(2.6, 0.0, 0, 0.1);
 
         // turn in place command
-        public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4); // TODO: set me
-        public static final double TURN_KP = 15; // TODO: set me on real robot
-        public static final double TURN_KI = 0.01; // TODO: set me on real robot
-        public static final double TURN_KD = 0.0; // TODO: set me on real robot
+        public static final Rotation2d TURN_TOLERANCE = Rotation2d.fromDegrees(0.4);
+        public static final double TURN_KP = 19;
+        public static final double TURN_KI = 0.02;
+        public static final double TURN_KD = 0.0;
     }
 }

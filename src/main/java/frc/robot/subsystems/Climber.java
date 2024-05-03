@@ -12,10 +12,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.revrobotics.CANSparkBase;  
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -53,8 +50,8 @@ public class Climber extends SubsystemBase {
     rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
     leftMotor.setSmartCurrentLimit(Constants.Climber.CLIMBER_CURRENT_LIMIT);
     rightMotor.setSmartCurrentLimit(Constants.Climber.CLIMBER_CURRENT_LIMIT);
-    leftMotor.setInverted(false);
-    rightMotor.setInverted(true);
+    leftMotor.setInverted(true);
+    rightMotor.setInverted(false);
 
     // normally closed limit switches
     leftBottomSwitch =  new DigitalInput(Constants.Climber.LB_SWITCH_PORT);
@@ -103,7 +100,7 @@ public class Climber extends SubsystemBase {
   public void periodic() { // XXX: maybe different motor power?
     putNTData();
 
-    if (climberDisabledChooser.get() == true) {
+    if (Boolean.TRUE.equals(climberDisabledChooser.get())) {
       leftMotor.set(0.0);
       rightMotor.set(0.0);
       return;
@@ -111,30 +108,25 @@ public class Climber extends SubsystemBase {
     
     switch (targetDirection) {
       case UP:
-        // TODO: disabled for orlando
-        leftMotor.set(1);
-        rightMotor.set(1);
-        /*      
         if (leftTopSwitch.get()) {
-          leftMotor.set(1);
+          leftMotor.set(0.75);
         } else {
           leftMotor.set(0.0);
         }
         if (rightTopSwitch.get()) {
-          rightMotor.set(1);
+          rightMotor.set(0.75);
         } else {
           rightMotor.set(0.0);
         }
-        */
         break;
       case DOWN:
         if (leftBottomSwitch.get()) {
-          leftMotor.set(-1);
+          leftMotor.set(-0.75);
         } else {
           leftMotor.set(0.0);
         }
         if (rightBottomSwitch.get()) {
-          rightMotor.set(-1);
+          rightMotor.set(-0.75);
         } else {
           rightMotor.set(0.0);
         }

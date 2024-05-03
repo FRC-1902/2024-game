@@ -31,7 +31,7 @@ public class ShootCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!shooterSubsystem.pieceSensorActive()) {
+    if (!shooterSubsystem.midPieceSensorActive()) {
       DataLogManager.log("NO Piece Detected to Shoot, exiting shoot command early");
       earlyExit = true;
       return;
@@ -39,7 +39,7 @@ public class ShootCommand extends Command {
       earlyExit = false;
     }
 
-    shooterSubsystem.setFlywheel(1, 0);
+    shooterSubsystem.setFlywheelRPM(5200);
     startTime = Timer.getFPGATimestamp();
     shotTime = null;
   }
@@ -52,7 +52,7 @@ public class ShootCommand extends Command {
     }
 
     // at full shot rpm or shooting into amp
-    boolean atRPM = shooterSubsystem.getRPM() > 5100 || (pivotSubsystem.getAngle().getRotations() > 0.45 && shooterSubsystem.getRPM() > 3000);
+    boolean atRPM = shooterSubsystem.getRPM() > 5150 || (pivotSubsystem.getAngle().getRotations() > 0.45 && shooterSubsystem.getRPM() > 3000);
 
     // shoot once revved up or time elapsed is greater than 1.5 seconds
     if (atRPM || Timer.getFPGATimestamp() - startTime > 1.5) {
@@ -60,7 +60,7 @@ public class ShootCommand extends Command {
     }
 
     // get ready to exit when piece is no longer detected
-    if (!shooterSubsystem.pieceSensorActive() && shotTime == null) {
+    if (!shooterSubsystem.topPieceSensorActive() && !shooterSubsystem.midPieceSensorActive() && shotTime == null) {
       shotTime = Timer.getFPGATimestamp();
     }
   }
@@ -68,7 +68,7 @@ public class ShootCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.setFlywheel(0, 0);
+    shooterSubsystem.setFlywheelRPM(0);
     shooterSubsystem.setIndexer(0);
   }
 
@@ -78,7 +78,6 @@ public class ShootCommand extends Command {
     // if time elapsed after shot is greater than 0.2 seconds, end command
     if (shotTime != null) 
       DataLogManager.log("" + (Timer.getFPGATimestamp() - shotTime) + " : " + shotTime);
-
     return earlyExit || (shotTime != null && Timer.getFPGATimestamp() - shotTime > 0.25);
   }
 }
