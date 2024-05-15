@@ -15,11 +15,11 @@ import frc.lib.util.SwerveModuleConstants;
 
 public class Constants {
     private Constants() {}
-	// Controllers
-	public static final int DRIVE_CONTROLLER_PORT = 0;
-	public static final int MANIP_CONTROLLER_PORT = 1;
+    // Controllers
+    public static final int DRIVE_CONTROLLER_PORT = 0;
+    public static final int MANIP_CONTROLLER_PORT = 1;
 
-	public static final double STICK_DEADBAND = 0.1;
+    public static final double STICK_DEADBAND = 0.1;
 
     public static final class Climber{
         private Climber() {}
@@ -130,9 +130,9 @@ public class Constants {
 
         /* Angle Encoder Invert */
         public static final boolean ABS_ENCODER_INVERT = chosenModule.canCoderInvert;
-		
-		/* Swerve Voltage Compensation */
-		public static final double VOLTAGE_COMP = 12.0;
+        
+        /* Swerve Voltage Compensation */
+        public static final double VOLTAGE_COMP = 12.0;
 
         /* Swerve Current Limiting */
         public static final int ANGLE_CURRENT_LIMIT = 30;
@@ -156,11 +156,11 @@ public class Constants {
         public static final double DRIVE_KV = 1.874719;
         public static final double DRIVE_KA = 0.296733;
 
-		/* Drive Motor Conversion Factors */
-		public static final double DRIVE_CONVERSION_POSITION_FACTOR =
-        	(chosenModule.wheelDiameter * Math.PI) / DRIVE_GEAR_RATIO;
-    	public static final double DRIVE_CONVERSION_VELOCITY_FACTOR = DRIVE_CONVERSION_POSITION_FACTOR / 60.0;
-    	public static final double ANGLE_CONVERSION_FACTOR = 360.0 / ANGLE_GEAR_RATIO;
+        /* Drive Motor Conversion Factors */
+        public static final double DRIVE_CONVERSION_POSITION_FACTOR =
+            (chosenModule.wheelDiameter * Math.PI) / DRIVE_GEAR_RATIO;
+        public static final double DRIVE_CONVERSION_VELOCITY_FACTOR = DRIVE_CONVERSION_POSITION_FACTOR / 60.0;
+        public static final double ANGLE_CONVERSION_FACTOR = 360.0 / ANGLE_GEAR_RATIO;
 
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
