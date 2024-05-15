@@ -17,6 +17,9 @@ public class Controllers {
 
   private static Controllers instance;
 
+  /**
+   * Enumeration of buttons on the Xbox controller.
+   */
   public enum Button{
     A(1), B(2), X(3), Y(4), LB(5), RB(6), LS(9), RS(10);
 
@@ -26,6 +29,9 @@ public class Controllers {
     }
   }
 
+  /**
+   * Enumeration of axes on the Xbox controller.
+   */
   public enum Axis{
     LX(0), LY(1), RX(4), RY(5), LT(2), RT(3);
 
@@ -35,11 +41,17 @@ public class Controllers {
     }
   }
 
+  /**
+   * Enumeration of button actions (pressed or released).
+   */
   public enum Action{
     PRESSED,
     RELEASED
   }
 
+  /**
+   * Enumeration of controller names (DRIVE or MANIP).
+   */
   public enum ControllerName{
     DRIVE, MANIP
   }
@@ -51,11 +63,12 @@ public class Controllers {
     manipController = commandManipController.getHID();
   }
 
-  /**Checks if specified button is depressed
-   * @param name Controller name DRIVE/MANIP
+  /**
+   * Checks if the specified button is pressed.
+   * @param name Controller name (DRIVE or MANIP)
    * @param button Button name
-   * @return boolean if button is pressed.
-   * If controller is specified incorrectly, returns false
+   * @return true if the button is pressed, false otherwise.
+   * If the controller is specified incorrectly, returns false.
    */
   public boolean get(ControllerName name, Button b){
     switch(name){
@@ -68,11 +81,12 @@ public class Controllers {
     }
   }
 
-  /**Checks the value of the specified axis
-   * @param name Controller name DRIVE/MANIP
+  /**
+   * Checks the value of the specified axis.
+   * @param name Controller name (DRIVE or MANIP)
    * @param axis Axis name
-   * @return double of axis value, between -1 and 1
-   * If controller is specified incorrectly, returns 0
+   * @return the value of the axis, between -1 and 1.
+   * If the controller is specified incorrectly, returns 0.
    */
   public double get(ControllerName name, Axis a){
     switch(name){
@@ -86,11 +100,11 @@ public class Controllers {
   }
 
   /**
-   * Returns the command trigger for the specified button
-   * @param name Controller name DRIVE/MANIP
+   * Returns the command trigger for the specified button.
+   * @param name Controller name (DRIVE or MANIP)
    * @param button Button name
-   * @return boolean if button is pressed.
-   * If controller is specified incorrectly, returns null
+   * @return the command trigger for the button.
+   * If the controller is specified incorrectly, returns null.
    */
   public Trigger getTrigger(ControllerName name, Button b){
     switch(name){
@@ -103,10 +117,11 @@ public class Controllers {
     }
   }
 
-  /**Returns DPAD's POV degree value
-   * @param name Controller name DRIVE/MANIP
-   * @return integer of DPAD value
-   * If controller is specified incorrectly, returns 0
+  /**
+   * Returns the degree value of the DPAD.
+   * @param name Controller name (DRIVE or MANIP)
+   * @return the degree value of the DPAD.
+   * If the controller is specified incorrectly, returns 0.
    */
   public int getDPAD(ControllerName name) {
     switch(name) {
@@ -120,9 +135,9 @@ public class Controllers {
   }
 
   /**
-   * Vibrate both controllers for a specified duration and intensity
-   * @param msDuration duration of vibration in milliseconds
-   * @param intensity 0-1 strenght of vibration
+   * Vibrates both controllers for a specified duration and intensity.
+   * @param msDuration the duration of the vibration in milliseconds.
+   * @param intensity the strength of the vibration, between 0 and 1.
    */
   public void vibrate(long msDuration, double intensity) {
     driveController.setRumble(edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble, intensity);
@@ -138,6 +153,10 @@ public class Controllers {
     }, msDuration);
   }
 
+  /**
+   * Returns the instance of the Controllers class.
+   * @return the instance of the Controllers class.
+   */
   public static Controllers getInstance(){
     if(instance==null){
       instance = new Controllers();

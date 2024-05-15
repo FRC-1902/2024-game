@@ -38,7 +38,7 @@ public class DriveCommand extends Command {
     double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.STICK_DEADBAND);
     boolean isFieldRelative = !controllers.get(ControllerName.DRIVE, Button.LB);
 
-    // cube controls for better handling, and scale down for softer pre-season movement
+    // cube controls for better handling, scale down turning
     translationVal = Math.pow(translationVal, 3.0);
     translationVal *= 1.0;
     strafeVal = Math.pow(strafeVal, 3.0);

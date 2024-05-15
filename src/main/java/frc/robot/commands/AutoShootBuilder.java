@@ -100,7 +100,7 @@ public class AutoShootBuilder{
     Translation2d targetVector = calculateTargetVector();
     double distance = getVecDistance(targetVector);
 
-    // magic precalculated numbers!!!!! based on how shooter distance relates to the target angle in degrees
+    // magic precalculated numbers!!! - based on how shooter distance relates to the target angle in degrees
     return Rotation2d.fromDegrees(
       Constants.Arm.SHOOTER_MAGIC_A * Math.pow(distance, 3) + 
       Constants.Arm.SHOOTER_MAGIC_B * Math.pow(distance, 2) + 
