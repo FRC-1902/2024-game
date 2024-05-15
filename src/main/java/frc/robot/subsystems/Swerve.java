@@ -13,7 +13,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -200,7 +199,7 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("R Y", estimatedPoseTransformed.getTranslation().getY());
             // SmartDashboard.putNumber("R Z", estimatedPoseTransformed.getTranslation().getZ());
         }
-        // back vision
+        // back vision (not used due to bad calibration at competition, recalibrate & test accruacy before using)
         // final Optional<EstimatedRobotPose> optionalEstimatedPoseBack = backPhotonPoseEstimator.update();
         // if (optionalEstimatedPoseBack.isPresent()) {
         //     final EstimatedRobotPose estimatedPose = optionalEstimatedPoseBack.get();

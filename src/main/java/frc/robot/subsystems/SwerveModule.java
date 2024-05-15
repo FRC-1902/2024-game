@@ -28,7 +28,7 @@ public class SwerveModule {
   
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
-  private SparkAbsoluteEncoder angleEncoder;
+  private SparkAbsoluteEncoder angleAbsEncoder;
 
   private final SparkPIDController driveController;
   private final SparkPIDController angleController;
@@ -42,7 +42,7 @@ public class SwerveModule {
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
     integratedAngleEncoder = angleMotor.getEncoder();
     angleController = angleMotor.getPIDController();
-    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+    angleAbsEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
     configAngleMotor();
 
@@ -65,7 +65,7 @@ public class SwerveModule {
     setSpeed(desiredState, isOpenLoop);
   }
 
-  // use to calculate feed forward values
+  // used to calculate feed forward values
   
   // private double tmpTime = System.currentTimeMillis();
   // private double tmpVel = 0.0;
@@ -100,7 +100,7 @@ public class SwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState){
-    //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+    // Prevent rotating module if speed is less then 1%. Prevents Jittering.
     Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.MAX_SPEED * 0.01)) ? lastAngle : desiredState.angle; 
     
     angleController.setReference(angle.getDegrees(), CANSparkBase.ControlType.kPosition);
@@ -111,9 +111,8 @@ public class SwerveModule {
     return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
   }
 
-  // XXX: Not actually pulling from cancoder, maybe rename?
-  public Rotation2d getCanCoder(){
-    return (Constants.Swerve.CAN_CODER_INVERT) ? Rotation2d.fromRotations(1 - angleEncoder.getPosition()) : Rotation2d.fromRotations(angleEncoder.getPosition());
+  public Rotation2d getAbsEncoder(){
+    return (Constants.Swerve.ABS_ENCODER_INVERT) ? Rotation2d.fromRotations(1 - angleAbsEncoder.getPosition()) : Rotation2d.fromRotations(angleAbsEncoder.getPosition());
   }
 
   public double getDesiredSpeed() {
@@ -121,14 +120,14 @@ public class SwerveModule {
   }
 
   public void resetToAbsolute(){
-    double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
+    double absolutePosition = getAbsEncoder().getDegrees() - angleOffset.getDegrees();
 
     integratedAngleEncoder.setPosition(absolutePosition);
   }
 
   private void configAngleEncoder(){     
-    angleEncoder.setAverageDepth(8); // bit sampling depth (must be a power of 2 up to 128 )
-    angleEncoder.setPositionConversionFactor(1); // angle encoder is directly on the correct shaft
+    angleAbsEncoder.setAverageDepth(8); // bit sampling depth (must be a power of 2 up to 128 )
+    angleAbsEncoder.setPositionConversionFactor(1); // angle encoder is directly on the correct shaft
   }
 
   private void configAngleMotor(){

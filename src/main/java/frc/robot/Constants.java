@@ -15,7 +15,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public class Constants {
     private Constants() {}
-	//Controllers
+	// Controllers
 	public static final int DRIVE_CONTROLLER_PORT = 0;
 	public static final int MANIP_CONTROLLER_PORT = 1;
 
@@ -129,7 +129,7 @@ public class Constants {
         public static final boolean DRIVE_MOTOR_INVERT = chosenModule.driveMotorInvert;
 
         /* Angle Encoder Invert */
-        public static final boolean CAN_CODER_INVERT = chosenModule.canCoderInvert;
+        public static final boolean ABS_ENCODER_INVERT = chosenModule.canCoderInvert;
 		
 		/* Swerve Voltage Compensation */
 		public static final double VOLTAGE_COMP = 12.0;
