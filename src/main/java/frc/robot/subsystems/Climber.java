@@ -97,7 +97,7 @@ public class Climber extends SubsystemBase {
   }
 
   @Override
-  public void periodic() { // XXX: maybe different motor power?
+  public void periodic() {
     putNTData();
 
     if (Boolean.TRUE.equals(climberDisabledChooser.get())) {

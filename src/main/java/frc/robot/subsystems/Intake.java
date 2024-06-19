@@ -17,7 +17,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
   private CANSparkMax intakeMotor;
   
-  /** Creates a new IntakeSubsystem. */
+  /** 
+   * Creates a new IntakeSubsystem.
+   * Initializes the intake motor and sets its configuration.
+   */
   public Intake() {
     intakeMotor = new CANSparkMax(Constants.Intake.INTAKE_MOTOR_ID, MotorType.kBrushless);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(intakeMotor, Usage.MINIMAL);
@@ -26,6 +29,10 @@ public class Intake extends SubsystemBase {
     intakeMotor.setInverted(true);
   }
 
+  /**
+   * Sets the power of the intake motor.
+   * @param power The power to set the intake motor to (-1.0 to 1.0).
+   */
   public void set(double power) {
     intakeMotor.set(power);
   }

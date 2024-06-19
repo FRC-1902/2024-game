@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,11 +30,6 @@ public class Pivot extends SubsystemBase {
   private ProfiledPIDController pivotPID;
 
   private double watchdogPrintTime;
-
-  private SendableChooser ones;
-  private SendableChooser twos;
-  private SendableChooser threes;
-
 
   /** Creates a new Pivot. */
   public Pivot(Shooter shooterSubsystem) {
@@ -65,35 +59,6 @@ public class Pivot extends SubsystemBase {
 
     // set down @ init
     setAngle(getDefaultAngle());
-
-
-    ones = new SendableChooser();
-    ones.setDefaultOption("0.2", 0.2);
-    ones.addOption("0.3", 0.3);
-    ones.addOption("0.4", 0.4);
-    ones.addOption("0.5", 0.5);
-
-    twos = new SendableChooser();
-    twos.setDefaultOption("0.00", 0.00);
-    twos.addOption("0.01", 0.01);
-    twos.addOption("0.02", 0.02);
-    twos.addOption("0.03", 0.03);
-    twos.addOption("0.04", 0.04);
-    twos.addOption("0.05", 0.05);
-    twos.addOption("0.06", 0.06);
-    twos.addOption("0.07", 0.07);
-    twos.addOption("0.08", 0.08);
-    twos.addOption("0.09", 0.09);
-
-    threes = new SendableChooser();
-    threes.setDefaultOption("0.000", 0.000);
-    threes.addOption("0.0025", 0.0025);
-    threes.addOption("0.005", 0.005);
-    threes.addOption("0.0075", 0.0075);
-
-    SmartDashboard.putData("Pivot Ones", ones);
-    SmartDashboard.putData("Pivot Twos", twos);
-    SmartDashboard.putData("Pivot Threes", threes);
   }
 
   /**
@@ -196,10 +161,6 @@ public class Pivot extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // double setpoint = (double) ones.getSelected() + (double) twos.getSelected() + (double) threes.getSelected();
-    // if (Math.abs(pivotPID.getGoal().position - setpoint) > 0.001)
-    //   setAngle(Rotation2d.fromRotations(setpoint));
-
     double setPower = pivotPID.calculate(getAngle().getRotations());
     double feedFoward = Constants.Arm.PIVOT_KF * Math.sin(getAngle().getRadians());
 
@@ -210,7 +171,6 @@ public class Pivot extends SubsystemBase {
       setPower += feedFoward / 1.0;
     }
 
-    // TODO: migrate to logs
     SmartDashboard.putNumber("PivotEncoder", pivotEncoder.getPosition());
     SmartDashboard.putNumber("Pivot Current 1", pivotMotor1.getOutputCurrent());
     SmartDashboard.putNumber("Pivot Current 2", pivotMotor2.getOutputCurrent());

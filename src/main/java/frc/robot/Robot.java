@@ -18,11 +18,9 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Climber;
 
 public class Robot extends LoggedRobot {
-  private IMU imu;
   private PowerDistribution pdh;
   private AutoSelector autoSelector;
   private Command autonomousCommand;
@@ -50,7 +48,6 @@ public class Robot extends LoggedRobot {
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
     Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
-    imu = IMU.getInstance();
     robotContainer = new RobotContainer();
     autoSelector = new AutoSelector(robotContainer);
 
