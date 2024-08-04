@@ -23,6 +23,7 @@ import frc.robot.commands.IndexCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.LEDCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Intake;
@@ -31,6 +32,7 @@ import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.LED;
 
 /*
  * Instantiates all robot subsystems and button commands.
@@ -45,10 +47,11 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-
+    public LED ledSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
+    Command ledCommand; 
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -56,8 +59,12 @@ public class RobotContainer {
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
         intakeSubsystem = new Intake();
+        ledSubsystem = new LED(); 
+
+
         controllers = Controllers.getInstance();
 
+        ledCommand = new LEDCommand(ledSubsystem, shooterSubsystem); 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
@@ -78,6 +85,7 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
         new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
         climberSubsystem.setDefaultCommand(new ClimbCommand(climberSubsystem));
+        ledSubsystem.setDefaultCommand(ledCommand);
 
         configureButtonBindings();
     }   
@@ -160,6 +168,8 @@ public class RobotContainer {
             return false; // true for default to blue alliance
         }
     }
+
+    
 
     public void resetPIDs() {
         pivotSubsystem.resetPIDs();
