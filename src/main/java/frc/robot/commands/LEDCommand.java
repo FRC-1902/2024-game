@@ -12,36 +12,34 @@ import frc.robot.subsystems.Shooter;
 
 public class LEDCommand extends Command {
   /** Creates a new HitTheLights. */
-  LED ledSubby; 
-  Shooter shooterSubby; 
-  public LEDCommand(LED ledSubby, Shooter shooterSubby) {
+  LED ledSubsystem; 
+  Shooter shooterSubsystem; 
+  public LEDCommand(LED ledSubsystem, Shooter shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.ledSubby = ledSubby; 
-    this.shooterSubby = shooterSubby; 
-    addRequirements(ledSubby, shooterSubby);
+    this.ledSubsystem = ledSubsystem; 
+    this.shooterSubsystem = shooterSubsystem; 
+    addRequirements(ledSubsystem, shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    ledSubby.setColour(Color.kRed); 
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(shooterSubby.topPieceSensorActive() && shooterSubby.midPieceSensorActive()){
-      ledSubby.setColour(Color.kGreen);
+    if(shooterSubsystem.topPieceSensorActive() || shooterSubsystem.midPieceSensorActive()){
+      ledSubsystem.setColour(Color.kGreen);
     }
     else{
-      ledSubby.setColour(Color.kRed); 
+      ledSubsystem.setColour(new Color("0xFF4000")); 
     }
   }
-
+          
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ledSubby.setColour(Color.kRed); 
+    ledSubsystem.setColour(new Color("0xFF4000")); 
   }
 
   // Returns true when the command should end.

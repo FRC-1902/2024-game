@@ -9,6 +9,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -52,6 +53,8 @@ public class RobotContainer {
     Command outtakeCommand;
     Command hpIntakeCommand;
     Command ledCommand; 
+    Command testCommand; 
+    
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -63,7 +66,7 @@ public class RobotContainer {
 
 
         controllers = Controllers.getInstance();
-
+        
         ledCommand = new LEDCommand(ledSubsystem, shooterSubsystem); 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
@@ -97,6 +100,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* -------- drive code -------- */
 
+        controllers.getTrigger(ControllerName.DRIVE, Button.B).onTrue(ledSubsystem.testCommand(Color.kRed)); 
+        
         // reset driver field-centric gyro offset
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));

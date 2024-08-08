@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -16,6 +17,7 @@ public class LED extends SubsystemBase {
   /** Creates a new LED. */
   private AddressableLED led; 
   private AddressableLEDBuffer ledBuffer;
+  
   public LED() {
     led = new AddressableLED(Constants.LED_PORT); 
     ledBuffer = new AddressableLEDBuffer(60);
@@ -25,11 +27,20 @@ public class LED extends SubsystemBase {
   }
 
   public void setColour(Color color){
-      for(int i = 0; i < ledBuffer.getLength(); i++){
-    ledBuffer.setLED(i, color);
+    for(int i = 0; i < ledBuffer.getLength(); i++){
+      ledBuffer.setLED(i, color);
+    }
+    led.setData(ledBuffer);
   }
-  led.setData(ledBuffer);
-}
+
+  public Command testCommand(Color color){
+   return run(() -> {
+      for(int i = 0; i < ledBuffer.getLength(); i++){
+        ledBuffer.setLED(i, color);
+      }
+      led.setData(ledBuffer);
+    });
+  }
   
   
   @Override
