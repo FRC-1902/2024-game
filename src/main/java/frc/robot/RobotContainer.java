@@ -9,7 +9,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.util.Color;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,7 +25,7 @@ import frc.robot.commands.IndexCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.LEDCommand;
+
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Intake;
@@ -34,7 +34,8 @@ import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.LED;
+import frc.robot.subsystems.ESP;
+
 
 /*
  * Instantiates all robot subsystems and button commands.
@@ -49,13 +50,14 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-    public LED ledSubsystem; 
+    public ESP espSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
     Command ledCommand; 
     Command testCommand; 
     Command digitalCommand; 
+    Command analogCommand; 
     
 
     public RobotContainer() {
@@ -64,13 +66,13 @@ public class RobotContainer {
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
         intakeSubsystem = new Intake();
-        ledSubsystem = new LED(); 
-        digitalCommand = new DigitalCommand(ledSubsystem, shooterSubsystem); 
+        espSubsystem = new ESP(); 
+         
 
 
         controllers = Controllers.getInstance();
+        digitalCommand = new DigitalCommand(shooterSubsystem, espSubsystem); 
         
-        ledCommand = new LEDCommand(ledSubsystem, shooterSubsystem); 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
@@ -91,7 +93,7 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
         new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
         climberSubsystem.setDefaultCommand(new ClimbCommand(climberSubsystem));
-        ledSubsystem.setDefaultCommand(digitalCommand);
+        espSubsystem.setDefaultCommand(digitalCommand);
 
         configureButtonBindings();
     }   
@@ -103,7 +105,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* -------- drive code -------- */
 
-        controllers.getTrigger(ControllerName.DRIVE, Button.B).onTrue(ledSubsystem.testCommand(Color.kRed)); 
+        
         
         // reset driver field-centric gyro offset
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
