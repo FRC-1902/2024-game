@@ -28,12 +28,12 @@ public class DigitalCommand extends Command {
   @Override
   public void execute() {
     esp.setLED(true); 
-    // if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
-    //   esp.setLED(true); 
-    // }
-    // else{
-    //   esp.setLED(false);
-    // }
+     if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
+       esp.setLED(true); 
+     }
+     else{
+       esp.setLED(false);
+     }
   }
 
   // Called once the command ends or is interrupted.
