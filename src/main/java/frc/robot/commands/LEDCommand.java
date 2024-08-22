@@ -17,7 +17,7 @@ public class LEDCommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     this.esp = esp; 
     this.shooter = shooter;   
-    addRequirements(shooter, esp);
+    addRequirements(esp);
   }
 
   // Called when the command is initially scheduled.
