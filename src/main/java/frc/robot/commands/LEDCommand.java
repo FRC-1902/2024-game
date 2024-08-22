@@ -6,13 +6,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ESP;
 import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-
-public class DigitalCommand extends Command {
+public class LEDCommand extends Command {
   /** Creates a new DigitalCommand. */
   ESP esp; 
   Shooter shooter; 
-  public DigitalCommand(Shooter shooter, ESP esp) {
+  ShuffleboardTab shooterTab; 
+  public LEDCommand(Shooter shooter, ESP esp) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.esp = esp; 
     this.shooter = shooter;   
@@ -27,19 +28,18 @@ public class DigitalCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    esp.setLED(true); 
-     if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
-       esp.setLED(true); 
-     }
-     else{
-       esp.setLED(false);
-     }
+    if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
+      esp.setLED(false);
+    }
+    else{
+      esp.setLED(true);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     esp.setLED(false);
+     esp.setLED(true);
   }
 
   // Returns true when the command should end.

@@ -19,13 +19,12 @@ import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.subsystems.Climber;
 import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.DigitalCommand;
+import frc.robot.commands.LEDCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IndexCommand;
 import frc.robot.commands.SetPivotCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.IntakeCommand;
-
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Intake;
@@ -56,7 +55,6 @@ public class RobotContainer {
     Command hpIntakeCommand;
     Command ledCommand; 
     Command testCommand; 
-    Command digitalCommand; 
     Command analogCommand; 
     
 
@@ -71,7 +69,7 @@ public class RobotContainer {
 
 
         controllers = Controllers.getInstance();
-        digitalCommand = new DigitalCommand(shooterSubsystem, espSubsystem); 
+        ledCommand = new LEDCommand(shooterSubsystem, espSubsystem); 
         
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
@@ -93,7 +91,7 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
         new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
         climberSubsystem.setDefaultCommand(new ClimbCommand(climberSubsystem));
-        espSubsystem.setDefaultCommand(digitalCommand);
+        espSubsystem.setDefaultCommand(ledCommand);
 
         configureButtonBindings();
     }   
