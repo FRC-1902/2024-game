@@ -6,13 +6,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ESP;
 import frc.robot.subsystems.Shooter;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LEDCommand extends Command {
   /** Creates a new DigitalCommand. */
   ESP esp; 
   Shooter shooter; 
-  ShuffleboardTab shooterTab; 
+  
   public LEDCommand(Shooter shooter, ESP esp) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.esp = esp; 
@@ -23,11 +23,14 @@ public class LEDCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    esp.setLED(true); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("topSensor", shooter.topPieceSensorActive()); 
+    SmartDashboard.putBoolean("midSensor", shooter.midPieceSensorActive());
     if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
       esp.setLED(false);
     }
@@ -48,3 +51,6 @@ public class LEDCommand extends Command {
     return false;
   }
 }
+
+
+
