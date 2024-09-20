@@ -9,6 +9,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,6 +19,7 @@ import frc.robot.commands.AutoDriveBuilder;
 import frc.robot.commands.AutoShootBuilder;
 import frc.robot.subsystems.Climber;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.LEDCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IndexCommand;
 import frc.robot.commands.SetPivotCommand;
@@ -31,12 +33,12 @@ import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.LED;
 
 /*
  * Instantiates all robot subsystems and button commands.
 */
 public class RobotContainer {
-
     Swerve swerveSubsystem;
     Shooter shooterSubsystem;
     public Pivot pivotSubsystem;
@@ -45,10 +47,11 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-
+    public LED ledSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
+    Command ledCommand; 
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -56,7 +59,9 @@ public class RobotContainer {
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
         intakeSubsystem = new Intake();
+        ledSubsystem = new LED(); 
         controllers = Controllers.getInstance();
+        shooterSubsystem.setDefaultCommand(new LEDCommand(shooterSubsystem, ledSubsystem));
 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
@@ -82,7 +87,6 @@ public class RobotContainer {
         configureButtonBindings();
     }   
 
-
     /**
      * See <a href="https://docs.google.com/spreadsheets/d/1wMP4YpzC1QxRhvHqJ1PFmJ7Ox0EeoEuYVAkCYsLmFI0/edit?usp=sharing">Button Map</a> for button bindings
      */
@@ -94,32 +98,31 @@ public class RobotContainer {
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
         // charge at amp
-        controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
-            .whileTrue(new ConditionalCommand(
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))), // blue amp
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))), // red amp
-                this::isBlue
-            ));
-        // charge at speaker
-        controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
-            .whileTrue(new ConditionalCommand(
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))), // blue speaker
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
-                this::isBlue
-            ));
-
+        // controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
+        //     .whileTrue(new ConditionalCommand(
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))), // blue amp
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))), // red amp
+        //         this::isBlue
+        //     ));
+        // // charge at speaker
+        // controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
+        //     .whileTrue(new ConditionalCommand(
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))), // blue speaker
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
+        //         this::isBlue
+        //     ));
 
         /* -------- manip code -------- */
 
         // auto shoot
-        controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
-            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
-            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        // controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
+        //     .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+        //     .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
 
-        // auto shoot
-        controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
-            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
-            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        // // auto shoot
+        // controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
+        //     .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+        //     .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
 
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
@@ -149,7 +152,6 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.31), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
-        
     }
 
     private boolean isBlue() {
