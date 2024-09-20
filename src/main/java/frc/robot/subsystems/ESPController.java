@@ -13,6 +13,10 @@ public class ESPController extends SubsystemBase {
   /** Creates a new ESP controller. */
   DigitalOutput output; 
   
+  /**
+   * Controlls an ESP32 via digital pin
+   * @param LED_PORT The ESP32's digital pin
+   */
   public ESPController() {
     output = new DigitalOutput(Constants.LED_PORT); 
   }
