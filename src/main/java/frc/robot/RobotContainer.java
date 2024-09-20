@@ -110,19 +110,19 @@ public class RobotContainer {
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
         // charge at amp
-        controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
-            .whileTrue(new ConditionalCommand(
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))), // blue amp
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))), // red amp
-                this::isBlue
-            ));
-        // charge at speaker
-        controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
-            .whileTrue(new ConditionalCommand(
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))), // blue speaker
-                autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
-                this::isBlue
-            ));
+        // controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
+        //     .whileTrue(new ConditionalCommand(
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(1.86, 7.6, Rotation2d.fromDegrees(90))), // blue amp
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(14.70, 7.6, Rotation2d.fromDegrees(90))), // red amp
+        //         this::isBlue
+        //     ));
+        // // charge at speaker
+        // controllers.getTrigger(ControllerName.DRIVE, Button.A).debounce(0.05)
+        //     .whileTrue(new ConditionalCommand(
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(1.35, 5.55, Rotation2d.fromDegrees(180))), // blue speaker
+        //         autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
+        //         this::isBlue
+        //     ));
 
 
         /* -------- manip code -------- */
