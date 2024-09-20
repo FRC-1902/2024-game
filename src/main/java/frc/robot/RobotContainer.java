@@ -119,14 +119,14 @@ public class RobotContainer {
         /* -------- manip code -------- */
 
         // auto shoot
-        controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
-            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
-            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        // controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
+        //     .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+        //     .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
 
-        // auto shoot
-        controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
-            .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
-            .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        // // auto shoot
+        // controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
+        //     .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
+        //     .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
 
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)
