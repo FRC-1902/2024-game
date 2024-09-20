@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LEDCommand extends Command {
   /** Creates a new DigitalCommand. */
-  LED esp; 
+  LED led; 
   Shooter shooter; 
   
   public LEDCommand(Shooter shooter, LED esp) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.esp = esp; 
+    this.led = esp; 
     this.shooter = shooter;   
     addRequirements(esp);
   }
@@ -23,24 +23,24 @@ public class LEDCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    esp.setLED(true); 
+    led.setLED(true); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
-      esp.setLED(false);
+      led.setLED(false);
     }
     else{
-      esp.setLED(true);
+      led.setLED(true);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     esp.setLED(true);
+     led.setLED(true);
   }
 
   // Returns true when the command should end.
