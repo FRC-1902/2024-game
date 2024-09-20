@@ -29,8 +29,6 @@ public class LEDCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("topSensor", shooter.topPieceSensorActive()); 
-    SmartDashboard.putBoolean("midSensor", shooter.midPieceSensorActive());
     if(shooter.topPieceSensorActive() || shooter.midPieceSensorActive()){
       esp.setLED(false);
     }
