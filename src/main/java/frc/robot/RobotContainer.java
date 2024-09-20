@@ -33,14 +33,13 @@ import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.ESP;
+import frc.robot.subsystems.ESPController;
 
 
 /*
  * Instantiates all robot subsystems and button commands.
 */
 public class RobotContainer {
-
     Swerve swerveSubsystem;
     Shooter shooterSubsystem;
     public Pivot pivotSubsystem;
@@ -49,7 +48,7 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-    public ESP espSubsystem; 
+    public ESPController espSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
@@ -64,10 +63,7 @@ public class RobotContainer {
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
         intakeSubsystem = new Intake();
-        espSubsystem = new ESP(); 
-         
-
-
+        espSubsystem = new ESPController(); 
         controllers = Controllers.getInstance();
         ledCommand = new LEDCommand(shooterSubsystem, espSubsystem); 
         
@@ -96,15 +92,12 @@ public class RobotContainer {
         configureButtonBindings();
     }   
 
-
     /**
      * See <a href="https://docs.google.com/spreadsheets/d/1wMP4YpzC1QxRhvHqJ1PFmJ7Ox0EeoEuYVAkCYsLmFI0/edit?usp=sharing">Button Map</a> for button bindings
      */
     private void configureButtonBindings() {
         /* -------- drive code -------- */
 
-        
-        
         // reset driver field-centric gyro offset
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
@@ -123,7 +116,6 @@ public class RobotContainer {
         //         autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
         //         this::isBlue
         //     ));
-
 
         /* -------- manip code -------- */
 
@@ -165,7 +157,6 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.RB).debounce(0.05)
             .onTrue(new SetPivotCommand(Rotation2d.fromRotations(0.31), pivotSubsystem))
             .onFalse(new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem));
-        
     }
 
     private boolean isBlue() {
@@ -176,8 +167,6 @@ public class RobotContainer {
             return false; // true for default to blue alliance
         }
     }
-
-    
 
     public void resetPIDs() {
         pivotSubsystem.resetPIDs();

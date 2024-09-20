@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ESP extends SubsystemBase {
-  /** Creates a new ESP. */
+public class ESPController extends SubsystemBase {
+  /** Creates a new ESP controller. */
   DigitalOutput output; 
   
-  public ESP() {
+  public ESPController() {
     output = new DigitalOutput(Constants.LED_PORT); 
   }
 
@@ -25,6 +25,5 @@ public class ESP extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
   }
 }
