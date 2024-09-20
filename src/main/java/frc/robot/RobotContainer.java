@@ -47,14 +47,11 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-    public LED espSubsystem; 
+    public LED ledSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
     Command ledCommand; 
-    Command testCommand; 
-    Command analogCommand; 
-    
 
     public RobotContainer() {
         swerveSubsystem = new Swerve();
@@ -62,10 +59,10 @@ public class RobotContainer {
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
         intakeSubsystem = new Intake();
-        espSubsystem = new LED(); 
+        ledSubsystem = new LED(); 
         controllers = Controllers.getInstance();
-        ledCommand = new LEDCommand(shooterSubsystem, espSubsystem); 
-        
+        shooterSubsystem.setDefaultCommand(new LEDCommand(shooterSubsystem, ledSubsystem));
+
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
 
@@ -86,7 +83,6 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(new DriveCommand(swerveSubsystem));
         new SetPivotCommand(pivotSubsystem.getDefaultAngle(), pivotSubsystem).schedule();
         climberSubsystem.setDefaultCommand(new ClimbCommand(climberSubsystem));
-        espSubsystem.setDefaultCommand(ledCommand);
 
         configureButtonBindings();
     }   
