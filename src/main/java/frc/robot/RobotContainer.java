@@ -33,8 +33,7 @@ import frc.robot.subsystems.Controllers.ControllerName;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.ESPController;
-
+import frc.robot.subsystems.LED;
 
 /*
  * Instantiates all robot subsystems and button commands.
@@ -48,7 +47,7 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-    public ESPController espSubsystem; 
+    public LED espSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
@@ -63,7 +62,7 @@ public class RobotContainer {
         pivotSubsystem = new Pivot(shooterSubsystem);
         climberSubsystem = new Climber();
         intakeSubsystem = new Intake();
-        espSubsystem = new ESPController(); 
+        espSubsystem = new LED(); 
         controllers = Controllers.getInstance();
         ledCommand = new LEDCommand(shooterSubsystem, espSubsystem); 
         

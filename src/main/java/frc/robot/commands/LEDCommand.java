@@ -4,16 +4,16 @@
 
 package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ESPController;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LEDCommand extends Command {
   /** Creates a new DigitalCommand. */
-  ESPController esp; 
+  LED esp; 
   Shooter shooter; 
   
-  public LEDCommand(Shooter shooter, ESPController esp) {
+  public LEDCommand(Shooter shooter, LED esp) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.esp = esp; 
     this.shooter = shooter;   

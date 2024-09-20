@@ -9,18 +9,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ESPController extends SubsystemBase {
+public class LED extends SubsystemBase {
   /** Creates a new ESP controller. */
   DigitalOutput output; 
   
   /**
    * Controlls an ESP32 via digital pin
-   * @param LED_PORT The ESP32's digital pin
    */
-  public ESPController() {
+  public LED() {
     output = new DigitalOutput(Constants.LED_PORT); 
   }
 
+  /**
+   * Sets the LED to the green or orange
+   * @param isGreen true for green, false for orange
+   */
   public void setLED(boolean isGreen){
     SmartDashboard.putBoolean("led/activeState", isGreen);
     output.set(isGreen);
