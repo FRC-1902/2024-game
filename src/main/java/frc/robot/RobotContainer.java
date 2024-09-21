@@ -61,7 +61,7 @@ public class RobotContainer {
         intakeSubsystem = new Intake();
         ledSubsystem = new LED(); 
         controllers = Controllers.getInstance();
-        shooterSubsystem.setDefaultCommand(new LEDCommand(shooterSubsystem, ledSubsystem));
+        ledSubsystem.setDefaultCommand(new LEDCommand(shooterSubsystem, ledSubsystem));
 
         autoDriveBuilder = new AutoDriveBuilder(swerveSubsystem);
         autoShootBuilder = new AutoShootBuilder(autoDriveBuilder, shooterSubsystem, pivotSubsystem, swerveSubsystem);
