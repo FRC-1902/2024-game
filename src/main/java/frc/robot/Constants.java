@@ -59,7 +59,7 @@ public class Constants {
 
         // Pivot Encoder Offset
     /****NOTE**** ----------- Will need to be reset on every change of the pivot. Look until pivot encoder is 0.5 when straight up ----------- ****NOTE****/
-        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.425);
+        public static final Rotation2d PIVOT_ANGLE_OFFSET = Rotation2d.fromRotations(0.43);
 
         // PID Values - Old arm values: 1.8, 0.2, 0.015, 0.1
         public static final double PIVOT_KP = 1.8;

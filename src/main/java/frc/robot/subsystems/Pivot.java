@@ -52,7 +52,7 @@ public class Pivot extends SubsystemBase {
 
     // pid config
     pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD,
-        new TrapezoidProfile.Constraints(100, 1.0));
+        new TrapezoidProfile.Constraints(100, 3.0));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE.getRotations());
     pivotPID.setIntegratorRange(-0.1, 0.1);
     pivotPID.setIZone(0.1);
