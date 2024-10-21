@@ -73,6 +73,9 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    // Reset Swerve Module to absolute because of race condition on start up
+    robotContainer.swerveSubsystem.resetModulesToAbsolute();
+
     robotContainer.resetPIDs();
 
     autonomousCommand = autoSelector.getSelectedCommand();
@@ -93,6 +96,9 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    // Reset Swerve Module to absolute because of race condition on start up
+    robotContainer.swerveSubsystem.resetModulesToAbsolute();
+
     robotContainer.resetPIDs();
   }
 

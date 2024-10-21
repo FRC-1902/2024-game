@@ -39,7 +39,7 @@ import frc.robot.subsystems.LED;
  * Instantiates all robot subsystems and button commands.
 */
 public class RobotContainer {
-    Swerve swerveSubsystem;
+    public Swerve swerveSubsystem;
     Shooter shooterSubsystem;
     public Pivot pivotSubsystem;
     public Climber climberSubsystem;
