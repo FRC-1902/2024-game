@@ -47,7 +47,7 @@ public class RobotContainer {
     Controllers controllers;
     public AutoDriveBuilder autoDriveBuilder;
     public AutoShootBuilder autoShootBuilder;
-    public LED ledSubsystem; 
+    LED ledSubsystem; 
     Command floorIntakeCommand;
     Command outtakeCommand;
     Command hpIntakeCommand;
