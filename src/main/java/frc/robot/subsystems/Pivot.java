@@ -52,7 +52,7 @@ public class Pivot extends SubsystemBase {
 
     // pid config
     pivotPID = new ProfiledPIDController(Constants.Arm.PIVOT_KP, Constants.Arm.PIVOT_KI, Constants.Arm.PIVOT_KD,
-        new TrapezoidProfile.Constraints(100, 4.0));
+        new TrapezoidProfile.Constraints(100, 3.0));
     pivotPID.setTolerance(Constants.Arm.PIVOT_DEGREES_TOLERANCE.getRotations());
     pivotPID.setIntegratorRange(-0.1, 0.1);
     pivotPID.setIZone(0.1);
@@ -77,7 +77,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public Rotation2d getDefaultAngle() {
-    return Rotation2d.fromRotations(0.165);
+    return Rotation2d.fromRotations(0.170);
   }
 
   /**
