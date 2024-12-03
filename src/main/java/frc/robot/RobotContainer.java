@@ -97,6 +97,7 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.DRIVE, Button.Y).debounce(0.05)
             .onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
 
+        /*
         // charge at amp
         controllers.getTrigger(ControllerName.DRIVE, Button.X).debounce(0.05)
             .whileTrue(new ConditionalCommand(
@@ -111,10 +112,12 @@ public class RobotContainer {
                 autoDriveBuilder.getPathFindingCommand(new Pose2d(15.2, 5.55, Rotation2d.fromDegrees(0))), // red speaker
                 this::isBlue
             ));
+        */
 
         /* -------- manip code -------- */
 
         // auto shoot
+        /*
         controllers.getTrigger(ControllerName.MANIP, Button.RS).debounce(0.05)
             .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
             .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
@@ -123,6 +126,7 @@ public class RobotContainer {
         controllers.getTrigger(ControllerName.MANIP, Button.X).debounce(0.05)
             .onTrue(new InstantCommand(autoShootBuilder::startShotSequence))
             .onFalse(new InstantCommand(autoShootBuilder::cancelShotSequence));
+        */
 
         // outtake
         controllers.getTrigger(ControllerName.MANIP, Button.LS).debounce(0.05)

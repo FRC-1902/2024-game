@@ -198,7 +198,7 @@ public class Pivot extends SubsystemBase {
       return;
     }
 
-    pivotMotor1.set(setPower);
-    pivotMotor2.set(setPower);
+    //pivotMotor1.set(setPower);
+    //pivotMotor2.set(setPower);
   }
 }

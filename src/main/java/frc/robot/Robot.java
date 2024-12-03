@@ -78,10 +78,12 @@ public class Robot extends LoggedRobot {
 
     robotContainer.resetPIDs();
 
+    /*
     autonomousCommand = autoSelector.getSelectedCommand();
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+    */
   }
 
   @Override

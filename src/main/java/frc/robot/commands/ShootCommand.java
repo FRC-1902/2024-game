@@ -39,7 +39,7 @@ public class ShootCommand extends Command {
       earlyExit = false;
     }
 
-    shooterSubsystem.setFlywheelRPM(5200);
+    shooterSubsystem.setFlywheelRPM(2000); // baby mode speed
     startTime = Timer.getFPGATimestamp();
     shotTime = null;
   }

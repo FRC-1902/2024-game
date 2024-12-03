@@ -128,11 +128,11 @@ public class Shooter extends SubsystemBase {
     // quick solution, devise better control system if targeting various rpms
     // partial bang bang controller best suited for ~5200 rpm
     if (Math.abs(getRPM()) < Math.abs(targetRPM)) {
-      topShooterMotor.set(1 * Math.signum(targetRPM));
-      bottomShooterMotor.set(1 * Math.signum(targetRPM));
+      topShooterMotor.set(0.7 * Math.signum(targetRPM));
+      bottomShooterMotor.set(0.7 * Math.signum(targetRPM));
     } else {
-      topShooterMotor.set(0.92 * Math.signum(targetRPM));
-      bottomShooterMotor.set(0.92 * Math.signum(targetRPM));
+      topShooterMotor.set(0.5 * Math.signum(targetRPM));
+      bottomShooterMotor.set(0.5 * Math.signum(targetRPM));
     }
     // This method will be called once per scheduler run
   }
